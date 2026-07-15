@@ -5,40 +5,42 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane prefHeight="650.0" prefWidth="1000.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cabiso_capstone.controllers.DashboardController">
-<!--            styleClass="dashboard-root">-->
+<BorderPane prefHeight="650.0" prefWidth="1000.0" styleClass="dashboard-root" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cabiso_capstone.controllers.DashboardController">
         <top>
             <HBox alignment="CENTER_LEFT" spacing="15.0" styleClass="dashboard-header">
 
                 <padding>
-                    <Insets bottom="15.0" left="25.0" right="25.0" top="15.0" />
+                    <Insets bottom="16.0" left="25.0" right="25.0" top="16.0" />
                 </padding>
-
+            <VBox spacing="2.0">
                 <Label styleClass="dashboard-brand" text="CABANA DORMITORY">
             <font>
                <Font name="System Bold" size="13.0" />
             </font></Label>
+            </VBox>
 
                 <Region HBox.hgrow="ALWAYS" />
 
+                <VBox alignment="CENTER_RIGHT" spacing="2.0">
                 <Label styleClass="dashboard-user" text="Administrator">
             <font>
                <Font name="System Bold" size="11.0" />
             </font></Label>
-
+               <Label styleClass="dashboard-user-role" text="System Manager" />
+                </VBox>
             </HBox>
         </top>
 
     <left>
-        <VBox prefWidth="220.0" spacing="10.0" styleClass="dashboard-sidebar">
+        <VBox prefWidth="220.0" spacing="8.0" styleClass="dashboard-sidebar">
 
             <padding>
-                <Insets bottom="25.0" left="15.0" right="15.0" top="25.0" />
+                <Insets bottom="22.0" left="15.0" right="15.0" top="28.0" />
             </padding>
 
             <Label styleClass="sidebar-title" text="MAIN MENU" />
 
-            <Button fx:id="dashboardButton" maxWidth="Infinity" onAction="#showDashboard" styleClass="sidebar-button" text="Dashboard" />
+            <Button fx:id="dashboardButton" maxWidth="Infinity" onAction="#showDashboard" styleClass="sidebar-button-active" text="Dashboard" />
 
             <Button maxWidth="Infinity" onAction="#openTenantView" styleClass="sidebar-button" text="Tenant Management" />
 
@@ -48,48 +50,66 @@
 
             <Region VBox.vgrow="ALWAYS" />
 
+            <Separator styleClass="sidebar-separator" />
+
             <Button maxWidth="Infinity" onAction="#handleLogout" styleClass="logout-button" text="Logout" />
 
         </VBox>
     </left>
     <center>
-        <VBox spacing="15.0" styleClass="dashboard-content">
+        <VBox spacing="24.0" styleClass="dashboard-content">
 
             <padding>
-                <Insets bottom="35.0" left="35.0" right="35.0" top="35.0" />
+                <Insets bottom="35.0" left="35.0" right="35.0" top="32.0" />
             </padding>
 
+            <VBox spacing="5.0">
             <Label styleClass="dashboard-title" text="Dashboard" />
+            <Label styleClass="dashboard-subtitle" text="Here is an overview of the dormitory." />
+            </VBox>
 
-            <Label styleClass="dashboard-subtitle" text="Welcome to the Dormitory Management System." />
+            <HBox spacing="18.0">
 
-            <HBox spacing="20.0">
+                <VBox spacing="8.0" styleClass="summary-card" HBox.hgrow="ALWAYS">
 
-                <VBox prefWidth="200.0" spacing="8.0" styleClass="summary-card">
-
-                    <Label styleClass="summary-label" text="Total Tenants" />
+                    <Label styleClass="summary-label" text="TOTAL TENANTS" />
 
                     <Label fx:id="totalTenantsLabel" styleClass="summary-value" text="0" />
 
+                    <Label styleClass="summary-description" text="Registered residents" />
+
                 </VBox>
 
-                <VBox prefWidth="200.0" spacing="8.0" styleClass="summary-card">
+                <VBox spacing="8.0" styleClass="summary-card" HBox.hgrow="ALWAYS">
 
-                    <Label styleClass="summary-label" text="Available Rooms" />
+                    <Label styleClass="summary-label" text="AVAILABLE ROOMS" />
 
                     <Label fx:id="availableRoomsLabel" styleClass="summary-value" text="0" />
+                    <Label styleClass="summary-description" text="Rooms ready for occupancy" />
 
                 </VBox>
 
-                <VBox prefWidth="200.0" spacing="8.0" styleClass="summary-card">
+                <VBox spacing="8.0" styleClass="summary-card" HBox.hgrow="ALWAYS">
 
-                    <Label styleClass="summary-label" text="Pending Payments" />
+                    <Label styleClass="summary-label" text="PENDING PAYMENTS" />
 
                     <Label fx:id="pendingPaymentsLabel" styleClass="summary-value" text="0" />
+
+                    <Label styleClass="summary-description" text="Accounts requiring attention" />
 
                 </VBox>
 
             </HBox>
+
+            <VBox prefHeight="134.0" prefWidth="710.0" spacing="14.0" styleClass="dashboard-panel">
+                <Label styleClass="section-title" text="Quick Access" />
+                <Label styleClass="section-description" text="Choose a module to begin managing dormitory records." />
+                <HBox prefWidth="710.0" spacing="12.0">
+                    <Button onAction="#openTenantView" styleClass="quick-action-button" text="Manage Tenants" />
+                    <Button onAction="#openRoomView" styleClass="quick-action-button" text="Manage Rooms" />
+                    <Button onAction="#openPaymentView" styleClass="quick-action-button" text="View Payments" />
+                </HBox>
+            </VBox>
 
         </VBox>
     </center>
