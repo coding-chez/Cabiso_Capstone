@@ -1,14 +1,96 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.example.cabiso_capstone.controllers.DashboardController"
-            prefHeight="400.0" prefWidth="600.0">
+<BorderPane prefHeight="650.0" prefWidth="1000.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cabiso_capstone.controllers.DashboardController">
+<!--            styleClass="dashboard-root">-->
+        <top>
+            <HBox alignment="CENTER_LEFT" spacing="15.0" styleClass="dashboard-header">
 
-</AnchorPane>
+                <padding>
+                    <Insets bottom="15.0" left="25.0" right="25.0" top="15.0" />
+                </padding>
+
+                <Label styleClass="dashboard-brand" text="CABANA DORMITORY">
+            <font>
+               <Font name="System Bold" size="13.0" />
+            </font></Label>
+
+                <Region HBox.hgrow="ALWAYS" />
+
+                <Label styleClass="dashboard-user" text="Administrator">
+            <font>
+               <Font name="System Bold" size="11.0" />
+            </font></Label>
+
+            </HBox>
+        </top>
+
+    <left>
+        <VBox prefWidth="220.0" spacing="10.0" styleClass="dashboard-sidebar">
+
+            <padding>
+                <Insets bottom="25.0" left="15.0" right="15.0" top="25.0" />
+            </padding>
+
+            <Label styleClass="sidebar-title" text="MAIN MENU" />
+
+            <Button fx:id="dashboardButton" maxWidth="Infinity" onAction="#showDashboard" styleClass="sidebar-button" text="Dashboard" />
+
+            <Button maxWidth="Infinity" onAction="#openTenantView" styleClass="sidebar-button" text="Tenant Management" />
+
+            <Button maxWidth="Infinity" onAction="#openRoomView" styleClass="sidebar-button" text="Room Management" />
+
+            <Button maxWidth="Infinity" onAction="#openPaymentView" styleClass="sidebar-button" text="Payment Management" />
+
+            <Region VBox.vgrow="ALWAYS" />
+
+            <Button maxWidth="Infinity" onAction="#handleLogout" styleClass="logout-button" text="Logout" />
+
+        </VBox>
+    </left>
+    <center>
+        <VBox spacing="15.0" styleClass="dashboard-content">
+
+            <padding>
+                <Insets bottom="35.0" left="35.0" right="35.0" top="35.0" />
+            </padding>
+
+            <Label styleClass="dashboard-title" text="Dashboard" />
+
+            <Label styleClass="dashboard-subtitle" text="Welcome to the Dormitory Management System." />
+
+            <HBox spacing="20.0">
+
+                <VBox prefWidth="200.0" spacing="8.0" styleClass="summary-card">
+
+                    <Label styleClass="summary-label" text="Total Tenants" />
+
+                    <Label fx:id="totalTenantsLabel" styleClass="summary-value" text="0" />
+
+                </VBox>
+
+                <VBox prefWidth="200.0" spacing="8.0" styleClass="summary-card">
+
+                    <Label styleClass="summary-label" text="Available Rooms" />
+
+                    <Label fx:id="availableRoomsLabel" styleClass="summary-value" text="0" />
+
+                </VBox>
+
+                <VBox prefWidth="200.0" spacing="8.0" styleClass="summary-card">
+
+                    <Label styleClass="summary-label" text="Pending Payments" />
+
+                    <Label fx:id="pendingPaymentsLabel" styleClass="summary-value" text="0" />
+
+                </VBox>
+
+            </HBox>
+
+        </VBox>
+    </center>
+</BorderPane>
