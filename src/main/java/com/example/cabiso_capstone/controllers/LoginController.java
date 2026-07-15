@@ -11,5 +11,27 @@ public class LoginController {
     public Label messageLabel;
 
     public void handleLogin(ActionEvent actionEvent) {
+        String username = usernameField.getText().trim();
+        String password = passwordField.getText();
+
+
+        if(username.isEmpty() || password.isEmpty()){
+            messageLabel.setText("Please enter your username and password");
+            return;
+        }
+
+        if (username.equals("admin") && password.equals("admin123")){
+            messageLabel.setStyle("-fx-text-fill: green");
+            messageLabel.setText("Administrator login successful!");
+        } else if (username.equals("tenant") && password.equals("tenant123")){
+            messageLabel.setStyle("-fx-text-fill: green");
+            messageLabel.setText("Tenant login successful!");
+        } else {
+            messageLabel.setText("Invalid username or password");
+            passwordField.clear();
+            passwordField.requestFocus();
+        }
+
+
     }
 }
