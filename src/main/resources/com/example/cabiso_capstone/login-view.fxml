@@ -1,14 +1,74 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.example.cabiso_capstone.controllers.LoginController"
-            prefHeight="400.0" prefWidth="600.0">
+<AnchorPane prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cabiso_capstone.controllers.LoginController"
+            stylesheets="@styles.css"
+            styleClass="root-container">
+
+    <children>
+        <HBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+
+        <VBox alignment="CENTER_LEFT" prefWidth="480.0" spacing="18.0" styleClass="welcome-panel">
+
+        <padding>
+            <Insets bottom="60.0" left="55.0" right="55.0" top="60.0" />
+        </padding>
+
+        <Label styleClass="brand-name" text="CABANA DORMITORY">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font></Label>
+
+        <Label styleClass="welcome-title" text="Dormitory Management System" wrapText="true">
+               <font>
+                  <Font size="25.0" />
+               </font></Label>
+
+        <Label maxWidth="350.0" styleClass="welcome-description" text="A simple and convenient system for administrators and tenants." wrapText="true" />
+
+            <Region VBox.vgrow="ALWAYS" />
+
+        </VBox>
+            <VBox alignment="CENTER" styleClass="login-section" HBox.hgrow="ALWAYS">
+
+                <VBox maxWidth="370.0" spacing="14.0" styleClass="login-card">
+
+                    <padding>
+                        <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
+                    </padding>
+
+                    <Label styleClass="login-title" text="Welcome Back">
+                  <font>
+                     <Font name="System Bold" size="20.0" />
+                  </font></Label>
+
+                    <Label styleClass="login-subtitle" text="Enter your account credentials to continue." wrapText="true" />
+
+                    <Region prefHeight="12.0" />
+
+                    <Label styleClass="field-label" text="Username" />
+
+                    <TextField fx:id="usernameField" prefHeight="42.0" promptText="Enter username" styleClass="login-field" />
+
+                    <Label styleClass="field-label" text="Password" />
+
+                    <PasswordField fx:id="passwordField" onAction="#handleLogin" prefHeight="42.0" promptText="Enter password" styleClass="login-field" />
+
+                    <Label fx:id="messageLabel" minHeight="20.0" styleClass="message-label" text="" wrapText="true" />
+
+                    <Button maxWidth="Infinity" onAction="#handleLogin" prefHeight="44.0" prefWidth="102.0" styleClass="login-button" text="LOGIN" />
+
+
+                </VBox>
+
+            </VBox>
+
+        </HBox>
+
+    </children>
 
 </AnchorPane>

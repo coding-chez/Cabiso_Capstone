@@ -10,10 +10,13 @@ import java.io.IOException;
 public class MainApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("hello-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
-        stage.setTitle("Hello!");
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("login-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        stage.setTitle("Dormitory Management System");
         stage.setScene(scene);
+       // stage.setFullScreen(true);
+        stage.setMaxHeight(780);
+        stage.setMaxWidth(1080);
         stage.show();
     }
 }
