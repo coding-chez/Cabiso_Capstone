@@ -4,12 +4,16 @@ import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
-public class DashboardController {
+public class AdminDashboardController {
 
     public Button dashboardButton;
     public Label pendingPaymentsLabel;
     public Label availableRoomsLabel;
     public Label totalTenantsLabel;
+    public Label totalRoomsLabel;
+    public Label totalPaymentsLabel;
+    public Label adminNameLabel;
+    public Label occupiedRoomsLabel;
 
     public void initialize(){
         //temp values

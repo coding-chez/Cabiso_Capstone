@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.cabiso_capstone.controllers.AdminDashboardController"
+            prefWidth="1100.0"
+            prefHeight="700.0"
+            stylesheets="@styles.css"
+            styleClass="dashboard-root">
+
+    <top>
+        <HBox alignment="CENTER_LEFT"
+              spacing="15.0"
+              styleClass="dashboard-header">
+
+            <padding>
+                <Insets top="15.0"
+                        right="25.0"
+                        bottom="15.0"
+                        left="25.0"/>
+            </padding>
+
+            <VBox spacing="2.0">
+                <Label text="CABANA DORMITORY"
+                       styleClass="dashboard-brand"/>
+
+                <Label text="Dormitory Management System"
+                       styleClass="dashboard-brand-subtitle"/>
+            </VBox>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <VBox alignment="CENTER_RIGHT"
+                  spacing="2.0">
+
+                <Label fx:id="adminNameLabel"
+                       text="Administrator"
+                       styleClass="dashboard-user"/>
+
+                <Label text="System Manager"
+                       styleClass="dashboard-user-role"/>
+            </VBox>
+        </HBox>
+    </top>
+
+    <left>
+        <VBox prefWidth="220.0"
+              spacing="8.0"
+              styleClass="dashboard-sidebar">
+
+            <padding>
+                <Insets top="28.0"
+                        right="15.0"
+                        bottom="22.0"
+                        left="15.0"/>
+            </padding>
+
+            <Label text="MAIN MENU"
+                   styleClass="sidebar-title"/>
+
+            <Button fx:id="dashboardButton"
+                    text="Dashboard"
+                    maxWidth="Infinity"
+                    onAction="#showDashboard"
+                    styleClass="sidebar-button-active"/>
+
+            <Button text="Tenant Management"
+                    maxWidth="Infinity"
+                    onAction="#openTenantView"
+                    styleClass="sidebar-button"/>
+
+            <Button text="Room Management"
+                    maxWidth="Infinity"
+                    onAction="#openRoomView"
+                    styleClass="sidebar-button"/>
+
+            <Button text="Payment Management"
+                    maxWidth="Infinity"
+                    onAction="#openPaymentView"
+                    styleClass="sidebar-button"/>
+
+            <Region VBox.vgrow="ALWAYS"/>
+
+            <Separator styleClass="sidebar-separator"/>
+
+            <Button text="Logout"
+                    maxWidth="Infinity"
+                    onAction="#handleLogout"
+                    styleClass="logout-button"/>
+
+        </VBox>
+    </left>
+    <center>
+        <VBox spacing="24.0"
+              styleClass="dashboard-content">
+
+            <padding>
+                <Insets top="32.0"
+                        right="35.0"
+                        bottom="35.0"
+                        left="35.0"/>
+            </padding>
+            <VBox spacing="5.0">
+
+                <Label text="Administrator Dashboard"
+                       styleClass="dashboard-title"/>
+
+                <Label text="View the dormitory overview and access management modules."
+                       styleClass="dashboard-subtitle"/>
+
+            </VBox>
+            <HBox spacing="18.0">
+
+                <VBox spacing="8.0"
+                      HBox.hgrow="ALWAYS"
+                      styleClass="summary-card">
+
+                    <Label text="TOTAL TENANTS"
+                           styleClass="summary-label"/>
+
+                    <Label fx:id="totalTenantsLabel"
+                           text="0"
+                           styleClass="summary-value"/>
+
+                    <Label text="Registered tenant accounts"
+                           styleClass="summary-description"/>
+
+                </VBox>
+
+                <VBox spacing="8.0"
+                      HBox.hgrow="ALWAYS"
+                      styleClass="summary-card">
+
+                    <Label text="AVAILABLE ROOMS"
+                           styleClass="summary-label"/>
+
+                    <Label fx:id="availableRoomsLabel"
+                           text="0"
+                           styleClass="summary-value"/>
+
+                    <Label text="Rooms ready for occupancy"
+                           styleClass="summary-description"/>
+
+                </VBox>
+
+                <VBox spacing="8.0"
+                      HBox.hgrow="ALWAYS"
+                      styleClass="summary-card">
+
+                    <Label text="PENDING PAYMENTS"
+                           styleClass="summary-label"/>
+
+                    <Label fx:id="pendingPaymentsLabel"
+                           text="0"
+                           styleClass="summary-value"/>
+
+                    <Label text="Payment records requiring attention"
+                           styleClass="summary-description"/>
+
+                </VBox>
+
+            </HBox>
+            <VBox spacing="15.0"
+                  styleClass="content-card">
+
+                <VBox spacing="3.0">
+                    <Label text="Quick Access"
+                           styleClass="section-title"/>
+
+                    <Label text="Choose a module to begin managing dormitory information."
+                           styleClass="section-description"/>
+                </VBox>
+
+                <HBox spacing="12.0">
+
+                    <Button text="Manage Tenants"
+                            onAction="#openTenantView"
+                            prefHeight="40.0"
+                            styleClass="quick-action-button"/>
+
+                    <Button text="Manage Rooms"
+                            onAction="#openRoomView"
+                            prefHeight="40.0"
+                            styleClass="quick-action-button"/>
+
+                    <Button text="Manage Payments"
+                            onAction="#openPaymentView"
+                            prefHeight="40.0"
+                            styleClass="quick-action-button"/>
+
+                </HBox>
+
+            </VBox>
+            <VBox spacing="15.0"
+                  styleClass="content-card">
+
+                <VBox spacing="3.0">
+                    <Label text="System Information"
+                           styleClass="section-title"/>
+
+                    <Label text="Current dormitory management summary."
+                           styleClass="section-description"/>
+                </VBox>
+
+                <Separator/>
+
+                <HBox spacing="50.0">
+
+                    <VBox spacing="4.0"
+                          HBox.hgrow="ALWAYS">
+
+                        <Label text="Occupied Rooms"
+                               styleClass="detail-label"/>
+
+                        <Label fx:id="occupiedRoomsLabel"
+                               text="0"
+                               styleClass="detail-value"/>
+                    </VBox>
+
+                    <VBox spacing="4.0"
+                          HBox.hgrow="ALWAYS">
+
+                        <Label text="Total Rooms"
+                               styleClass="detail-label"/>
+
+                        <Label fx:id="totalRoomsLabel"
+                               text="0"
+                               styleClass="detail-value"/>
+                    </VBox>
+
+                    <VBox spacing="4.0"
+                          HBox.hgrow="ALWAYS">
+
+                        <Label text="Recorded Payments"
+                               styleClass="detail-label"/>
+
+                        <Label fx:id="totalPaymentsLabel"
+                               text="0"
+                               styleClass="detail-value"/>
+                    </VBox>
+
+                </HBox>
+
+            </VBox>
+
+        </VBox>
+    </center>
+
+</BorderPane>

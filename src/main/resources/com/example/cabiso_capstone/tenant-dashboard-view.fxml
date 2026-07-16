@@ -1,0 +1,582 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.cabiso_capstone.controllers.TenantDashboardController"
+            prefWidth="1100.0"
+            prefHeight="700.0"
+            stylesheets="@styles.css"
+            styleClass="tenant-dashboard-root">
+
+    <top>
+        <HBox alignment="CENTER_LEFT"
+              spacing="15.0"
+              styleClass="dashboard-header">
+
+            <padding>
+                <Insets top="15.0"
+                        right="25.0"
+                        bottom="15.0"
+                        left="25.0"/>
+            </padding>
+
+            <VBox spacing="2.0">
+                <Label text="CABANA DORMITORY"
+                       styleClass="dashboard-brand"/>
+
+                <Label text="Tenant Portal"
+                       styleClass="dashboard-brand-subtitle"/>
+            </VBox>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <VBox alignment="CENTER_RIGHT"
+                  spacing="2.0">
+
+                <Label fx:id="tenantNameHeaderLabel"
+                       text="Tenant Name"
+                       styleClass="dashboard-user"/>
+
+                <Label text="Tenant Account"
+                       styleClass="dashboard-user-role"/>
+            </VBox>
+
+        </HBox>
+    </top>
+    <left>
+        <VBox prefWidth="220.0"
+              spacing="8.0"
+              styleClass="dashboard-sidebar">
+
+            <padding>
+                <Insets top="28.0"
+                        right="15.0"
+                        bottom="22.0"
+                        left="15.0"/>
+            </padding>
+
+            <Label text="TENANT MENU"
+                   styleClass="sidebar-title"/>
+
+            <Button fx:id="overviewButton"
+                    text="Overview"
+                    maxWidth="Infinity"
+                    onAction="#showOverview"
+                    styleClass="sidebar-button-active"/>
+
+            <Button fx:id="profileButton"
+                    text="My Profile"
+                    maxWidth="Infinity"
+                    onAction="#showProfile"
+                    styleClass="sidebar-button"/>
+
+            <Button fx:id="roomButton"
+                    text="My Room"
+                    maxWidth="Infinity"
+                    onAction="#showRoomDetails"
+                    styleClass="sidebar-button"/>
+
+            <Button fx:id="paymentButton"
+                    text="Payment History"
+                    maxWidth="Infinity"
+                    onAction="#showPaymentHistory"
+                    styleClass="sidebar-button"/>
+
+            <Region VBox.vgrow="ALWAYS"/>
+
+            <Separator styleClass="sidebar-separator"/>
+
+            <Button text="Logout"
+                    maxWidth="Infinity"
+                    onAction="#handleLogout"
+                    styleClass="logout-button"/>
+
+        </VBox>
+    </left>
+
+    <center>
+        <StackPane styleClass="tenant-dashboard-content">
+            <VBox fx:id="overviewPane"
+                  spacing="22.0"
+                  visible="true"
+                  managed="true">
+
+                <padding>
+                    <Insets top="30.0"
+                            right="34.0"
+                            bottom="35.0"
+                            left="34.0"/>
+                </padding>
+
+                <VBox spacing="4.0">
+
+                    <Label fx:id="welcomeLabel"
+                           text="Welcome back!"
+                           styleClass="dashboard-title"/>
+
+                    <Label text="Here is a summary of your dormitory account."
+                           styleClass="dashboard-subtitle"/>
+
+                </VBox>
+
+                <HBox spacing="18.0">
+
+                    <VBox spacing="8.0"
+                          HBox.hgrow="ALWAYS"
+                          styleClass="summary-card">
+
+                        <Label text="ASSIGNED ROOM"
+                               styleClass="summary-label"/>
+
+                        <Label fx:id="overviewRoomLabel"
+                               text="Not Assigned"
+                               styleClass="summary-value-small"/>
+
+                        <Label text="Your current room assignment"
+                               styleClass="summary-description"/>
+
+                    </VBox>
+
+                    <VBox spacing="8.0"
+                          HBox.hgrow="ALWAYS"
+                          styleClass="summary-card">
+
+                        <Label text="CURRENT BALANCE"
+                               styleClass="summary-label"/>
+
+                        <Label fx:id="overviewBalanceLabel"
+                               text="₱0.00"
+                               styleClass="summary-value-small"/>
+
+                        <Label text="Outstanding account balance"
+                               styleClass="summary-description"/>
+
+                    </VBox>
+
+                    <VBox spacing="8.0"
+                          HBox.hgrow="ALWAYS"
+                          styleClass="summary-card">
+
+                        <Label text="ACCOUNT STATUS"
+                               styleClass="summary-label"/>
+
+                        <Label fx:id="overviewStatusLabel"
+                               text="Active"
+                               styleClass="summary-value-small"/>
+
+                        <Label text="Current tenant account status"
+                               styleClass="summary-description"/>
+
+                    </VBox>
+
+                </HBox>
+
+                <VBox spacing="12.0"
+                      styleClass="content-card"
+                      VBox.vgrow="ALWAYS">
+
+                    <HBox alignment="CENTER_LEFT">
+
+                        <VBox spacing="3.0">
+                            <Label text="Recent Payments"
+                                   styleClass="section-title"/>
+
+                            <Label text="Your latest recorded payment transactions."
+                                   styleClass="section-description"/>
+                        </VBox>
+
+                        <Region HBox.hgrow="ALWAYS"/>
+
+                        <Button text="View All"
+                                onAction="#showPaymentHistory"
+                                prefHeight="36.0"
+                                styleClass="secondary-button"/>
+
+                    </HBox>
+
+                    <TableView fx:id="recentPaymentsTable"
+                               prefHeight="260.0"
+                               VBox.vgrow="ALWAYS"
+                               styleClass="management-table">
+
+                        <placeholder>
+                            <Label text="No recent payment records."
+                                   styleClass="table-placeholder"/>
+                        </placeholder>
+
+                        <columns>
+                            <TableColumn fx:id="recentPaymentDateColumn"
+                                         text="Date"
+                                         prefWidth="140.0"/>
+
+                            <TableColumn fx:id="recentAmountColumn"
+                                         text="Amount"
+                                         prefWidth="130.0"/>
+
+                            <TableColumn fx:id="recentMethodColumn"
+                                         text="Method"
+                                         prefWidth="130.0"/>
+
+                            <TableColumn fx:id="recentReferenceColumn"
+                                         text="Reference Number"
+                                         prefWidth="180.0"/>
+
+                            <TableColumn fx:id="recentStatusColumn"
+                                         text="Status"
+                                         prefWidth="110.0"/>
+                        </columns>
+
+                    </TableView>
+
+                </VBox>
+
+            </VBox>
+
+            <!-- =================================================
+                 PROFILE SECTION
+                 ================================================= -->
+            <VBox fx:id="profilePane"
+                  spacing="22.0"
+                  visible="false"
+                  managed="false">
+
+                <padding>
+                    <Insets top="30.0"
+                            right="34.0"
+                            bottom="35.0"
+                            left="34.0"/>
+                </padding>
+
+                <VBox spacing="4.0">
+
+                    <Label text="My Profile"
+                           styleClass="dashboard-title"/>
+
+                    <Label text="View and update your permitted personal information."
+                           styleClass="dashboard-subtitle"/>
+
+                </VBox>
+
+                <VBox spacing="18.0"
+                      styleClass="content-card">
+
+                    <VBox spacing="3.0">
+                        <Label text="Personal Information"
+                               styleClass="section-title"/>
+
+                        <Label text="Only your contact number may be updated through this portal."
+                               styleClass="section-description"/>
+                    </VBox>
+
+                    <HBox spacing="16.0">
+
+                        <VBox spacing="6.0"
+                              HBox.hgrow="ALWAYS">
+
+                            <Label text="Tenant ID"
+                                   styleClass="field-label"/>
+
+                            <TextField fx:id="profileTenantIdField"
+                                       editable="false"
+                                       promptText="Tenant ID"
+                                       prefHeight="40.0"
+                                       styleClass="management-field-disabled"/>
+                        </VBox>
+
+                        <VBox spacing="6.0"
+                              HBox.hgrow="ALWAYS">
+
+                            <Label text="Full Name"
+                                   styleClass="field-label"/>
+
+                            <TextField fx:id="profileFullNameField"
+                                       editable="false"
+                                       promptText="Full name"
+                                       prefHeight="40.0"
+                                       styleClass="management-field-disabled"/>
+                        </VBox>
+
+                    </HBox>
+
+                    <HBox spacing="16.0">
+
+                        <VBox spacing="6.0"
+                              HBox.hgrow="ALWAYS">
+
+                            <Label text="Username"
+                                   styleClass="field-label"/>
+
+                            <TextField fx:id="profileUsernameField"
+                                       editable="false"
+                                       promptText="Username"
+                                       prefHeight="40.0"
+                                       styleClass="management-field-disabled"/>
+                        </VBox>
+
+                        <VBox spacing="6.0"
+                              HBox.hgrow="ALWAYS">
+
+                            <Label text="Contact Number"
+                                   styleClass="field-label"/>
+
+                            <TextField fx:id="profileContactField"
+                                       promptText="Enter contact number"
+                                       prefHeight="40.0"
+                                       styleClass="management-field"/>
+                        </VBox>
+
+                    </HBox>
+
+                    <HBox spacing="16.0">
+
+                        <VBox spacing="6.0"
+                              HBox.hgrow="ALWAYS">
+
+                            <Label text="Account Status"
+                                   styleClass="field-label"/>
+
+                            <TextField fx:id="profileStatusField"
+                                       editable="false"
+                                       promptText="Status"
+                                       prefHeight="40.0"
+                                       styleClass="management-field-disabled"/>
+                        </VBox>
+
+                        <VBox spacing="6.0"
+                              HBox.hgrow="ALWAYS">
+
+                            <Label text="Assigned Room"
+                                   styleClass="field-label"/>
+
+                            <TextField fx:id="profileRoomField"
+                                       editable="false"
+                                       promptText="Assigned room"
+                                       prefHeight="40.0"
+                                       styleClass="management-field-disabled"/>
+                        </VBox>
+
+                    </HBox>
+
+                    <Label fx:id="profileMessageLabel"
+                           text=""
+                           minHeight="18.0"
+                           wrapText="true"
+                           styleClass="form-message-label"/>
+
+                    <HBox alignment="CENTER_RIGHT">
+
+                        <Button text="Update Contact Information"
+                                onAction="#handleUpdateProfile"
+                                prefHeight="40.0"
+                                styleClass="primary-button"/>
+
+                    </HBox>
+
+                </VBox>
+
+            </VBox>
+
+            <VBox fx:id="roomPane"
+                  spacing="22.0"
+                  visible="false"
+                  managed="false">
+
+                <padding>
+                    <Insets top="30.0"
+                            right="34.0"
+                            bottom="35.0"
+                            left="34.0"/>
+                </padding>
+
+                <VBox spacing="4.0">
+
+                    <Label text="My Room"
+                           styleClass="dashboard-title"/>
+
+                    <Label text="View your current room assignment and occupancy information."
+                           styleClass="dashboard-subtitle"/>
+
+                </VBox>
+
+                <VBox spacing="18.0"
+                      styleClass="content-card">
+
+                    <VBox spacing="3.0">
+                        <Label text="Assigned Room Information"
+                               styleClass="section-title"/>
+
+                        <Label text="Room details are managed by the administrator and cannot be edited here."
+                               styleClass="section-description"/>
+                    </VBox>
+
+                    <Separator/>
+
+                    <HBox spacing="50.0">
+
+                        <VBox spacing="16.0"
+                              HBox.hgrow="ALWAYS">
+
+                            <VBox spacing="3.0">
+                                <Label text="Room Number"
+                                       styleClass="detail-label"/>
+
+                                <Label fx:id="roomNumberLabel"
+                                       text="Not Assigned"
+                                       styleClass="detail-value"/>
+                            </VBox>
+
+                            <VBox spacing="3.0">
+                                <Label text="Capacity"
+                                       styleClass="detail-label"/>
+
+                                <Label fx:id="roomCapacityLabel"
+                                       text="0"
+                                       styleClass="detail-value"/>
+                            </VBox>
+
+                            <VBox spacing="3.0">
+                                <Label text="Current Occupants"
+                                       styleClass="detail-label"/>
+
+                                <Label fx:id="roomOccupantsLabel"
+                                       text="0"
+                                       styleClass="detail-value"/>
+                            </VBox>
+
+                        </VBox>
+
+                        <VBox spacing="16.0"
+                              HBox.hgrow="ALWAYS">
+
+                            <VBox spacing="3.0">
+                                <Label text="Available Slots"
+                                       styleClass="detail-label"/>
+
+                                <Label fx:id="roomAvailableSlotsLabel"
+                                       text="0"
+                                       styleClass="detail-value"/>
+                            </VBox>
+
+                            <VBox spacing="3.0">
+                                <Label text="Monthly Rate"
+                                       styleClass="detail-label"/>
+
+                                <Label fx:id="roomMonthlyRateLabel"
+                                       text="₱0.00"
+                                       styleClass="detail-value"/>
+                            </VBox>
+
+                            <VBox spacing="3.0">
+                                <Label text="Room Status"
+                                       styleClass="detail-label"/>
+
+                                <Label fx:id="roomStatusLabel"
+                                       text="Unavailable"
+                                       styleClass="detail-value"/>
+                            </VBox>
+
+                        </VBox>
+
+                    </HBox>
+
+                </VBox>
+
+            </VBox>
+
+            <VBox fx:id="paymentHistoryPane"
+                  spacing="22.0"
+                  visible="false"
+                  managed="false">
+
+                <padding>
+                    <Insets top="30.0"
+                            right="34.0"
+                            bottom="35.0"
+                            left="34.0"/>
+                </padding>
+
+                <VBox spacing="4.0">
+
+                    <Label text="Payment History"
+                           styleClass="dashboard-title"/>
+
+                    <Label text="View payments recorded under your tenant account."
+                           styleClass="dashboard-subtitle"/>
+
+                </VBox>
+
+                <VBox spacing="12.0"
+                      styleClass="content-card"
+                      VBox.vgrow="ALWAYS">
+
+                    <HBox alignment="CENTER_LEFT">
+
+                        <VBox spacing="3.0">
+                            <Label text="All Payment Records"
+                                   styleClass="section-title"/>
+
+                            <Label text="Only transactions associated with your account are displayed."
+                                   styleClass="section-description"/>
+                        </VBox>
+
+                        <Region HBox.hgrow="ALWAYS"/>
+
+                        <Label fx:id="paymentRecordCountLabel"
+                               text="0 records"
+                               styleClass="record-count-label"/>
+
+                    </HBox>
+
+                    <TableView fx:id="paymentHistoryTable"
+                               prefHeight="450.0"
+                               VBox.vgrow="ALWAYS"
+                               styleClass="management-table">
+
+                        <placeholder>
+                            <Label text="No payment records available."
+                                   styleClass="table-placeholder"/>
+                        </placeholder>
+
+                        <columns>
+                            <TableColumn fx:id="paymentIdColumn"
+                                         text="Payment ID"
+                                         prefWidth="100.0"/>
+
+                            <TableColumn fx:id="paymentDateColumn"
+                                         text="Date"
+                                         prefWidth="130.0"/>
+
+                            <TableColumn fx:id="paymentAmountColumn"
+                                         text="Amount"
+                                         prefWidth="120.0"/>
+
+                            <TableColumn fx:id="paymentMethodColumn"
+                                         text="Method"
+                                         prefWidth="120.0"/>
+
+                            <TableColumn fx:id="paymentReferenceColumn"
+                                         text="Reference Number"
+                                         prefWidth="190.0"/>
+
+                            <TableColumn fx:id="paymentStatusColumn"
+                                         text="Status"
+                                         prefWidth="110.0"/>
+                        </columns>
+
+                    </TableView>
+
+                </VBox>
+
+            </VBox>
+
+        </StackPane>
+    </center>
+
+</BorderPane>
