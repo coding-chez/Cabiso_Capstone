@@ -8,12 +8,29 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class MainApplication extends Application {
+    private static Stage mainStage;
+
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("tenant-view.fxml"));
+        mainStage = stage;
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("login-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
-        stage.setTitle("Dormitory Management System");
-        stage.setScene(scene);
-        stage.show();
+        mainStage.setTitle("Dormitory Management System");
+        mainStage.setScene(scene);
+        mainStage.show();
+    }
+
+    public static void changeScene(String fxmlFile) throws IOException {
+        FXMLLoader fxmlLoader =
+                new FXMLLoader(MainApplication.class.getResource(fxmlFile));
+
+        Scene scene = new Scene(fxmlLoader.load());
+
+        mainStage.setScene(scene);
+        mainStage.centerOnScreen();
+    }
+
+    public static void main(String[] args) {
+        launch(args);
     }
 }

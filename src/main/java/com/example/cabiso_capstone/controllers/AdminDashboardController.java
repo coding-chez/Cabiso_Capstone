@@ -1,8 +1,11 @@
 package com.example.cabiso_capstone.controllers;
 
+import com.example.cabiso_capstone.MainApplication;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+
+import java.io.IOException;
 
 public class AdminDashboardController {
 
@@ -15,19 +18,23 @@ public class AdminDashboardController {
     public Label adminNameLabel;
     public Label occupiedRoomsLabel;
 
-    public void initialize(){
-        //temp values
+    public void initialize() {
+        // Temporary values
         totalTenantsLabel.setText("2");
         availableRoomsLabel.setText("5");
         pendingPaymentsLabel.setText("1");
     }
 
     public void handleLogout(ActionEvent actionEvent) {
-        System.out.println("logout"); //checking in 123
+        try {
+            MainApplication.changeScene("login-view.fxml");
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
     }
 
     public void openRoomView(ActionEvent actionEvent) {
-        System.out.println("open room view"); //checking in 123
+        System.out.println("open room view");
     }
 
     public void showDashboard(ActionEvent actionEvent) {
@@ -35,10 +42,10 @@ public class AdminDashboardController {
     }
 
     public void openTenantView(ActionEvent actionEvent) {
-        System.out.println("tenant view"); //checking in 123
+        System.out.println("tenant view");
     }
 
     public void openPaymentView(ActionEvent actionEvent) {
-        System.out.println("open payment view"); //checking in 123
+        System.out.println("open payment view");
     }
 }
