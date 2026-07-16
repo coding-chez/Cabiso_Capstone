@@ -270,16 +270,11 @@
     -fx-background-color: #dfecea;
 }
 
-/* =========================================================
-   SHARED DASHBOARD AND MANAGEMENT LAYOUT
-   ========================================================= */
 
 .management-root {
     -fx-background-color: #f4f7f6;
     -fx-font-family: "Arial";
 }
-
-/* Header */
 
 .dashboard-header {
     -fx-background-color: white;
@@ -308,8 +303,6 @@
     -fx-font-size: 11px;
     -fx-text-fill: #82918e;
 }
-
-/* Sidebar */
 
 .dashboard-sidebar {
     -fx-background-color: #1c5c55;
@@ -357,7 +350,6 @@
     -fx-background-color: rgba(255, 255, 255, 0.10);
 }
 
-/* Main content */
 
 .management-scroll-pane {
     -fx-background-color: transparent;
@@ -384,7 +376,6 @@
     -fx-text-fill: #71817f;
 }
 
-/* Cards */
 
 .toolbar-card,
 .content-card {
@@ -420,8 +411,6 @@
     -fx-text-fill: #1c5c55;
 }
 
-/* Form fields */
-
 .field-label {
     -fx-font-size: 12px;
     -fx-font-weight: bold;
@@ -439,11 +428,11 @@
     -fx-font-size: 13px;
 }
 
-.management-field:focused,
-.management-combo-box:focused {
-    -fx-background-color: white;
-    -fx-border-color: #1c5c55;
-}
+/*.management-field:focused,*/
+/*.management-combo-box:focused {*/
+/*    -fx-background-color: white;*/
+/*    -fx-border-color: #1c5c55;*/
+/*}*/
 
 .management-field-disabled {
     -fx-background-color: #edf1f0;
@@ -457,8 +446,6 @@
 .management-combo-box .list-cell {
     -fx-padding: 0 12px;
 }
-
-/* Table */
 
 .management-table {
     -fx-background-color: white;
@@ -488,20 +475,18 @@
     -fx-border-color: transparent transparent #edf1f0 transparent;
 }
 
-.management-table .table-row-cell:selected {
-    -fx-background-color: #dcebe8;
-}
+/*.management-table .table-row-cell:selected {*/
+/*    -fx-background-color: #dcebe8;*/
+/*}*/
 
-.management-table .table-row-cell:selected .text {
-    -fx-fill: #173b37;
-}
+/*.management-table .table-row-cell:selected .text {*/
+/*    -fx-fill: #173b37;*/
+/*}*/
 
 .table-placeholder {
     -fx-font-size: 13px;
     -fx-text-fill: #87928f;
 }
-
-/* Buttons */
 
 .primary-button,
 .secondary-button,
@@ -547,3 +532,4 @@
     -fx-font-size: 12px;
     -fx-text-fill: #c34035;
 }
+
