@@ -27,6 +27,7 @@ public class LoginController {
             messageLabel.setStyle("-fx-text-fill: green");
             messageLabel.setText("Tenant login successful!");
         } else {
+            messageLabel.setStyle("-fx-text-fill: red");
             messageLabel.setText("Invalid username or password");
             passwordField.clear();
             passwordField.requestFocus();

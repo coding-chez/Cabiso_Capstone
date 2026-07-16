@@ -12,12 +12,14 @@
                 <padding>
                     <Insets bottom="16.0" left="25.0" right="25.0" top="16.0" />
                 </padding>
-            <VBox spacing="2.0">
-                <Label styleClass="dashboard-brand" text="CABANA DORMITORY">
-            <font>
-               <Font name="System Bold" size="13.0" />
-            </font></Label>
-            </VBox>
+
+                <VBox spacing="2.0">
+                    <Label text="CABANA DORMITORY"
+                           styleClass="dashboard-brand"/>
+
+                    <Label text="Dormitory Management System"
+                           styleClass="dashboard-brand-subtitle"/>
+                </VBox>
 
                 <Region HBox.hgrow="ALWAYS" />
 
