@@ -533,3 +533,30 @@
     -fx-text-fill: #c34035;
 }
 
+.register-link {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1c5c55;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-cursor: hand;
+}
+
+.register-link:hover {
+    -fx-text-fill: #174d47;
+    -fx-underline: true;
+}
+
+.register-scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+    -fx-border-color: transparent;
+}
+
+.register-scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.register-scroll-pane .scroll-bar:vertical {
+    -fx-pref-width: 8px;
+}

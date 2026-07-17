@@ -34,18 +34,34 @@ public class AdminDashboardController {
     }
 
     public void openRoomView(ActionEvent actionEvent) {
-        System.out.println("open room view");
+        try {
+            MainApplication.changeScene("room-view.fxml");
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
     }
 
     public void showDashboard(ActionEvent actionEvent) {
-
+        try {
+            MainApplication.changeScene("admin-dashboard-view.fxml");
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
     }
 
     public void openTenantView(ActionEvent actionEvent) {
-        System.out.println("tenant view");
+        try {
+            MainApplication.changeScene("tenant-view.fxml");
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
     }
 
     public void openPaymentView(ActionEvent actionEvent) {
-        System.out.println("open payment view");
+        try {
+            MainApplication.changeScene("payment-view.fxml");
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
     }
 }

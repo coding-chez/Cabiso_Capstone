@@ -1,6 +1,8 @@
 package com.example.cabiso_capstone.model;
 
-public class Tenant extends User{
+public class Tenant extends User {
+
+    private int tenantId;
     private String contactNumber;
     private Room assignedRoom;
     private double balance;
@@ -10,13 +12,32 @@ public class Tenant extends User{
         super();
     }
 
-    public Tenant(int userId, String fullName, String username, String password, String contactNumber, Room assignedRoom, double balance, String status) {
+    public Tenant(
+            int tenantId,
+            int userId,
+            String fullName,
+            String username,
+            String password,
+            String contactNumber,
+            Room assignedRoom,
+            double balance,
+            String status
+    ) {
         super(userId, fullName, username, password);
 
+        this.tenantId = tenantId;
         this.contactNumber = contactNumber;
         this.assignedRoom = assignedRoom;
         this.balance = balance;
         this.status = status;
+    }
+
+    public int getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(int tenantId) {
+        this.tenantId = tenantId;
     }
 
     public String getContactNumber() {

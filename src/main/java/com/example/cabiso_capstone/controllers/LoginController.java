@@ -1,12 +1,17 @@
 package com.example.cabiso_capstone.controllers;
 
 import com.example.cabiso_capstone.MainApplication;
+import com.example.cabiso_capstone.database.DatabaseConnection;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class LoginController {
 
@@ -24,32 +29,77 @@ public class LoginController {
             return;
         }
 
-        try {
-            if (username.equals("admin")
-                    && password.equals("admin123")) {
+        String sql =
+                "SELECT role, account_status "
+                        + "FROM users "
+                        + "WHERE username = ? AND password = ?";
 
-                MainApplication.changeScene(
-                        "admin-dashboard-view.fxml"
-                );
+        try (
+                Connection connection = DatabaseConnection.getConnection();
+                PreparedStatement statement = connection.prepareStatement(sql)
+        ) {
+            statement.setString(1, username);
+            statement.setString(2, password);
 
-            } else if (username.equals("tenant")
-                    && password.equals("tenant123")) {
+            try (ResultSet resultSet = statement.executeQuery()) {
 
-                MainApplication.changeScene(
-                        "tenant-dashboard-view.fxml"
-                );
+                if (!resultSet.next()) {
+                    messageLabel.setStyle("-fx-text-fill: red;");
+                    messageLabel.setText("Invalid username or password");
 
-            } else {
-                messageLabel.setStyle("-fx-text-fill: red;");
-                messageLabel.setText("Invalid username or password");
+                    passwordField.clear();
+                    passwordField.requestFocus();
+                    return;
+                }
 
-                passwordField.clear();
-                passwordField.requestFocus();
+                String role = resultSet.getString("role");
+                String accountStatus =
+                        resultSet.getString("account_status");
+
+                if (!accountStatus.equalsIgnoreCase("ACTIVE")) {
+                    messageLabel.setStyle("-fx-text-fill: orange;");
+                    messageLabel.setText(
+                            "Your account is still pending administrator approval."
+                    );
+                    return;
+                }
+
+                if (role.equalsIgnoreCase("ADMIN")) {
+                    MainApplication.changeScene(
+                            "admin-dashboard-view.fxml"
+                    );
+
+                } else if (role.equalsIgnoreCase("TENANT")) {
+                    MainApplication.changeScene(
+                            "tenant-dashboard-view.fxml"
+                    );
+
+                } else {
+                    messageLabel.setStyle("-fx-text-fill: red;");
+                    messageLabel.setText("Unknown account role.");
+                }
             }
+
+        } catch (SQLException exception) {
+            messageLabel.setStyle("-fx-text-fill: red;");
+            messageLabel.setText("Unable to connect to the database.");
+
+            exception.printStackTrace();
 
         } catch (IOException exception) {
             messageLabel.setStyle("-fx-text-fill: red;");
-            messageLabel.setText("Unable to open dashboard");
+            messageLabel.setText("Unable to open dashboard.");
+
+            exception.printStackTrace();
+        }
+    }
+
+    public void openRegisterView(ActionEvent actionEvent) {
+        try {
+            MainApplication.changeScene("register-view.fxml");
+        } catch (IOException exception) {
+            messageLabel.setStyle("-fx-text-fill: red;");
+            messageLabel.setText("Unable to open registration");
 
             exception.printStackTrace();
         }
