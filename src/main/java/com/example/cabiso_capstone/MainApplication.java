@@ -27,7 +27,7 @@ public class MainApplication extends Application {
         Scene scene = new Scene(fxmlLoader.load());
 
         mainStage.setScene(scene);
-        mainStage.centerOnScreen();
+//        mainStage.centerOnScreen();
     }
 
     public static void main(String[] args) {

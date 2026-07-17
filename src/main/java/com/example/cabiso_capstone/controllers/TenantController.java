@@ -90,12 +90,62 @@ public class TenantController {
 
         tenantTable.setItems(tenantList);
 
+        tenantTable.getSelectionModel()
+                .selectedItemProperty()
+                .addListener((observable, oldTenant, selectedTenant) -> {
+
+                    if (selectedTenant != null) {
+                        populateTenantForm(selectedTenant);
+                    }
+                });
+
         loadTenants();
 
         Platform.runLater(() -> {
             tenantTable.refresh();
             tenantTable.requestLayout();
         });
+    }
+
+    private void populateTenantForm(Tenant tenant) {
+
+        tenantIdField.setText(
+                String.valueOf(tenant.getTenantId())
+        );
+
+        fullNameField.setText(
+                tenant.getFullName()
+        );
+
+        usernameField.setText(
+                tenant.getUsername()
+        );
+
+        passwordField.setText(
+                tenant.getPassword()
+        );
+
+        contactField.setText(
+                tenant.getContactNumber()
+        );
+
+        balanceField.setText(
+                String.valueOf(tenant.getBalance())
+        );
+
+        statusComboBox.setValue(
+                tenant.getStatus()
+        );
+
+        if (tenant.getAssignedRoom() != null) {
+            roomComboBox.setValue(
+                    tenant.getAssignedRoom()
+            );
+        } else {
+            roomComboBox.setValue(null);
+        }
+
+        formMessageLabel.setText("");
     }
 
     private void loadTenants() {
