@@ -4,214 +4,337 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane prefHeight="700.0" prefWidth="1100.0" styleClass="management-root" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cabiso_capstone.controllers.TenantController">
+<BorderPane prefHeight="700.0" styleClass="management-root" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cabiso_capstone.controllers.TenantController">
 
     <top>
-        <HBox alignment="CENTER_LEFT" spacing="15.0" styleClass="dashboard-header">
+        <HBox alignment="CENTER_LEFT"
+              spacing="15.0"
+              styleClass="dashboard-header">
 
             <padding>
-                <Insets bottom="15.0" left="25.0" right="25.0" top="15.0" />
+                <Insets top="15.0" right="25.0" bottom="15.0" left="25.0"/>
             </padding>
 
             <VBox spacing="2.0">
-                <Label styleClass="dashboard-brand" text="CABANA DORMITORY" />
+                <Label text="CABANA DORMITORY"
+                       styleClass="dashboard-brand"/>
 
-                <Label styleClass="dashboard-brand-subtitle" text="Dormitory Management System" />
+                <Label text="Dormitory Management System"
+                       styleClass="dashboard-brand-subtitle"/>
             </VBox>
 
-            <Region HBox.hgrow="ALWAYS" />
+            <Region HBox.hgrow="ALWAYS"/>
 
-            <VBox alignment="CENTER_RIGHT" spacing="2.0">
+            <VBox alignment="CENTER_RIGHT"
+                  spacing="2.0">
 
-                <Label styleClass="dashboard-user" text="Administrator" />
+                <Label text="Administrator"
+                       styleClass="dashboard-user"/>
 
-                <Label styleClass="dashboard-user-role" text="System Manager" />
+                <Label text="System Manager"
+                       styleClass="dashboard-user-role"/>
             </VBox>
 
         </HBox>
     </top>
 
     <left>
-        <VBox prefWidth="220.0" spacing="8.0" styleClass="dashboard-sidebar">
+        <VBox spacing="8.0"
+              styleClass="dashboard-sidebar">
 
             <padding>
-                <Insets bottom="22.0" left="15.0" right="15.0" top="28.0" />
+                <Insets top="28.0" right="15.0" bottom="22.0" left="15.0"/>
             </padding>
 
-            <Label styleClass="sidebar-title" text="MAIN MENU" />
+            <Label text="MAIN MENU"
+                   styleClass="sidebar-title"/>
 
-            <Button maxWidth="Infinity" onAction="#openDashboard" styleClass="sidebar-button" text="Dashboard" />
+            <Button text="Dashboard"
+                    maxWidth="Infinity"
+                    onAction="#openDashboard"
+                    styleClass="sidebar-button"/>
 
-            <Button maxWidth="Infinity" styleClass="sidebar-button-active" text="Tenant Management" />
+            <Button text="Tenant Management"
+                    maxWidth="Infinity"
+                    styleClass="sidebar-button-active"/>
 
-            <Button maxWidth="Infinity" onAction="#openRoomView" styleClass="sidebar-button" text="Room Management" />
+            <Button text="Room Management"
+                    maxWidth="Infinity"
+                    onAction="#openRoomView"
+                    styleClass="sidebar-button"/>
 
-            <Button maxWidth="Infinity" onAction="#openPaymentView" styleClass="sidebar-button" text="Payment Management" />
+            <Button text="Payment Management"
+                    maxWidth="Infinity"
+                    onAction="#openPaymentView"
+                    styleClass="sidebar-button"/>
 
-            <Region VBox.vgrow="ALWAYS" />
+            <Region VBox.vgrow="ALWAYS"/>
 
-            <Button maxWidth="Infinity" onAction="#handleLogout" styleClass="logout-button" text="Logout" />
+            <Button text="Logout"
+                    maxWidth="Infinity"
+                    onAction="#handleLogout"
+                    styleClass="logout-button"/>
 
         </VBox>
     </left>
 
     <center>
-        <ScrollPane fitToHeight="false" fitToWidth="true" hbarPolicy="NEVER" styleClass="management-scroll-pane">
+        <ScrollPane fitToHeight="false"
+                    fitToWidth="true"
+                    hbarPolicy="NEVER"
+                    styleClass="management-scroll-pane">
 
             <content>
-                <VBox spacing="40.0" styleClass="management-content">
+                <VBox spacing="20.0"
+                      styleClass="management-content">
 
                     <padding>
-                        <Insets bottom="35.0" left="32.0" right="32.0" top="30.0" />
+                        <Insets top="30.0" right="32.0" bottom="35.0" left="32.0"/>
                     </padding>
 
+                    <!-- Page title -->
                     <VBox spacing="4.0">
-                        <Label styleClass="dashboard-title" text="Tenant Management" />
+                        <Label text="Tenant Management"
+                               styleClass="dashboard-title"/>
 
-                        <Label styleClass="dashboard-subtitle" text="View, register, update, and manage dormitory tenants." />
+                        <Label text="Review applications, manage tenant records, and update account information."
+                               styleClass="dashboard-subtitle"/>
                     </VBox>
 
-                    <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="toolbar-card">
+                    <!-- Search toolbar -->
+                    <HBox alignment="CENTER_LEFT"
+                          spacing="10.0"
+                          styleClass="toolbar-card">
 
-                        <TextField fx:id="searchField" prefHeight="40.0" promptText="Search by tenant name, username, or room..." styleClass="management-field" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="searchField"
+                                   prefHeight="40.0"
+                                   promptText="Search by tenant name, username, contact, or room..."
+                                   styleClass="management-field"
+                                   HBox.hgrow="ALWAYS"/>
 
-                        <Button onAction="#handleSearch" prefHeight="40.0" styleClass="secondary-button" text="Search" />
+                        <ComboBox fx:id="statusFilterComboBox"
+                                  prefHeight="40.0"
+                                  prefWidth="155.0"
+                                  promptText="All Statuses"
+                                  styleClass="management-combo-box"/>
 
-                        <Button onAction="#handleRefresh" prefHeight="40.0" styleClass="secondary-button" text="Refresh" />
+                        <Button text="Search"
+                                onAction="#handleSearch"
+                                prefHeight="40.0"
+                                styleClass="secondary-button"/>
+
+                        <Button text="Refresh"
+                                onAction="#handleRefresh"
+                                prefHeight="40.0"
+                                styleClass="secondary-button"/>
                     </HBox>
 
-                    <VBox prefHeight="164.0" prefWidth="799.0" spacing="12.0" styleClass="content-card" VBox.vgrow="ALWAYS">
+                    <!-- Tenant records -->
+                    <VBox minHeight="320.0"
+                          prefHeight="340.0"
+                          maxHeight="340.0"
+                          spacing="16.0"
+                          styleClass="content-card">
 
                         <HBox alignment="CENTER_LEFT">
-                            <VBox spacing="3.0">
-                                <Label styleClass="section-title" text="Tenant Records" />
 
-                                <Label styleClass="section-description" text="Select a tenant record to view or update its information." />
+                            <VBox spacing="3.0">
+                                <Label text="Tenant Records"
+                                       styleClass="section-title"/>
+
+                                <Label text="Select a tenant record to review or update its information."
+                                       styleClass="section-description"/>
                             </VBox>
 
-                            <Region HBox.hgrow="ALWAYS" />
+                            <Region HBox.hgrow="ALWAYS"/>
 
-                            <Label fx:id="recordCountLabel" styleClass="record-count-label" text="0 records" />
+                            <Label fx:id="recordCountLabel"
+                                   text="0 records"
+                                   styleClass="record-count-label"/>
                         </HBox>
 
-                        <TableView fx:id="tenantTable" prefHeight="400.0" styleClass="management-table" VBox.vgrow="ALWAYS">
+                        <TableView fx:id="tenantTable"
+                                   minHeight="235.0"
+                                   prefHeight="235.0"
+                                   maxHeight="235.0"
+                                   styleClass="management-table">
 
                             <placeholder>
-                                <Label styleClass="table-placeholder" text="No tenant records available." />
+                                <Label text="No tenant records available."
+                                       styleClass="table-placeholder"/>
                             </placeholder>
 
                             <columns>
-                                <TableColumn fx:id="tenantIdColumn" prefWidth="65.0" text="ID" />
+                                <TableColumn fx:id="tenantIdColumn"
+                                             text="ID"/>
 
-                                <TableColumn fx:id="fullNameColumn" prefWidth="180.0" text="Full Name" />
+                                <TableColumn fx:id="fullNameColumn"
+                                             text="Full Name"/>
 
-                                <TableColumn fx:id="usernameColumn" prefWidth="125.0" text="Username" />
+                                <TableColumn fx:id="usernameColumn"
+                                             text="Username"/>
 
-                                <TableColumn fx:id="contactColumn" prefWidth="145.0" text="Contact Number" />
+                                <TableColumn fx:id="contactColumn"
+                                             text="Contact Number"/>
 
-                                <TableColumn fx:id="roomColumn" prefWidth="90.0" text="Room" />
+                                <TableColumn fx:id="roomColumn"
+                                             text="Room"/>
 
-                                <TableColumn fx:id="balanceColumn" prefWidth="120.0" text="Balance" />
+                                <TableColumn fx:id="balanceColumn"
+                                             text="Balance"/>
 
-                                <TableColumn fx:id="statusColumn" prefWidth="100.0" text="Status" />
+                                <TableColumn fx:id="statusColumn"
+                                             text="Status"/>
                             </columns>
 
                         </TableView>
                     </VBox>
 
-                    <VBox spacing="16.0" styleClass="content-card">
+                    <!-- Tenant information -->
+                    <VBox spacing="20.0"
+                          styleClass="content-card">
 
                         <VBox spacing="3.0">
-                            <Label styleClass="section-title" text="Tenant Information" />
+                            <Label text="Tenant Information"
+                                   styleClass="section-title"/>
 
-                            <Label styleClass="section-description" text="Complete the required fields before saving a tenant record." />
+                            <Label text="Select a record above, then review or update the tenant information."
+                                   styleClass="section-description"/>
                         </VBox>
 
+                        <!-- Row 1 -->
                         <HBox spacing="16.0">
 
-                            <VBox spacing="6.0" HBox.hgrow="NEVER">
+                            <VBox spacing="6.0"
+                                  HBox.hgrow="ALWAYS">
 
-                                <Label styleClass="field-label" text="Tenant ID" />
+                                <Label text="Tenant ID"
+                                       styleClass="field-label"/>
 
-                                <TextField fx:id="tenantIdField" editable="false" prefHeight="40.0" promptText="Generated automatically" styleClass="management-field-disabled" />
+                                <TextField fx:id="tenantIdField"
+                                           editable="false"
+                                           maxWidth="Infinity"
+                                           prefHeight="40.0"
+                                           promptText="Generated automatically"
+                                           styleClass="management-field-disabled"/>
                             </VBox>
 
-                            <VBox spacing="6.0" HBox.hgrow="NEVER">
+                            <VBox spacing="6.0"
+                                  HBox.hgrow="ALWAYS">
 
-                                <Label styleClass="field-label" text="Full Name" />
+                                <Label text="Full Name"
+                                       styleClass="field-label"/>
 
-                                <TextField fx:id="fullNameField" prefHeight="40.0" promptText="Enter tenant's full name" styleClass="management-field" />
+                                <TextField fx:id="fullNameField"
+                                           maxWidth="Infinity"
+                                           prefHeight="40.0"
+                                           promptText="Enter tenant's full name"
+                                           styleClass="management-field"/>
                             </VBox>
 
                         </HBox>
 
+                        <!-- Row 2 -->
                         <HBox spacing="16.0">
 
-                            <VBox spacing="6.0" HBox.hgrow="NEVER">
+                            <VBox spacing="6.0"
+                                  HBox.hgrow="ALWAYS">
 
-                                <Label styleClass="field-label" text="Username" />
+                                <Label text="Username"
+                                       styleClass="field-label"/>
 
-                                <TextField fx:id="usernameField" prefHeight="40.0" promptText="Enter account username" styleClass="management-field" />
+                                <TextField fx:id="usernameField"
+                                           maxWidth="Infinity"
+                                           prefHeight="40.0"
+                                           promptText="Enter account username"
+                                           styleClass="management-field"/>
                             </VBox>
 
-                            <VBox spacing="6.0" HBox.hgrow="NEVER">
+                            <VBox spacing="6.0"
+                                  HBox.hgrow="ALWAYS">
 
-                                <Label styleClass="field-label" text="Password" />
+                                <Label text="Password"
+                                       styleClass="field-label"/>
 
-                                <PasswordField fx:id="passwordField" prefHeight="40.0" promptText="Enter account password" styleClass="management-field" />
+                                <PasswordField fx:id="passwordField"
+                                               maxWidth="Infinity"
+                                               prefHeight="40.0"
+                                               promptText="Enter account password"
+                                               styleClass="management-field"/>
                             </VBox>
 
                         </HBox>
 
+                        <!-- Row 3 -->
                         <HBox spacing="16.0">
 
-                            <VBox spacing="6.0" HBox.hgrow="NEVER">
+                            <VBox spacing="6.0"
+                                  HBox.hgrow="ALWAYS">
 
-                                <Label styleClass="field-label" text="Contact Number" />
+                                <Label text="Contact Number"
+                                       styleClass="field-label"/>
 
-                                <TextField fx:id="contactField" prefHeight="40.0" promptText="Example: 09123456789" styleClass="management-field" />
+                                <TextField fx:id="contactField"
+                                           maxWidth="Infinity"
+                                           prefHeight="40.0"
+                                           promptText="Example: 09123456789"
+                                           styleClass="management-field"/>
                             </VBox>
 
-                            <VBox spacing="6.0" HBox.hgrow="NEVER">
+                            <VBox spacing="6.0"
+                                  HBox.hgrow="ALWAYS">
 
-                                <Label styleClass="field-label" text="Assigned Room" />
+                                <Label text="Assigned Room"
+                                       styleClass="field-label"/>
 
-                                <ComboBox fx:id="roomComboBox" maxWidth="Infinity" prefHeight="40.0" promptText="Select an available room" styleClass="management-combo-box" />
+                                <ComboBox fx:id="roomComboBox"
+                                          maxWidth="Infinity"
+                                          prefHeight="40.0"
+                                          promptText="Select an available room"
+                                          styleClass="management-combo-box"/>
                             </VBox>
 
                         </HBox>
 
+                        <!-- Row 4 -->
                         <HBox spacing="16.0">
 
-                            <VBox spacing="6.0" HBox.hgrow="NEVER">
+                            <VBox spacing="6.0"
+                                  HBox.hgrow="ALWAYS">
 
-                                <Label styleClass="field-label" text="Current Balance" />
+                                <Label text="Current Balance"
+                                       styleClass="field-label"/>
 
-                                <TextField fx:id="balanceField" prefHeight="40.0" promptText="Enter current balance" styleClass="management-field" />
+                                <TextField fx:id="balanceField"
+                                           editable="false"
+                                           maxWidth="Infinity"
+                                           prefHeight="40.0"
+                                           promptText="Calculated automatically"
+                                           styleClass="management-field-disabled"/>
                             </VBox>
 
-                            <VBox spacing="6.0" HBox.hgrow="NEVER">
+                            <VBox spacing="6.0"
+                                  HBox.hgrow="ALWAYS">
 
-                                <Label styleClass="field-label" text="Account Status" />
+                                <Label text="Account Status"
+                                       styleClass="field-label"/>
 
-                                <ComboBox fx:id="statusComboBox" maxWidth="Infinity" prefHeight="40.0" promptText="Select tenant status" styleClass="management-combo-box" />
+                                <ComboBox fx:id="statusComboBox"
+                                          maxWidth="Infinity"
+                                          prefHeight="40.0"
+                                          promptText="Select tenant status"
+                                          styleClass="management-combo-box"/>
                             </VBox>
 
                         </HBox>
 
-                        <Label fx:id="formMessageLabel" minHeight="18.0" styleClass="form-message-label" text="" wrapText="true" />
+                        <Label fx:id="formMessageLabel"
+                               minHeight="18.0"
+                               text=""
+                               wrapText="true"
+                               styleClass="form-message-label"/>
 
-<!--                        <HBox alignment="CENTER_RIGHT" spacing="10.0">-->
-
-<!--                            <Button onAction="#handleClear" prefHeight="40.0" styleClass="secondary-button" text="Clear" />-->
-
-<!--                            <Button onAction="#handleDeleteTenant" prefHeight="40.0" styleClass="danger-button" text="Delete" />-->
-
-<!--                            <Button onAction="#handleUpdateTenant" prefHeight="40.0" styleClass="secondary-button" text="Update" />-->
-
-<!--                            <Button onAction="#handleAddTenant" prefHeight="40.0" styleClass="primary-button" text="Add Tenant" />-->
-
-<!--                        </HBox>-->
+                        <!-- Actions -->
                         <HBox alignment="CENTER_RIGHT"
                               spacing="10.0">
 
@@ -220,8 +343,8 @@
                                     prefHeight="40.0"
                                     styleClass="secondary-button"/>
 
-                            <Button text="Delete"
-                                    onAction="#handleDeleteTenant"
+                            <Button text="Deactivate"
+                                    onAction="#handleDeactivateTenant"
                                     prefHeight="40.0"
                                     styleClass="danger-button"/>
 
@@ -230,13 +353,8 @@
                                     prefHeight="40.0"
                                     styleClass="secondary-button"/>
 
-                            <Button text="Approve"
+                            <Button text="Approve Tenant"
                                     onAction="#handleApproveTenant"
-                                    prefHeight="40.0"
-                                    styleClass="primary-button"/>
-
-                            <Button text="Add Tenant"
-                                    onAction="#handleAddTenant"
                                     prefHeight="40.0"
                                     styleClass="primary-button"/>
 

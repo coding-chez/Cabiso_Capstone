@@ -8,27 +8,24 @@ import com.example.cabiso_capstone.model.Tenant;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.io.IOException;
 import javafx.application.Platform;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+
+import java.sql.*;
+
+import javafx.collections.transformation.FilteredList;
+import java.util.Locale;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 
 public class TenantController {
 
     public TextField searchField;
-
+    public ComboBox<String> statusFilterComboBox;
     public TableView<Tenant> tenantTable;
-
     public TableColumn<Tenant, Integer> tenantIdColumn;
     public TableColumn<Tenant, String> fullNameColumn;
     public TableColumn<Tenant, String> usernameColumn;
@@ -49,8 +46,8 @@ public class TenantController {
     public TextField balanceField;
     public ComboBox<String> statusComboBox;
 
-    private final ObservableList<Tenant> tenantList =
-            FXCollections.observableArrayList();
+    private final ObservableList<Tenant> tenantList = FXCollections.observableArrayList();
+    private FilteredList<Tenant> filteredTenantList;
 
     public void initialize() {
 
@@ -82,13 +79,30 @@ public class TenantController {
                 new PropertyValueFactory<>("status")
         );
 
-        statusComboBox.getItems().addAll(
-                "PENDING",
-                "ACTIVE",
-                "INACTIVE"
+        statusComboBox.getItems().addAll("PENDING", "ACTIVE", "INACTIVE");
+
+        statusFilterComboBox.getItems().addAll("ALL", "PENDING", "ACTIVE", "INACTIVE");
+
+        statusFilterComboBox.setValue("ALL");
+
+        searchField.textProperty().addListener(
+                (observable, oldValue, newValue) -> applyFilters()
         );
 
-        tenantTable.setItems(tenantList);
+        statusFilterComboBox.valueProperty().addListener(
+                (observable, oldValue, newValue) -> applyFilters()
+        );
+
+        tenantTable.setColumnResizePolicy(
+                TableView.CONSTRAINED_RESIZE_POLICY
+        );
+
+        filteredTenantList = new FilteredList<>(
+                tenantList,
+                tenant -> true
+        );
+
+        tenantTable.setItems(filteredTenantList);
 
         tenantTable.getSelectionModel()
                 .selectedItemProperty()
@@ -107,6 +121,99 @@ public class TenantController {
         });
     }
 
+    private void applyFilters() {
+
+        String searchText = searchField.getText();
+
+        if (searchText == null) {
+            searchText = "";
+        }
+
+        String normalizedSearch =
+                searchText.trim().toLowerCase(Locale.ROOT);
+
+        String selectedStatus =
+                statusFilterComboBox.getValue();
+
+        if (selectedStatus == null) {
+            selectedStatus = "ALL";
+        }
+
+        String finalSelectedStatus = selectedStatus;
+
+        filteredTenantList.setPredicate(tenant -> {
+
+            boolean matchesSearch;
+
+            if (normalizedSearch.isEmpty()) {
+                matchesSearch = true;
+
+            } else {
+                String fullName =
+                        safeLower(tenant.getFullName());
+
+                String username =
+                        safeLower(tenant.getUsername());
+
+                String contactNumber =
+                        safeLower(tenant.getContactNumber());
+
+                String roomNumber =
+                        safeLower(tenant.getAssignedRoomNumber());
+
+                matchesSearch =
+                        fullName.contains(normalizedSearch)
+                                || username.contains(normalizedSearch)
+                                || contactNumber.contains(normalizedSearch)
+                                || roomNumber.contains(normalizedSearch);
+            }
+
+            boolean matchesStatus =
+                    finalSelectedStatus.equalsIgnoreCase("ALL")
+                            || safeLower(tenant.getStatus())
+                            .equals(
+                                    finalSelectedStatus.toLowerCase(Locale.ROOT)
+                            );
+
+            return matchesSearch && matchesStatus;
+        });
+
+        updateRecordCount();
+    }
+
+    private String safeLower(String value) {
+
+        if (value == null) {
+            return "";
+        }
+
+        return value.toLowerCase(Locale.ROOT);
+    }
+
+    private void updateRecordCount() {
+
+        int visibleRecords = filteredTenantList.size();
+        int totalRecords = tenantList.size();
+
+        if (visibleRecords == totalRecords) {
+
+            recordCountLabel.setText(
+                    totalRecords
+                            + (totalRecords == 1
+                            ? " record"
+                            : " records")
+            );
+
+        } else {
+            recordCountLabel.setText(
+                    visibleRecords
+                            + " of "
+                            + totalRecords
+                            + " records"
+            );
+        }
+    }
+
     private void populateTenantForm(Tenant tenant) {
 
         tenantIdField.setText(
@@ -121,8 +228,9 @@ public class TenantController {
                 tenant.getUsername()
         );
 
-        passwordField.setText(
-                tenant.getPassword()
+        passwordField.clear();
+        passwordField.setPromptText(
+                "Leave blank to keep current password"
         );
 
         contactField.setText(
@@ -209,9 +317,10 @@ public class TenantController {
                 tenantList.add(tenant);
             }
 
-            recordCountLabel.setText(
-                    tenantList.size() + " records"
-            );
+//            recordCountLabel.setText(
+//                    tenantList.size() + " records"
+//            );
+            applyFilters();
 
         } catch (SQLException exception) {
 
@@ -228,15 +337,34 @@ public class TenantController {
     }
 
     public void handleRefresh(ActionEvent actionEvent) {
+
+        searchField.clear();
+        statusFilterComboBox.setValue("ALL");
+
         loadTenants();
 
+        tenantTable.getSelectionModel().clearSelection();
+        clearFormFields();
+
         formMessageLabel.setStyle(
-                "-fx-text-fill: green;"
+                "-fx-text-fill: #1c655c;"
         );
 
         formMessageLabel.setText(
                 "Tenant records refreshed."
         );
+    }
+
+    private void clearFormFields() {
+
+        tenantIdField.clear();
+        fullNameField.clear();
+        usernameField.clear();
+        passwordField.clear();
+        contactField.clear();
+        roomComboBox.setValue(null);
+        balanceField.clear();
+        statusComboBox.setValue(null);
     }
 
     public void handleAddTenant(ActionEvent actionEvent) {
@@ -245,6 +373,261 @@ public class TenantController {
 
     public void handleUpdateTenant(ActionEvent actionEvent) {
 
+        Tenant selectedTenant =
+                tenantTable.getSelectionModel().getSelectedItem();
+
+        if (selectedTenant == null) {
+            showFormError(
+                    "Please select a tenant to update."
+            );
+            return;
+        }
+
+        String fullName =
+                fullNameField.getText().trim();
+
+        String username =
+                usernameField.getText().trim();
+
+        String newPassword =
+                passwordField.getText();
+
+        String contactNumber =
+                contactField.getText().trim();
+
+        String selectedStatus =
+                statusComboBox.getValue();
+
+        Room selectedRoom =
+                roomComboBox.getValue();
+
+        if (fullName.isEmpty()
+                || username.isEmpty()
+                || contactNumber.isEmpty()
+                || selectedStatus == null) {
+
+            showFormError(
+                    "Please complete the required tenant information."
+            );
+            return;
+        }
+
+        boolean changingPassword =
+                newPassword != null
+                        && !newPassword.isBlank();
+
+        String updateUserSql;
+
+        if (changingPassword) {
+            updateUserSql =
+                    "UPDATE users "
+                            + "SET username = ?, "
+                            + "password = ?, "
+                            + "account_status = ? "
+                            + "WHERE user_id = ?";
+        } else {
+            updateUserSql =
+                    "UPDATE users "
+                            + "SET username = ?, "
+                            + "account_status = ? "
+                            + "WHERE user_id = ?";
+        }
+
+        String updateTenantSql =
+                "UPDATE tenants "
+                        + "SET full_name = ?, "
+                        + "contact_number = ?, "
+                        + "room_id = ?, "
+                        + "status = ? "
+                        + "WHERE tenant_id = ?";
+
+        try (
+                Connection connection =
+                        DatabaseConnection.getConnection()
+        ) {
+
+            if (usernameBelongsToAnotherUser(
+                    connection,
+                    username,
+                    selectedTenant.getUserId()
+            )) {
+                showFormError(
+                        "That username is already used by another account."
+                );
+                return;
+            }
+
+            connection.setAutoCommit(false);
+
+            try (
+                    PreparedStatement userStatement =
+                            connection.prepareStatement(
+                                    updateUserSql
+                            );
+
+                    PreparedStatement tenantStatement =
+                            connection.prepareStatement(
+                                    updateTenantSql
+                            )
+            ) {
+
+                userStatement.setString(
+                        1,
+                        username
+                );
+
+                if (changingPassword) {
+
+                    userStatement.setString(
+                            2,
+                            newPassword
+                    );
+
+                    userStatement.setString(
+                            3,
+                            selectedStatus
+                    );
+
+                    userStatement.setInt(
+                            4,
+                            selectedTenant.getUserId()
+                    );
+
+                } else {
+
+                    userStatement.setString(
+                            2,
+                            selectedStatus
+                    );
+
+                    userStatement.setInt(
+                            3,
+                            selectedTenant.getUserId()
+                    );
+                }
+
+                tenantStatement.setString(
+                        1,
+                        fullName
+                );
+
+                tenantStatement.setString(
+                        2,
+                        contactNumber
+                );
+
+                if (selectedRoom == null) {
+                    tenantStatement.setNull(
+                            3,
+                            Types.INTEGER
+                    );
+                } else {
+                    tenantStatement.setInt(
+                            3,
+                            selectedRoom.getRoomId()
+                    );
+                }
+
+                tenantStatement.setString(
+                        4,
+                        selectedStatus
+                );
+
+                tenantStatement.setInt(
+                        5,
+                        selectedTenant.getTenantId()
+                );
+
+                int userRows =
+                        userStatement.executeUpdate();
+
+                int tenantRows =
+                        tenantStatement.executeUpdate();
+
+                if (userRows == 0 || tenantRows == 0) {
+                    connection.rollback();
+
+                    showFormError(
+                            "The selected tenant could not be updated."
+                    );
+                    return;
+                }
+
+                connection.commit();
+
+                loadTenants();
+
+                tenantTable
+                        .getSelectionModel()
+                        .clearSelection();
+
+                clearFormFields();
+
+                showFormSuccess(
+                        fullName
+                                + " was updated successfully."
+                );
+
+            } catch (SQLException exception) {
+                connection.rollback();
+                throw exception;
+            }
+
+        } catch (SQLException exception) {
+            showFormError(
+                    "Database error while updating the tenant."
+            );
+
+            exception.printStackTrace();
+        }
+    }
+
+    private boolean usernameBelongsToAnotherUser(Connection connection, String username, int currentUserId) throws SQLException {
+
+        String sql =
+                "SELECT user_id "
+                        + "FROM users "
+                        + "WHERE username = ? "
+                        + "AND user_id <> ?";
+
+        try (
+                PreparedStatement statement =
+                        connection.prepareStatement(sql)
+        ) {
+
+            statement.setString(
+                    1,
+                    username
+            );
+
+            statement.setInt(
+                    2,
+                    currentUserId
+            );
+
+            try (
+                    ResultSet resultSet =
+                            statement.executeQuery()
+            ) {
+                return resultSet.next();
+            }
+        }
+    }
+
+    private void showFormError(String message) {
+        formMessageLabel.setStyle(
+                "-fx-text-fill: #bd4338;"
+        );
+
+        formMessageLabel.setText(message);
+    }
+
+    private void showFormSuccess(String message) {
+        formMessageLabel.setStyle(
+                "-fx-text-fill: #1c655c;"
+        );
+
+        formMessageLabel.setText(message);
     }
 
     public void handleDeleteTenant(ActionEvent actionEvent) {
@@ -253,10 +636,27 @@ public class TenantController {
 
     public void handleClear(ActionEvent actionEvent) {
 
+        tenantTable
+                .getSelectionModel()
+                .clearSelection();
+
+        clearFormFields();
+
+        formMessageLabel.setText("");
     }
 
     public void handleSearch(ActionEvent actionEvent) {
 
+        applyFilters();
+
+        formMessageLabel.setStyle(
+                "-fx-text-fill: #1c655c;"
+        );
+
+        formMessageLabel.setText(
+                filteredTenantList.size()
+                        + " matching tenant record(s) found."
+        );
     }
 
     public void handleLogout(ActionEvent actionEvent) {
@@ -392,6 +792,147 @@ public class TenantController {
 
             formMessageLabel.setText(
                     "Database error while approving tenant."
+            );
+
+            exception.printStackTrace();
+        }
+    }
+
+    public void handleDeactivateTenant(
+            ActionEvent actionEvent
+    ) {
+
+        Tenant selectedTenant =
+                tenantTable.getSelectionModel().getSelectedItem();
+
+        if (selectedTenant == null) {
+            showFormError(
+                    "Please select a tenant to deactivate."
+            );
+            return;
+        }
+
+        if (selectedTenant
+                .getStatus()
+                .equalsIgnoreCase("INACTIVE")) {
+
+            showFormError(
+                    "This tenant is already inactive."
+            );
+            return;
+        }
+
+        Alert confirmation =
+                new Alert(
+                        Alert.AlertType.CONFIRMATION
+                );
+
+        confirmation.setTitle(
+                "Deactivate Tenant"
+        );
+
+        confirmation.setHeaderText(
+                "Deactivate "
+                        + selectedTenant.getFullName()
+                        + "?"
+        );
+
+        confirmation.setContentText(
+                "This tenant will no longer be able to log in. "
+                        + "Their records will remain in the system."
+        );
+
+        confirmation.showAndWait().ifPresent(
+                response -> {
+
+                    if (response == ButtonType.OK) {
+                        deactivateTenant(
+                                selectedTenant
+                        );
+                    }
+                }
+        );
+    }
+
+    private void deactivateTenant(Tenant tenant) {
+
+        String updateUserSql =
+                "UPDATE users "
+                        + "SET account_status = 'INACTIVE' "
+                        + "WHERE user_id = ?";
+
+        String updateTenantSql =
+                "UPDATE tenants "
+                        + "SET status = 'INACTIVE' "
+                        + "WHERE tenant_id = ?";
+
+        try (
+                Connection connection =
+                        DatabaseConnection.getConnection()
+        ) {
+
+            connection.setAutoCommit(false);
+
+            try (
+                    PreparedStatement userStatement =
+                            connection.prepareStatement(
+                                    updateUserSql
+                            );
+
+                    PreparedStatement tenantStatement =
+                            connection.prepareStatement(
+                                    updateTenantSql
+                            )
+            ) {
+
+                userStatement.setInt(
+                        1,
+                        tenant.getUserId()
+                );
+
+                tenantStatement.setInt(
+                        1,
+                        tenant.getTenantId()
+                );
+
+                int userRows =
+                        userStatement.executeUpdate();
+
+                int tenantRows =
+                        tenantStatement.executeUpdate();
+
+                if (userRows == 0 || tenantRows == 0) {
+                    connection.rollback();
+
+                    showFormError(
+                            "The selected tenant could not be deactivated."
+                    );
+                    return;
+                }
+
+                connection.commit();
+
+                loadTenants();
+
+                tenantTable
+                        .getSelectionModel()
+                        .clearSelection();
+
+                clearFormFields();
+
+                showFormSuccess(
+                        tenant.getFullName()
+                                + " has been deactivated."
+                );
+
+            } catch (SQLException exception) {
+                connection.rollback();
+                throw exception;
+            }
+
+        } catch (SQLException exception) {
+            showFormError(
+                    "Database error while deactivating the tenant."
             );
 
             exception.printStackTrace();
