@@ -3,245 +3,154 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 
-<BorderPane xmlns="http://javafx.com/javafx/17.0.12"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.example.cabiso_capstone.controllers.AdminDashboardController"
-            prefWidth="1100.0"
-            prefHeight="700.0"
-            stylesheets="@styles.css"
-            styleClass="dashboard-root">
+<BorderPane prefHeight="700.0" styleClass="dashboard-root" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cabiso_capstone.controllers.AdminDashboardController">
 
     <top>
-        <HBox alignment="CENTER_LEFT"
-              spacing="15.0"
-              styleClass="dashboard-header">
+        <HBox alignment="CENTER_LEFT" spacing="15.0" styleClass="dashboard-header">
 
             <padding>
-                <Insets top="15.0"
-                        right="25.0"
-                        bottom="15.0"
-                        left="25.0"/>
+                <Insets bottom="15.0" left="25.0" right="25.0" top="15.0" />
             </padding>
 
             <VBox spacing="2.0">
-                <Label text="CABANA DORMITORY"
-                       styleClass="dashboard-brand"/>
+                <Label styleClass="dashboard-brand" text="CABANA DORMITORY" />
 
-                <Label text="Dormitory Management System"
-                       styleClass="dashboard-brand-subtitle"/>
+                <Label styleClass="dashboard-brand-subtitle" text="Dormitory Management System" />
             </VBox>
 
-            <Region HBox.hgrow="ALWAYS"/>
+            <Region HBox.hgrow="ALWAYS" />
 
-            <VBox alignment="CENTER_RIGHT"
-                  spacing="2.0">
+            <VBox alignment="CENTER_RIGHT" spacing="2.0">
 
-                <Label fx:id="adminNameLabel"
-                       text="Administrator"
-                       styleClass="dashboard-user"/>
+                <Label fx:id="adminNameLabel" styleClass="dashboard-user" text="Administrator" />
 
-                <Label text="System Manager"
-                       styleClass="dashboard-user-role"/>
+                <Label styleClass="dashboard-user-role" text="System Manager" />
             </VBox>
         </HBox>
     </top>
 
     <left>
-        <VBox prefWidth="220.0"
-              spacing="8.0"
-              styleClass="dashboard-sidebar">
+        <VBox prefWidth="220.0" spacing="8.0" styleClass="dashboard-sidebar">
 
             <padding>
-                <Insets top="28.0"
-                        right="15.0"
-                        bottom="22.0"
-                        left="15.0"/>
+                <Insets bottom="22.0" left="15.0" right="15.0" top="28.0" />
             </padding>
 
-            <Label text="MAIN MENU"
-                   styleClass="sidebar-title"/>
+            <Label styleClass="sidebar-title" text="MAIN MENU" />
 
-            <Button fx:id="dashboardButton"
-                    text="Dashboard"
-                    maxWidth="Infinity"
-                    onAction="#showDashboard"
-                    styleClass="sidebar-button-active"/>
+            <Button fx:id="dashboardButton" maxWidth="Infinity" onAction="#showDashboard" styleClass="sidebar-button-active" text="Dashboard" />
 
-            <Button text="Tenant Management"
-                    maxWidth="Infinity"
-                    onAction="#openTenantView"
-                    styleClass="sidebar-button"/>
+            <Button maxWidth="Infinity" onAction="#openTenantView" styleClass="sidebar-button" text="Tenant Management" />
 
-            <Button text="Room Management"
-                    maxWidth="Infinity"
-                    onAction="#openRoomView"
-                    styleClass="sidebar-button"/>
+            <Button maxWidth="Infinity" onAction="#openRoomView" styleClass="sidebar-button" text="Room Management" />
 
-            <Button text="Payment Management"
-                    maxWidth="Infinity"
-                    onAction="#openPaymentView"
-                    styleClass="sidebar-button"/>
+            <Button maxWidth="Infinity" onAction="#openPaymentView" styleClass="sidebar-button" text="Payment Management" />
 
-            <Region VBox.vgrow="ALWAYS"/>
+            <Region VBox.vgrow="ALWAYS" />
 
-            <Separator styleClass="sidebar-separator"/>
+            <Separator styleClass="sidebar-separator" />
 
-            <Button text="Logout"
-                    maxWidth="Infinity"
-                    onAction="#handleLogout"
-                    styleClass="logout-button"/>
+            <Button maxWidth="Infinity" onAction="#handleLogout" styleClass="logout-button" text="Logout" />
 
         </VBox>
     </left>
     <center>
-        <VBox spacing="24.0"
-              styleClass="dashboard-content">
+        <VBox spacing="24.0" styleClass="dashboard-content">
 
             <padding>
-                <Insets top="32.0"
-                        right="35.0"
-                        bottom="35.0"
-                        left="35.0"/>
+                <Insets bottom="35.0" left="35.0" right="35.0" top="32.0" />
             </padding>
             <VBox spacing="5.0">
 
-                <Label text="Administrator Dashboard"
-                       styleClass="dashboard-title"/>
+                <Label styleClass="dashboard-title" text="Administrator Dashboard" />
 
-                <Label text="View the dormitory overview and access management modules."
-                       styleClass="dashboard-subtitle"/>
+                <Label styleClass="dashboard-subtitle" text="View the dormitory overview and access management modules." />
 
             </VBox>
             <HBox spacing="18.0">
 
-                <VBox spacing="8.0"
-                      HBox.hgrow="ALWAYS"
-                      styleClass="summary-card">
+                <VBox spacing="8.0" styleClass="summary-card" HBox.hgrow="ALWAYS">
 
-                    <Label text="TOTAL TENANTS"
-                           styleClass="summary-label"/>
+                    <Label styleClass="summary-label" text="TOTAL TENANTS" />
 
-                    <Label fx:id="totalTenantsLabel"
-                           text="0"
-                           styleClass="summary-value"/>
+                    <Label fx:id="totalTenantsLabel" styleClass="summary-value" text="0" />
 
-                    <Label text="Registered tenant accounts"
-                           styleClass="summary-description"/>
+                    <Label styleClass="summary-description" text="Registered tenant accounts" />
 
                 </VBox>
 
-                <VBox spacing="8.0"
-                      HBox.hgrow="ALWAYS"
-                      styleClass="summary-card">
+                <VBox spacing="8.0" styleClass="summary-card" HBox.hgrow="ALWAYS">
 
-                    <Label text="AVAILABLE ROOMS"
-                           styleClass="summary-label"/>
+                    <Label styleClass="summary-label" text="AVAILABLE ROOMS" />
 
-                    <Label fx:id="availableRoomsLabel"
-                           text="0"
-                           styleClass="summary-value"/>
+                    <Label fx:id="availableRoomsLabel" styleClass="summary-value" text="0" />
 
-                    <Label text="Rooms ready for occupancy"
-                           styleClass="summary-description"/>
+                    <Label styleClass="summary-description" text="Rooms ready for occupancy" />
 
                 </VBox>
 
-                <VBox spacing="8.0"
-                      HBox.hgrow="ALWAYS"
-                      styleClass="summary-card">
+                <VBox spacing="8.0" styleClass="summary-card" HBox.hgrow="ALWAYS">
 
-                    <Label text="PENDING PAYMENTS"
-                           styleClass="summary-label"/>
+                    <Label styleClass="summary-label" text="PENDING PAYMENTS" />
 
-                    <Label fx:id="pendingPaymentsLabel"
-                           text="0"
-                           styleClass="summary-value"/>
+                    <Label fx:id="pendingPaymentsLabel" styleClass="summary-value" text="0" />
 
-                    <Label text="Payment records requiring attention"
-                           styleClass="summary-description"/>
+                    <Label styleClass="summary-description" text="Payment records requiring attention" />
 
                 </VBox>
 
             </HBox>
-            <VBox spacing="15.0"
-                  styleClass="content-card">
+            <VBox spacing="15.0" styleClass="content-card">
 
                 <VBox spacing="3.0">
-                    <Label text="Quick Access"
-                           styleClass="section-title"/>
+                    <Label styleClass="section-title" text="Quick Access" />
 
-                    <Label text="Choose a module to begin managing dormitory information."
-                           styleClass="section-description"/>
+                    <Label styleClass="section-description" text="Choose a module to begin managing dormitory information." />
                 </VBox>
 
                 <HBox spacing="12.0">
 
-                    <Button text="Manage Tenants"
-                            onAction="#openTenantView"
-                            prefHeight="40.0"
-                            styleClass="quick-action-button"/>
+                    <Button onAction="#openTenantView" prefHeight="40.0" styleClass="quick-action-button" text="Manage Tenants" />
 
-                    <Button text="Manage Rooms"
-                            onAction="#openRoomView"
-                            prefHeight="40.0"
-                            styleClass="quick-action-button"/>
+                    <Button onAction="#openRoomView" prefHeight="40.0" styleClass="quick-action-button" text="Manage Rooms" />
 
-                    <Button text="Manage Payments"
-                            onAction="#openPaymentView"
-                            prefHeight="40.0"
-                            styleClass="quick-action-button"/>
+                    <Button onAction="#openPaymentView" prefHeight="40.0" styleClass="quick-action-button" text="Manage Payments" />
 
                 </HBox>
 
             </VBox>
-            <VBox spacing="15.0"
-                  styleClass="content-card">
+            <VBox spacing="15.0" styleClass="content-card">
 
                 <VBox spacing="3.0">
-                    <Label text="System Information"
-                           styleClass="section-title"/>
+                    <Label styleClass="section-title" text="System Information" />
 
-                    <Label text="Current dormitory management summary."
-                           styleClass="section-description"/>
+                    <Label styleClass="section-description" text="Current dormitory management summary." />
                 </VBox>
 
-                <Separator/>
+                <Separator />
 
                 <HBox spacing="50.0">
 
-                    <VBox spacing="4.0"
-                          HBox.hgrow="ALWAYS">
+                    <VBox spacing="4.0" HBox.hgrow="ALWAYS">
 
-                        <Label text="Occupied Rooms"
-                               styleClass="detail-label"/>
+                        <Label styleClass="detail-label" text="Occupied Rooms" />
 
-                        <Label fx:id="occupiedRoomsLabel"
-                               text="0"
-                               styleClass="detail-value"/>
+                        <Label fx:id="occupiedRoomsLabel" styleClass="detail-value" text="0" />
                     </VBox>
 
-                    <VBox spacing="4.0"
-                          HBox.hgrow="ALWAYS">
+                    <VBox spacing="4.0" HBox.hgrow="ALWAYS">
 
-                        <Label text="Total Rooms"
-                               styleClass="detail-label"/>
+                        <Label styleClass="detail-label" text="Total Rooms" />
 
-                        <Label fx:id="totalRoomsLabel"
-                               text="0"
-                               styleClass="detail-value"/>
+                        <Label fx:id="totalRoomsLabel" styleClass="detail-value" text="0" />
                     </VBox>
 
-                    <VBox spacing="4.0"
-                          HBox.hgrow="ALWAYS">
+                    <VBox spacing="4.0" HBox.hgrow="ALWAYS">
 
-                        <Label text="Recorded Payments"
-                               styleClass="detail-label"/>
+                        <Label styleClass="detail-label" text="Recorded Payments" />
 
-                        <Label fx:id="totalPaymentsLabel"
-                               text="0"
-                               styleClass="detail-value"/>
+                        <Label fx:id="totalPaymentsLabel" styleClass="detail-value" text="0" />
                     </VBox>
 
                 </HBox>

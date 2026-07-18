@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
 
-<BorderPane xmlns="http://javafx.com/javafx/17.0.12"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.example.cabiso_capstone.controllers.RoomController"
-            prefWidth="1100.0"
-            prefHeight="700.0"
+<BorderPane prefHeight="700.0"
+            styleClass="management-root"
             stylesheets="@styles.css"
-            styleClass="management-root">
+            xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.cabiso_capstone.controllers.RoomController">
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
 
     <top>
         <HBox alignment="CENTER_LEFT"
@@ -50,9 +50,12 @@
         </HBox>
     </top>
 
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
     <left>
-        <VBox prefWidth="220.0"
-              spacing="8.0"
+        <VBox spacing="8.0"
               styleClass="dashboard-sidebar">
 
             <padding>
@@ -94,9 +97,13 @@
         </VBox>
     </left>
 
+    <!-- =====================================================
+         MAIN CONTENT
+    ====================================================== -->
+
     <center>
         <ScrollPane fitToWidth="true"
-                    fitToHeight="true"
+                    fitToHeight="false"
                     hbarPolicy="NEVER"
                     styleClass="management-scroll-pane">
 
@@ -111,28 +118,32 @@
                                 left="32.0"/>
                     </padding>
 
-                    <!-- PAGE TITLE -->
+                    <!-- Page title -->
+
                     <VBox spacing="4.0">
                         <Label text="Room Management"
                                styleClass="dashboard-title"/>
 
-                        <Label text="Manage room information, occupancy, rates, and availability."
+                        <Label text="Monitor room capacity, occupancy, rates, and operational status."
                                styleClass="dashboard-subtitle"/>
                     </VBox>
+
+                    <!-- Search and filter toolbar -->
 
                     <HBox alignment="CENTER_LEFT"
                           spacing="10.0"
                           styleClass="toolbar-card">
 
                         <TextField fx:id="searchField"
-                                   promptText="Search by room number, status, or capacity..."
+                                   promptText="Search by room number..."
                                    prefHeight="40.0"
-                                   HBox.hgrow="ALWAYS"
-                                   styleClass="management-field"/>
+                                   maxWidth="Infinity"
+                                   styleClass="management-field"
+                                   HBox.hgrow="ALWAYS"/>
 
                         <ComboBox fx:id="filterStatusComboBox"
-                                  promptText="All statuses"
-                                  prefWidth="150.0"
+                                  promptText="All Statuses"
+                                  prefWidth="165.0"
                                   prefHeight="40.0"
                                   styleClass="management-combo-box"/>
 
@@ -145,11 +156,16 @@
                                 onAction="#handleRefresh"
                                 prefHeight="40.0"
                                 styleClass="secondary-button"/>
+
                     </HBox>
 
-                    <VBox spacing="12.0"
-                          styleClass="content-card"
-                          VBox.vgrow="ALWAYS">
+                    <!-- Room records -->
+
+                    <VBox minHeight="320.0"
+                          prefHeight="340.0"
+                          maxHeight="340.0"
+                          spacing="16.0"
+                          styleClass="content-card">
 
                         <HBox alignment="CENTER_LEFT">
 
@@ -157,7 +173,7 @@
                                 <Label text="Room Records"
                                        styleClass="section-title"/>
 
-                                <Label text="Select a room record to review or update its information."
+                                <Label text="Select a room to review its capacity, occupancy, rate, and status."
                                        styleClass="section-description"/>
                             </VBox>
 
@@ -166,11 +182,13 @@
                             <Label fx:id="recordCountLabel"
                                    text="0 records"
                                    styleClass="record-count-label"/>
+
                         </HBox>
 
                         <TableView fx:id="roomTable"
-                                   prefHeight="280.0"
-                                   VBox.vgrow="ALWAYS"
+                                   minHeight="235.0"
+                                   prefHeight="235.0"
+                                   maxHeight="235.0"
                                    styleClass="management-table">
 
                             <placeholder>
@@ -180,47 +198,45 @@
 
                             <columns>
                                 <TableColumn fx:id="roomIdColumn"
-                                             text="Room ID"
-                                             prefWidth="85.0"/>
+                                             text="ID"/>
 
                                 <TableColumn fx:id="roomNumberColumn"
-                                             text="Room Number"
-                                             prefWidth="120.0"/>
+                                             text="Room Number"/>
 
                                 <TableColumn fx:id="capacityColumn"
-                                             text="Capacity"
-                                             prefWidth="95.0"/>
+                                             text="Capacity"/>
 
                                 <TableColumn fx:id="occupantsColumn"
-                                             text="Occupants"
-                                             prefWidth="95.0"/>
+                                             text="Occupants"/>
 
                                 <TableColumn fx:id="availableSlotsColumn"
-                                             text="Available Slots"
-                                             prefWidth="120.0"/>
+                                             text="Available Slots"/>
 
                                 <TableColumn fx:id="monthlyRateColumn"
-                                             text="Monthly Rate"
-                                             prefWidth="130.0"/>
+                                             text="Monthly Rate"/>
 
                                 <TableColumn fx:id="statusColumn"
-                                             text="Status"
-                                             prefWidth="110.0"/>
+                                             text="Status"/>
                             </columns>
 
                         </TableView>
+
                     </VBox>
 
-                    <VBox spacing="16.0"
+                    <!-- Room information form -->
+
+                    <VBox spacing="20.0"
                           styleClass="content-card">
 
                         <VBox spacing="3.0">
                             <Label text="Room Information"
                                    styleClass="section-title"/>
 
-                            <Label text="Complete the required fields before saving a room record."
+                            <Label text="Create a room or select an existing record before updating it."
                                    styleClass="section-description"/>
                         </VBox>
+
+                        <!-- Row 1 -->
 
                         <HBox spacing="16.0">
 
@@ -231,10 +247,12 @@
                                        styleClass="field-label"/>
 
                                 <TextField fx:id="roomIdField"
-                                           promptText="Generated automatically"
                                            editable="false"
+                                           maxWidth="Infinity"
                                            prefHeight="40.0"
+                                           promptText="Generated automatically"
                                            styleClass="management-field-disabled"/>
+
                             </VBox>
 
                             <VBox spacing="6.0"
@@ -244,12 +262,16 @@
                                        styleClass="field-label"/>
 
                                 <TextField fx:id="roomNumberField"
-                                           promptText="Example: 101"
+                                           maxWidth="Infinity"
                                            prefHeight="40.0"
+                                           promptText="Example: 101"
                                            styleClass="management-field"/>
+
                             </VBox>
 
                         </HBox>
+
+                        <!-- Row 2 -->
 
                         <HBox spacing="16.0">
 
@@ -260,9 +282,11 @@
                                        styleClass="field-label"/>
 
                                 <TextField fx:id="capacityField"
-                                           promptText="Enter maximum occupants"
+                                           maxWidth="Infinity"
                                            prefHeight="40.0"
+                                           promptText="Enter maximum occupants"
                                            styleClass="management-field"/>
+
                             </VBox>
 
                             <VBox spacing="6.0"
@@ -272,12 +296,17 @@
                                        styleClass="field-label"/>
 
                                 <TextField fx:id="occupantsField"
-                                           promptText="Enter current occupants"
+                                           editable="false"
+                                           maxWidth="Infinity"
                                            prefHeight="40.0"
-                                           styleClass="management-field"/>
+                                           promptText="Calculated automatically"
+                                           styleClass="management-field-disabled"/>
+
                             </VBox>
 
                         </HBox>
+
+                        <!-- Row 3 -->
 
                         <HBox spacing="16.0">
 
@@ -288,22 +317,25 @@
                                        styleClass="field-label"/>
 
                                 <TextField fx:id="monthlyRateField"
-                                           promptText="Enter monthly room rate"
+                                           maxWidth="Infinity"
                                            prefHeight="40.0"
+                                           promptText="Enter monthly room rate"
                                            styleClass="management-field"/>
+
                             </VBox>
 
                             <VBox spacing="6.0"
                                   HBox.hgrow="ALWAYS">
 
-                                <Label text="Room Status"
+                                <Label text="Operational Status"
                                        styleClass="field-label"/>
 
                                 <ComboBox fx:id="statusComboBox"
-                                          promptText="Select room status"
-                                          prefHeight="40.0"
                                           maxWidth="Infinity"
+                                          prefHeight="40.0"
+                                          promptText="Select room status"
                                           styleClass="management-combo-box"/>
+
                             </VBox>
 
                         </HBox>
@@ -314,7 +346,8 @@
                                minHeight="18.0"
                                styleClass="form-message-label"/>
 
-                        <!-- ACTION BUTTONS -->
+                        <!-- Actions -->
+
                         <HBox alignment="CENTER_RIGHT"
                               spacing="10.0">
 
@@ -323,7 +356,7 @@
                                     prefHeight="40.0"
                                     styleClass="secondary-button"/>
 
-                            <Button text="Delete"
+                            <Button text="Deactivate"
                                     onAction="#handleDeleteRoom"
                                     prefHeight="40.0"
                                     styleClass="danger-button"/>
