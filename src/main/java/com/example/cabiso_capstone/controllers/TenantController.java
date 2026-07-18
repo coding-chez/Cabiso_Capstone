@@ -48,6 +48,7 @@ public class TenantController {
 
     private final ObservableList<Tenant> tenantList = FXCollections.observableArrayList();
     private FilteredList<Tenant> filteredTenantList;
+    private final ObservableList<Room> availableRoomList = FXCollections.observableArrayList();
 
     public void initialize() {
 
@@ -112,7 +113,10 @@ public class TenantController {
                         populateTenantForm(selectedTenant);
                     }
                 });
+        roomComboBox.setItems(availableRoomList);
 
+        loadAvailableRooms();
+        
         loadTenants();
 
         Platform.runLater(() -> {
@@ -121,6 +125,88 @@ public class TenantController {
         });
     }
 
+    private void loadAvailableRooms() {
+
+        availableRoomList.clear();
+
+        String sql =
+                """
+                SELECT
+                    r.room_id,
+                    r.room_number,
+                    r.capacity,
+                    r.monthly_rate,
+                    r.status,
+                    COUNT(t.tenant_id) AS occupants
+                FROM rooms r
+                LEFT JOIN tenants t
+                       ON r.room_id = t.room_id
+                      AND t.status = 'ACTIVE'
+                GROUP BY
+                    r.room_id,
+                    r.room_number,
+                    r.capacity,
+                    r.monthly_rate,
+                    r.status
+                ORDER BY r.room_number
+                """;
+
+        try (
+                Connection connection =
+                        DatabaseConnection.getConnection();
+
+                PreparedStatement statement =
+                        connection.prepareStatement(sql);
+
+                ResultSet resultSet =
+                        statement.executeQuery()
+        ) {
+
+            while (resultSet.next()) {
+
+                int capacity = resultSet.getInt("capacity");
+                int occupants = resultSet.getInt("occupants");
+
+                String status = resultSet.getString("status");
+
+                // Automatically determine FULL or AVAILABLE
+                if (!status.equalsIgnoreCase("MAINTENANCE")
+                        && !status.equalsIgnoreCase("INACTIVE")) {
+
+                    if (occupants >= capacity) {
+                        status = "FULL";
+                    } else {
+                        status = "AVAILABLE";
+                    }
+                }
+
+                Room room = new Room(
+
+                        resultSet.getInt("room_id"),
+
+                        resultSet.getString("room_number"),
+
+                        capacity,
+
+                        occupants,
+
+                        resultSet.getDouble("monthly_rate"),
+
+                        status
+                );
+
+                availableRoomList.add(room);
+            }
+
+        } catch (SQLException exception) {
+
+            showFormError(
+                    "Unable to load available rooms."
+            );
+
+            exception.printStackTrace();
+        }
+    }
     private void applyFilters() {
 
         String searchText = searchField.getText();
@@ -246,14 +332,35 @@ public class TenantController {
         );
 
         if (tenant.getAssignedRoom() != null) {
-            roomComboBox.setValue(
-                    tenant.getAssignedRoom()
-            );
+            selectCurrentRoom(tenant);
         } else {
             roomComboBox.setValue(null);
         }
 
         formMessageLabel.setText("");
+    }
+
+    private void selectCurrentRoom(Tenant tenant) {
+
+        if (tenant.getAssignedRoom() == null) {
+
+            roomComboBox.setValue(null);
+            return;
+        }
+
+        for (Room room : availableRoomList) {
+
+            if (room.getRoomId()
+                    == tenant.getAssignedRoom().getRoomId()) {
+
+                roomComboBox.setValue(room);
+                return;
+            }
+        }
+
+        roomComboBox.setValue(
+                tenant.getAssignedRoom()
+        );
     }
 
     private void loadTenants() {
@@ -383,6 +490,15 @@ public class TenantController {
             return;
         }
 
+        Integer previousRoomId = null;
+
+        if (selectedTenant.getAssignedRoom() != null) {
+            previousRoomId =
+                    selectedTenant
+                            .getAssignedRoom()
+                            .getRoomId();
+        }
+
         String fullName =
                 fullNameField.getText().trim();
 
@@ -411,6 +527,49 @@ public class TenantController {
             );
             return;
         }
+
+        if ("ACTIVE".equalsIgnoreCase(selectedStatus)
+                && selectedRoom == null) {
+
+            showFormError(
+                    "An active tenant must have an assigned room."
+            );
+            return;
+        }
+
+        if (selectedTenant.getStatus().equalsIgnoreCase("PENDING")
+                && "ACTIVE".equalsIgnoreCase(selectedStatus)) {
+
+            showFormError(
+                    "Use Approve Tenant to activate a pending account."
+            );
+            return;
+        }
+
+        if ("INACTIVE".equalsIgnoreCase(selectedStatus)
+                && selectedRoom != null) {
+
+            showFormError(
+                    "An inactive tenant cannot keep an assigned room. "
+                            + "Use Deactivate to release the room properly."
+            );
+            return;
+        }
+
+        if (!validateSelectedRoom(
+                selectedRoom,
+                previousRoomId
+        )) {
+            return;
+        }
+
+        boolean changingRoom =
+                selectedRoom != null
+                        && (
+                        previousRoomId == null
+                                || selectedRoom.getRoomId()
+                                != previousRoomId
+                );
 
         boolean changingPassword =
                 newPassword != null
@@ -454,6 +613,20 @@ public class TenantController {
                 showFormError(
                         "That username is already used by another account."
                 );
+                return;
+            }
+
+            if (changingRoom
+                    && !roomHasAvailableSlot(
+                    connection,
+                    selectedRoom.getRoomId()
+            )) {
+
+                showFormError(
+                        "The selected room is already full."
+                );
+
+                loadAvailableRooms();
                 return;
             }
 
@@ -553,8 +726,23 @@ public class TenantController {
                     return;
                 }
 
+                if (previousRoomId != null) {
+                    updateRoomStatus(
+                            connection,
+                            previousRoomId
+                    );
+                }
+
+                if (changingRoom && selectedRoom != null) {
+                    updateRoomStatus(
+                            connection,
+                            selectedRoom.getRoomId()
+                    );
+                }
+
                 connection.commit();
 
+                loadAvailableRooms();
                 loadTenants();
 
                 tenantTable
@@ -563,10 +751,19 @@ public class TenantController {
 
                 clearFormFields();
 
-                showFormSuccess(
-                        fullName
-                                + " was updated successfully."
-                );
+                if (changingRoom) {
+                    showFormSuccess(
+                            fullName
+                                    + " was updated and assigned to Room "
+                                    + selectedRoom.getRoomNumber()
+                                    + "."
+                    );
+                } else {
+                    showFormSuccess(
+                            fullName
+                                    + " was updated successfully."
+                    );
+                }
 
             } catch (SQLException exception) {
                 connection.rollback();
@@ -699,42 +896,66 @@ public class TenantController {
                 tenantTable.getSelectionModel().getSelectedItem();
 
         if (selectedTenant == null) {
-            formMessageLabel.setStyle("-fx-text-fill: red;");
-            formMessageLabel.setText(
-                    "Please select a tenant to approve."
-            );
+            showFormError("Please select a pending tenant.");
             return;
         }
 
-        if (selectedTenant.getStatus().equalsIgnoreCase("ACTIVE")) {
-            formMessageLabel.setStyle("-fx-text-fill: orange;");
-            formMessageLabel.setText(
-                    "This tenant is already active."
-            );
+        if (!selectedTenant.getStatus().equalsIgnoreCase("PENDING")) {
+            showFormError("Only pending tenants can be approved.");
             return;
         }
 
-        String updateUserSql =
-                "UPDATE users "
-                        + "SET account_status = 'ACTIVE' "
-                        + "WHERE user_id = ?";
+        Room selectedRoom = roomComboBox.getValue();
+        if (!validateSelectedRoom(
+                selectedRoom,
+                null
+        )) {
+            return;
+        }
 
-        String updateTenantSql =
-                "UPDATE tenants "
-                        + "SET status = 'ACTIVE' "
-                        + "WHERE tenant_id = ?";
+        if (selectedRoom == null) {
+            showFormError("Please assign a room before approving.");
+            return;
+        }
 
         try (Connection connection =
                      DatabaseConnection.getConnection()) {
 
             connection.setAutoCommit(false);
 
+            if (!roomHasAvailableSlot(connection, selectedRoom.getRoomId())) {
+                connection.rollback();
+
+                showFormError(
+                        "The selected room is already full."
+                );
+
+                loadAvailableRooms();
+                return;
+            }
+
+            String updateUser =
+                    """
+                    UPDATE users
+                    SET account_status='ACTIVE'
+                    WHERE user_id=?
+                    """;
+
+            String updateTenant =
+                    """
+                    UPDATE tenants
+                    SET
+                        status='ACTIVE',
+                        room_id=?
+                    WHERE tenant_id=?
+                    """;
+
             try (
                     PreparedStatement userStatement =
-                            connection.prepareStatement(updateUserSql);
+                            connection.prepareStatement(updateUser);
 
                     PreparedStatement tenantStatement =
-                            connection.prepareStatement(updateTenantSql)
+                            connection.prepareStatement(updateTenant)
             ) {
 
                 userStatement.setInt(
@@ -744,63 +965,149 @@ public class TenantController {
 
                 tenantStatement.setInt(
                         1,
+                        selectedRoom.getRoomId()
+                );
+
+                tenantStatement.setInt(
+                        2,
                         selectedTenant.getTenantId()
                 );
 
-                int userRows =
-                        userStatement.executeUpdate();
+                userStatement.executeUpdate();
+                tenantStatement.executeUpdate();
 
-                int tenantRows =
-                        tenantStatement.executeUpdate();
-
-                if (userRows == 0 || tenantRows == 0) {
-                    connection.rollback();
-
-                    formMessageLabel.setStyle(
-                            "-fx-text-fill: red;"
-                    );
-
-                    formMessageLabel.setText(
-                            "Unable to approve the selected tenant."
-                    );
-
-                    return;
-                }
+                updateRoomStatus(
+                        connection,
+                        selectedRoom.getRoomId()
+                );
 
                 connection.commit();
 
-                formMessageLabel.setStyle(
-                        "-fx-text-fill: green;"
-                );
-
-                formMessageLabel.setText(
-                        selectedTenant.getFullName()
-                                + " has been approved."
-                );
-
-                loadTenants();
-
             } catch (SQLException exception) {
+
                 connection.rollback();
                 throw exception;
             }
 
-        } catch (SQLException exception) {
-            formMessageLabel.setStyle(
-                    "-fx-text-fill: red;"
+            loadAvailableRooms();
+            loadTenants();
+
+            tenantTable.getSelectionModel().clearSelection();
+            clearFormFields();
+
+            showFormSuccess(
+                    selectedTenant.getFullName()
+                            + " approved successfully."
             );
 
-            formMessageLabel.setText(
-                    "Database error while approving tenant."
+        } catch (SQLException exception) {
+
+            showFormError(
+                    "Unable to approve tenant."
             );
 
             exception.printStackTrace();
         }
     }
 
-    public void handleDeactivateTenant(
-            ActionEvent actionEvent
-    ) {
+    private boolean roomHasAvailableSlot(
+            Connection connection,
+            int roomId
+    ) throws SQLException {
+
+        String sql =
+                """
+                SELECT
+                    r.capacity,
+                    COUNT(t.tenant_id) occupants
+                FROM rooms r
+                LEFT JOIN tenants t
+                       ON r.room_id=t.room_id
+                      AND t.status='ACTIVE'
+                WHERE r.room_id=?
+                GROUP BY
+                    r.room_id,
+                    r.capacity
+                """;
+
+        try (
+                PreparedStatement statement =
+                        connection.prepareStatement(sql)
+        ) {
+
+            statement.setInt(1, roomId);
+
+            try (
+                    ResultSet resultSet =
+                            statement.executeQuery()
+            ) {
+
+                if (!resultSet.next())
+                    return false;
+
+                return resultSet.getInt("occupants")
+                        < resultSet.getInt("capacity");
+            }
+        }
+    }
+
+    private void updateRoomStatus(
+            Connection connection,
+            int roomId
+    ) throws SQLException {
+
+        String sql =
+                """
+                UPDATE rooms
+    
+                SET status =
+    
+                CASE
+    
+                    WHEN status='MAINTENANCE'
+    
+                        THEN 'MAINTENANCE'
+    
+                    WHEN status='INACTIVE'
+    
+                        THEN 'INACTIVE'
+    
+                    WHEN (
+    
+                        SELECT COUNT(*)
+    
+                        FROM tenants
+    
+                        WHERE room_id=?
+    
+                        AND status='ACTIVE'
+    
+                    ) >= capacity
+    
+                        THEN 'FULL'
+    
+                    ELSE 'AVAILABLE'
+    
+                END
+    
+                WHERE room_id=?
+                """;
+
+        try (
+
+                PreparedStatement statement =
+                        connection.prepareStatement(sql)
+
+        ) {
+
+            statement.setInt(1, roomId);
+            statement.setInt(2, roomId);
+
+            statement.executeUpdate();
+        }
+    }
+
+    public void handleDeactivateTenant(ActionEvent actionEvent) {
 
         Tenant selectedTenant =
                 tenantTable.getSelectionModel().getSelectedItem();
@@ -839,7 +1146,8 @@ public class TenantController {
 
         confirmation.setContentText(
                 "This tenant will no longer be able to log in. "
-                        + "Their records will remain in the system."
+                        + "Their room assignment will be removed, "
+                        + "but their records will remain in the system."
         );
 
         confirmation.showAndWait().ifPresent(
@@ -854,7 +1162,56 @@ public class TenantController {
         );
     }
 
+    private boolean validateSelectedRoom(
+            Room selectedRoom,
+            Integer currentRoomId
+    ) {
+
+        if (selectedRoom == null) {
+            return true;
+        }
+
+        boolean keepingCurrentRoom =
+                currentRoomId != null
+                        && selectedRoom.getRoomId()
+                        == currentRoomId;
+
+        if (keepingCurrentRoom) {
+            return true;
+        }
+
+        if (selectedRoom.getStatus().equalsIgnoreCase("FULL")) {
+            showFormError(
+                    "The selected room is already full."
+            );
+            return false;
+        }
+
+        if (selectedRoom.getStatus().equalsIgnoreCase("MAINTENANCE")) {
+            showFormError(
+                    "The selected room is currently under maintenance."
+            );
+            return false;
+        }
+
+        if (selectedRoom.getStatus().equalsIgnoreCase("INACTIVE")) {
+            showFormError(
+                    "The selected room is currently unavailable."
+            );
+            return false;
+        }
+
+        return true;
+    }
+
     private void deactivateTenant(Tenant tenant) {
+
+        Integer previousRoomId = null;
+
+        if (tenant.getAssignedRoom() != null) {
+            previousRoomId =
+                    tenant.getAssignedRoom().getRoomId();
+        }
 
         String updateUserSql =
                 "UPDATE users "
@@ -863,7 +1220,8 @@ public class TenantController {
 
         String updateTenantSql =
                 "UPDATE tenants "
-                        + "SET status = 'INACTIVE' "
+                        + "SET status = 'INACTIVE', "
+                        + "room_id = NULL "
                         + "WHERE tenant_id = ?";
 
         try (
@@ -875,14 +1233,10 @@ public class TenantController {
 
             try (
                     PreparedStatement userStatement =
-                            connection.prepareStatement(
-                                    updateUserSql
-                            );
+                            connection.prepareStatement(updateUserSql);
 
                     PreparedStatement tenantStatement =
-                            connection.prepareStatement(
-                                    updateTenantSql
-                            )
+                            connection.prepareStatement(updateTenantSql)
             ) {
 
                 userStatement.setInt(
@@ -910,8 +1264,16 @@ public class TenantController {
                     return;
                 }
 
+                if (previousRoomId != null) {
+                    updateRoomStatus(
+                            connection,
+                            previousRoomId
+                    );
+                }
+
                 connection.commit();
 
+                loadAvailableRooms();
                 loadTenants();
 
                 tenantTable
@@ -922,7 +1284,7 @@ public class TenantController {
 
                 showFormSuccess(
                         tenant.getFullName()
-                                + " has been deactivated."
+                                + " has been deactivated and removed from the room."
                 );
 
             } catch (SQLException exception) {

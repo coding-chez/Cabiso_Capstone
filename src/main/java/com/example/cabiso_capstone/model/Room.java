@@ -1,6 +1,7 @@
 package com.example.cabiso_capstone.model;
 
 public class Room {
+
     private int roomId;
     private String roomNumber;
     private int capacity;
@@ -11,7 +12,14 @@ public class Room {
     public Room() {
     }
 
-    public Room(int roomId, String roomNumber, int capacity, int occupants, double monthlyRate, String status) {
+    public Room(
+            int roomId,
+            String roomNumber,
+            int capacity,
+            int occupants,
+            double monthlyRate,
+            String status
+    ) {
         this.roomId = roomId;
         this.roomNumber = roomNumber;
         this.capacity = capacity;
@@ -69,24 +77,36 @@ public class Room {
     }
 
     public int getAvailableSlots() {
-        return capacity - occupants;
+        return Math.max(capacity - occupants, 0);
     }
 
-    public boolean isAvailable() {
-        return occupants < capacity
-                && !"Unavailable".equalsIgnoreCase(status);
-    }
-
-    public void updateAvailabilityStatus() {
-        if (occupants >= capacity) {
-            status = "Occupied";
-        } else {
-            status = "Available";
-        }
+    public boolean isAssignable() {
+        return status.equalsIgnoreCase("AVAILABLE")
+                && getAvailableSlots() > 0;
     }
 
     @Override
     public String toString() {
-        return roomNumber;
+
+        switch (status.toUpperCase()) {
+
+            case "FULL":
+                return "Room " + roomNumber + " • FULL";
+
+            case "MAINTENANCE":
+                return "Room " + roomNumber + " • MAINTENANCE";
+
+            case "INACTIVE":
+                return "Room " + roomNumber + " • INACTIVE";
+
+            default:
+                return "Room "
+                        + roomNumber
+                        + " • "
+                        + getAvailableSlots()
+                        + " slot"
+                        + (getAvailableSlots() == 1 ? "" : "s")
+                        + " available";
+        }
     }
 }
