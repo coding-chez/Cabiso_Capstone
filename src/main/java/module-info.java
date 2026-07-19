@@ -8,6 +8,5 @@ module com.example.cabiso_capstone {
 
     opens com.example.cabiso_capstone.controllers to javafx.fxml;
     opens com.example.cabiso_capstone.model to javafx.fxml, javafx.base;
-    opens com.example.cabiso_capstone.service to javafx.fxml;
     opens com.example.cabiso_capstone.database to javafx.fxml;
 }
