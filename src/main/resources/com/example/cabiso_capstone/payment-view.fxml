@@ -1,20 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
 
-
-<BorderPane xmlns="http://javafx.com/javafx/17.0.12"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.example.cabiso_capstone.controllers.PaymentController"
-            prefWidth="1100.0"
-            prefHeight="700.0"
+<BorderPane prefHeight="700.0"
+            styleClass="management-root"
             stylesheets="@styles.css"
-            styleClass="management-root">
+            xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.cabiso_capstone.controllers.PaymentController">
 
     <top>
         <HBox alignment="CENTER_LEFT"
@@ -52,8 +47,7 @@
     </top>
 
     <left>
-        <VBox prefWidth="220.0"
-              spacing="8.0"
+        <VBox spacing="8.0"
               styleClass="dashboard-sidebar">
 
             <padding>
@@ -97,7 +91,7 @@
 
     <center>
         <ScrollPane fitToWidth="true"
-                    fitToHeight="true"
+                    fitToHeight="false"
                     hbarPolicy="NEVER"
                     styleClass="management-scroll-pane">
 
@@ -112,28 +106,33 @@
                                 left="32.0"/>
                     </padding>
 
+                    <!-- Page title -->
+
                     <VBox spacing="4.0">
                         <Label text="Payment Management"
                                styleClass="dashboard-title"/>
 
-                        <Label text="Record payments and review tenant payment history."
+                        <Label text="Record tenant payments and review transaction history."
                                styleClass="dashboard-subtitle"/>
                     </VBox>
+
+                    <!-- Search toolbar -->
 
                     <HBox alignment="CENTER_LEFT"
                           spacing="10.0"
                           styleClass="toolbar-card">
 
                         <TextField fx:id="searchField"
-                                   promptText="Search by tenant name, payment ID, or status..."
+                                   maxWidth="Infinity"
                                    prefHeight="40.0"
-                                   HBox.hgrow="ALWAYS"
-                                   styleClass="management-field"/>
+                                   promptText="Search by tenant, reference number, or billing month..."
+                                   styleClass="management-field"
+                                   HBox.hgrow="ALWAYS"/>
 
                         <ComboBox fx:id="filterStatusComboBox"
-                                  promptText="All statuses"
-                                  prefWidth="150.0"
                                   prefHeight="40.0"
+                                  prefWidth="150.0"
+                                  promptText="All Status"
                                   styleClass="management-combo-box"/>
 
                         <Button text="Search"
@@ -145,11 +144,16 @@
                                 onAction="#handleRefresh"
                                 prefHeight="40.0"
                                 styleClass="secondary-button"/>
+
                     </HBox>
 
-                    <VBox spacing="12.0"
-                          styleClass="content-card"
-                          VBox.vgrow="ALWAYS">
+                    <!-- Payment records -->
+
+                    <VBox minHeight="320.0"
+                          prefHeight="340.0"
+                          maxHeight="340.0"
+                          spacing="16.0"
+                          styleClass="content-card">
 
                         <HBox alignment="CENTER_LEFT">
 
@@ -157,7 +161,7 @@
                                 <Label text="Payment Records"
                                        styleClass="section-title"/>
 
-                                <Label text="Select a payment record to review its details."
+                                <Label text="Select a payment record to review or update its details."
                                        styleClass="section-description"/>
                             </VBox>
 
@@ -169,8 +173,9 @@
                         </HBox>
 
                         <TableView fx:id="paymentTable"
-                                   prefHeight="280.0"
-                                   VBox.vgrow="ALWAYS"
+                                   minHeight="235.0"
+                                   prefHeight="235.0"
+                                   maxHeight="235.0"
                                    styleClass="management-table">
 
                             <placeholder>
@@ -180,47 +185,47 @@
 
                             <columns>
                                 <TableColumn fx:id="paymentIdColumn"
-                                             text="Payment ID"
-                                             prefWidth="95.0"/>
+                                             text="ID"/>
 
                                 <TableColumn fx:id="tenantNameColumn"
-                                             text="Tenant"
-                                             prefWidth="180.0"/>
+                                             text="Tenant"/>
 
                                 <TableColumn fx:id="roomColumn"
-                                             text="Room"
-                                             prefWidth="80.0"/>
+                                             text="Room"/>
+
+                                <TableColumn fx:id="billingMonthColumn"
+                                             text="Billing Month"/>
 
                                 <TableColumn fx:id="amountColumn"
-                                             text="Amount"
-                                             prefWidth="120.0"/>
+                                             text="Amount"/>
 
                                 <TableColumn fx:id="paymentDateColumn"
-                                             text="Payment Date"
-                                             prefWidth="130.0"/>
+                                             text="Payment Date"/>
 
                                 <TableColumn fx:id="paymentMethodColumn"
-                                             text="Method"
-                                             prefWidth="110.0"/>
+                                             text="Method"/>
 
                                 <TableColumn fx:id="statusColumn"
-                                             text="Status"
-                                             prefWidth="100.0"/>
+                                             text="Status"/>
                             </columns>
 
                         </TableView>
                     </VBox>
 
-                    <VBox spacing="16.0"
+                    <!-- Payment information -->
+
+                    <VBox spacing="20.0"
                           styleClass="content-card">
 
                         <VBox spacing="3.0">
                             <Label text="Payment Information"
                                    styleClass="section-title"/>
 
-                            <Label text="Complete the required details before recording a payment."
+                            <Label text="Select an active tenant and complete the payment details."
                                    styleClass="section-description"/>
                         </VBox>
+
+                        <!-- Row 1 -->
 
                         <HBox spacing="16.0">
 
@@ -231,9 +236,10 @@
                                        styleClass="field-label"/>
 
                                 <TextField fx:id="paymentIdField"
-                                           promptText="Generated automatically"
                                            editable="false"
+                                           maxWidth="Infinity"
                                            prefHeight="40.0"
+                                           promptText="Generated automatically"
                                            styleClass="management-field-disabled"/>
                             </VBox>
 
@@ -244,13 +250,48 @@
                                        styleClass="field-label"/>
 
                                 <ComboBox fx:id="tenantComboBox"
-                                          promptText="Select tenant"
-                                          prefHeight="40.0"
                                           maxWidth="Infinity"
+                                          prefHeight="40.0"
+                                          promptText="Select an active tenant"
                                           styleClass="management-combo-box"/>
                             </VBox>
 
                         </HBox>
+
+                        <!-- Row 2 -->
+
+                        <HBox spacing="16.0">
+
+                            <VBox spacing="6.0"
+                                  HBox.hgrow="ALWAYS">
+
+                                <Label text="Assigned Room"
+                                       styleClass="field-label"/>
+
+                                <TextField fx:id="roomField"
+                                           editable="false"
+                                           maxWidth="Infinity"
+                                           prefHeight="40.0"
+                                           promptText="Loaded from selected tenant"
+                                           styleClass="management-field-disabled"/>
+                            </VBox>
+
+                            <VBox spacing="6.0"
+                                  HBox.hgrow="ALWAYS">
+
+                                <Label text="Billing Month"
+                                       styleClass="field-label"/>
+
+                                <ComboBox fx:id="billingMonthComboBox"
+                                          maxWidth="Infinity"
+                                          prefHeight="40.0"
+                                          promptText="Select billing month"
+                                          styleClass="management-combo-box"/>
+                            </VBox>
+
+                        </HBox>
+
+                        <!-- Row 3 -->
 
                         <HBox spacing="16.0">
 
@@ -261,27 +302,11 @@
                                        styleClass="field-label"/>
 
                                 <TextField fx:id="amountField"
-                                           promptText="Enter payment amount"
+                                           maxWidth="Infinity"
                                            prefHeight="40.0"
+                                           promptText="Enter payment amount"
                                            styleClass="management-field"/>
                             </VBox>
-
-                            <VBox spacing="6.0"
-                                  HBox.hgrow="ALWAYS">
-
-                                <Label text="Payment Date"
-                                       styleClass="field-label"/>
-
-                                <DatePicker fx:id="paymentDatePicker"
-                                            promptText="Select payment date"
-                                            prefHeight="40.0"
-                                            maxWidth="Infinity"
-                                            styleClass="management-date-picker"/>
-                            </VBox>
-
-                        </HBox>
-
-                        <HBox spacing="16.0">
 
                             <VBox spacing="6.0"
                                   HBox.hgrow="ALWAYS">
@@ -290,10 +315,62 @@
                                        styleClass="field-label"/>
 
                                 <ComboBox fx:id="paymentMethodComboBox"
-                                          promptText="Select payment method"
-                                          prefHeight="40.0"
                                           maxWidth="Infinity"
+                                          prefHeight="40.0"
+                                          promptText="Select payment method"
                                           styleClass="management-combo-box"/>
+                            </VBox>
+
+                        </HBox>
+
+                        <!-- Row 4 -->
+
+                        <HBox spacing="16.0">
+
+                            <VBox spacing="6.0"
+                                  HBox.hgrow="ALWAYS">
+
+                                <Label text="Payment Date"
+                                       styleClass="field-label"/>
+
+                                <DatePicker fx:id="paymentDatePicker"
+                                            maxWidth="Infinity"
+                                            prefHeight="40.0"
+                                            promptText="Select payment date"
+                                            styleClass="management-date-picker"/>
+                            </VBox>
+
+                            <VBox spacing="6.0"
+                                  HBox.hgrow="ALWAYS">
+
+                                <Label text="Current Balance"
+                                       styleClass="field-label"/>
+
+                                <TextField fx:id="currentBalanceField"
+                                           editable="false"
+                                           maxWidth="Infinity"
+                                           prefHeight="40.0"
+                                           promptText="Calculated automatically"
+                                           styleClass="management-field-disabled"/>
+                            </VBox>
+
+                        </HBox>
+
+                        <!-- Row 5 -->
+
+                        <HBox spacing="16.0">
+
+                            <VBox spacing="6.0"
+                                  HBox.hgrow="ALWAYS">
+
+                                <Label text="Reference Number"
+                                       styleClass="field-label"/>
+
+                                <TextField fx:id="referenceNumberField"
+                                           maxWidth="Infinity"
+                                           prefHeight="40.0"
+                                           promptText="Receipt or transaction reference"
+                                           styleClass="management-field"/>
                             </VBox>
 
                             <VBox spacing="6.0"
@@ -303,30 +380,35 @@
                                        styleClass="field-label"/>
 
                                 <ComboBox fx:id="statusComboBox"
-                                          promptText="Select payment status"
-                                          prefHeight="40.0"
                                           maxWidth="Infinity"
+                                          prefHeight="40.0"
+                                          promptText="Select payment status"
                                           styleClass="management-combo-box"/>
                             </VBox>
 
                         </HBox>
 
+                        <!-- Remarks -->
+
                         <VBox spacing="6.0">
 
-                            <Label text="Reference Number"
+                            <Label text="Remarks"
                                    styleClass="field-label"/>
 
-                            <TextField fx:id="referenceNumberField"
-                                       promptText="Enter receipt or transaction reference"
-                                       prefHeight="40.0"
-                                       styleClass="management-field"/>
+                            <TextArea fx:id="remarksArea"
+                                      prefRowCount="3"
+                                      wrapText="true"
+                                      promptText="Optional notes about this payment"
+                                      styleClass="management-field"/>
                         </VBox>
 
                         <Label fx:id="formMessageLabel"
+                               minHeight="18.0"
                                text=""
                                wrapText="true"
-                               minHeight="18.0"
                                styleClass="form-message-label"/>
+
+                        <!-- Actions -->
 
                         <HBox alignment="CENTER_RIGHT"
                               spacing="10.0">
@@ -336,7 +418,7 @@
                                     prefHeight="40.0"
                                     styleClass="secondary-button"/>
 
-                            <Button text="Delete"
+                            <Button text="Void"
                                     onAction="#handleDeletePayment"
                                     prefHeight="40.0"
                                     styleClass="danger-button"/>
