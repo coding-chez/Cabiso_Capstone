@@ -115,16 +115,27 @@
                             left="34.0"/>
                 </padding>
 
-                <VBox spacing="4.0">
+                <HBox alignment="CENTER_LEFT">
 
-                    <Label fx:id="welcomeLabel"
-                           text="Welcome back!"
-                           styleClass="dashboard-title"/>
+                    <VBox spacing="4.0">
 
-                    <Label text="Here is a summary of your dormitory account."
-                           styleClass="dashboard-subtitle"/>
+                        <Label fx:id="welcomeLabel"
+                               text="Welcome back!"
+                               styleClass="dashboard-title"/>
 
-                </VBox>
+                        <Label text="Here is a summary of your dormitory account."
+                               styleClass="dashboard-subtitle"/>
+
+                    </VBox>
+
+                    <Region HBox.hgrow="ALWAYS"/>
+
+                    <Button text="Refresh"
+                            onAction="#handleRefreshDashboard"
+                            prefHeight="40.0"
+                            styleClass="secondary-button"/>
+
+                </HBox>
 
                 <HBox spacing="18.0">
 
@@ -535,39 +546,36 @@
                     </HBox>
 
                     <TableView fx:id="paymentHistoryTable"
-                               prefHeight="450.0"
-                               VBox.vgrow="ALWAYS"
-                               styleClass="management-table">
+                               prefHeight="420.0"
+                               VBox.vgrow="ALWAYS">
 
                         <placeholder>
-                            <Label text="No payment records available."
-                                   styleClass="table-placeholder"/>
+                            <Label text="No payment records found." />
                         </placeholder>
 
                         <columns>
+
                             <TableColumn fx:id="paymentIdColumn"
-                                         text="Payment ID"
-                                         prefWidth="100.0"/>
+                                         text="Payment ID" />
+
+                            <TableColumn fx:id="billingMonthColumn"
+                                         text="Billing Month" />
 
                             <TableColumn fx:id="paymentDateColumn"
-                                         text="Date"
-                                         prefWidth="130.0"/>
+                                         text="Payment Date" />
 
                             <TableColumn fx:id="paymentAmountColumn"
-                                         text="Amount"
-                                         prefWidth="120.0"/>
+                                         text="Amount" />
 
                             <TableColumn fx:id="paymentMethodColumn"
-                                         text="Method"
-                                         prefWidth="120.0"/>
+                                         text="Method" />
 
                             <TableColumn fx:id="paymentReferenceColumn"
-                                         text="Reference Number"
-                                         prefWidth="190.0"/>
+                                         text="Reference" />
 
                             <TableColumn fx:id="paymentStatusColumn"
-                                         text="Status"
-                                         prefWidth="110.0"/>
+                                         text="Status" />
+
                         </columns>
 
                     </TableView>
