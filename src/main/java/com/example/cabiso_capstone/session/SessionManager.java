@@ -7,7 +7,7 @@ public final class SessionManager {
 
     private static SessionStorage storage =
             new FileSessionStorage(
-                    Paths.get("session.dat"));
+                    Paths.get("session.txt"));
 
     private SessionManager() {
     }

@@ -92,11 +92,15 @@
 
                 <VBox spacing="8.0" styleClass="summary-card" HBox.hgrow="ALWAYS">
 
-                    <Label styleClass="summary-label" text="PENDING PAYMENTS" />
+                    <Label styleClass="summary-label"
+                           text="PAID PAYMENTS" />
 
-                    <Label fx:id="pendingPaymentsLabel" styleClass="summary-value" text="0" />
+                    <Label fx:id="pendingPaymentsLabel"
+                           styleClass="summary-value"
+                           text="0" />
 
-                    <Label styleClass="summary-description" text="Payment records requiring attention" />
+                    <Label styleClass="summary-description"
+                           text="Successfully recorded payments" />
 
                 </VBox>
 

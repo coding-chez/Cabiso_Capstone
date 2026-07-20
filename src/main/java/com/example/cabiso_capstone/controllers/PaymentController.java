@@ -702,12 +702,39 @@ public class PaymentController {
     }
 
     public void openDashboard(ActionEvent actionEvent) {
+
+        try {
+            MainApplication.changeScene(
+                    "admin-dashboard-view.fxml"
+            );
+
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
     }
 
     public void openTenantView(ActionEvent actionEvent) {
+
+        try {
+            MainApplication.changeScene(
+                    "tenant-view.fxml"
+            );
+
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
     }
 
     public void openRoomView(ActionEvent actionEvent) {
+
+        try {
+            MainApplication.changeScene(
+                    "room-view.fxml"
+            );
+
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
     }
 
     public void handleLogout(ActionEvent actionEvent) {
