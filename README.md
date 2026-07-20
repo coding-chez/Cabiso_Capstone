@@ -130,7 +130,7 @@ Workflow:
 Successful Login
         │
         ▼
-session.dat created
+session.txt created
         │
         ▼
 Application Closed
@@ -145,7 +145,7 @@ Correct Dashboard Opens
 Logout
         │
         ▼
-session.dat deleted
+session.txt deleted
 ````
 
 Serialized Data
