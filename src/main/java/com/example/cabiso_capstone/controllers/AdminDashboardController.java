@@ -5,9 +5,14 @@ import com.example.cabiso_capstone.database.DatabaseConnection;
 import com.example.cabiso_capstone.session.SessionManager;
 import com.example.cabiso_capstone.session.UserSession;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -19,6 +24,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.util.Duration;
 
 import java.time.LocalDate;
 
@@ -44,36 +50,32 @@ public class AdminDashboardController {
     public Label voidPaymentsLabel;
     public TableView<RecentTenantActivity> recentTenantTable;
 
-    public TableColumn<RecentTenantActivity, String>
-            recentTenantNameColumn;
+    public TableColumn<RecentTenantActivity, String> recentTenantNameColumn;
 
-    public TableColumn<RecentTenantActivity, String>
-            recentTenantRoomColumn;
+    public TableColumn<RecentTenantActivity, String> recentTenantRoomColumn;
 
-    public TableColumn<RecentTenantActivity, String>
-            recentTenantStatusColumn;
+    public TableColumn<RecentTenantActivity, String> recentTenantStatusColumn;
 
 
     public TableView<RecentPaymentActivity> recentPaymentTable;
 
-    public TableColumn<RecentPaymentActivity, String>
-            recentPaymentTenantColumn;
+    public TableColumn<RecentPaymentActivity, String> recentPaymentTenantColumn;
 
-    public TableColumn<RecentPaymentActivity, String>
-            recentPaymentAmountColumn;
+    public TableColumn<RecentPaymentActivity, String> recentPaymentAmountColumn;
 
-    public TableColumn<RecentPaymentActivity, String>
-            recentPaymentDateColumn;
+    public TableColumn<RecentPaymentActivity, String> recentPaymentDateColumn;
 
-    public TableColumn<RecentPaymentActivity, String>
-            recentPaymentStatusColumn;
-    private final ObservableList<RecentTenantActivity>
-            recentTenantActivities =
-            FXCollections.observableArrayList();
+    public TableColumn<RecentPaymentActivity, String> recentPaymentStatusColumn;
+    private final ObservableList<RecentTenantActivity> recentTenantActivities = FXCollections.observableArrayList();
+    private final ObservableList<RecentPaymentActivity> recentPaymentActivities = FXCollections.observableArrayList();
 
-    private final ObservableList<RecentPaymentActivity>
-            recentPaymentActivities =
-            FXCollections.observableArrayList();
+    private Timeline dashboardRefreshTimeline;
+    @FXML
+    private Label currentDateLabel;
+
+    @FXML
+    private Label currentTimeLabel;
+
     public void initialize() {
 
         if (!validateSession()) {
@@ -81,14 +83,10 @@ public class AdminDashboardController {
         }
 
         initializeRecentActivityTables();
-
         loadLoggedInAdministrator();
-        loadDashboardStatistics();
-        loadOccupancySummary();
-        loadFinancialSummary();
 
-        loadRecentTenantActivity();
-        loadRecentPaymentActivity();
+        refreshDashboardData();
+        startDashboardAutoRefresh();
     }
 
     private void loadRecentPaymentActivity() {
@@ -103,14 +101,11 @@ public class AdminDashboardController {
                     p.payment_date,
                     p.status
                 FROM payments p
-    
-                JOIN tenants t
+                INNER JOIN tenants t
                     ON p.tenant_id = t.tenant_id
-    
                 ORDER BY
                     p.payment_date DESC,
                     p.payment_id DESC
-    
                 LIMIT 5
                 """;
 
@@ -127,7 +122,16 @@ public class AdminDashboardController {
 
             while (resultSet.next()) {
 
-                RecentPaymentActivity activity =
+                LocalDate paymentDate = null;
+
+                if (resultSet.getDate("payment_date") != null) {
+                    paymentDate =
+                            resultSet.getDate(
+                                    "payment_date"
+                            ).toLocalDate();
+                }
+
+                recentPaymentActivities.add(
                         new RecentPaymentActivity(
                                 resultSet.getString(
                                         "full_name"
@@ -135,24 +139,26 @@ public class AdminDashboardController {
                                 resultSet.getDouble(
                                         "amount"
                                 ),
-                                resultSet.getDate(
-                                        "payment_date"
-                                ).toLocalDate(),
+                                paymentDate,
                                 resultSet.getString(
                                         "status"
                                 )
-                        );
-
-                recentPaymentActivities.add(
-                        activity
+                        )
                 );
             }
 
+            recentPaymentTable.setItems(
+                    recentPaymentActivities
+            );
+
             recentPaymentTable.refresh();
 
-        } catch (SQLException exception) {
+            System.out.println(
+                    "Recent payments loaded: "
+                            + recentPaymentActivities.size()
+            );
 
-            recentPaymentActivities.clear();
+        } catch (SQLException exception) {
 
             System.err.println(
                     "Unable to load recent payment activity."
@@ -160,6 +166,26 @@ public class AdminDashboardController {
 
             exception.printStackTrace();
         }
+    }
+    private void loadCurrentDateTime() {
+
+        LocalDateTime now = LocalDateTime.now();
+
+        currentDateLabel.setText(
+                now.format(
+                        DateTimeFormatter.ofPattern(
+                                "MMMM dd, yyyy"
+                        )
+                )
+        );
+
+        currentTimeLabel.setText(
+                now.format(
+                        DateTimeFormatter.ofPattern(
+                                "hh:mm a"
+                        )
+                )
+        );
     }
 
     private void loadRecentTenantActivity() {
@@ -170,15 +196,13 @@ public class AdminDashboardController {
                 """
                 SELECT
                     t.full_name,
-                    r.room_number,
+                    COALESCE(r.room_number, 'Not Assigned')
+                        AS room_number,
                     t.status
                 FROM tenants t
-    
                 LEFT JOIN rooms r
                     ON t.room_id = r.room_id
-    
                 ORDER BY t.tenant_id DESC
-    
                 LIMIT 5
                 """;
 
@@ -195,39 +219,33 @@ public class AdminDashboardController {
 
             while (resultSet.next()) {
 
-                String roomNumber =
-                        resultSet.getString(
-                                "room_number"
-                        );
-
-                if (roomNumber == null
-                        || roomNumber.isBlank()) {
-
-                    roomNumber =
-                            "Not Assigned";
-                }
-
-                RecentTenantActivity activity =
+                recentTenantActivities.add(
                         new RecentTenantActivity(
                                 resultSet.getString(
                                         "full_name"
                                 ),
-                                roomNumber,
+                                resultSet.getString(
+                                        "room_number"
+                                ),
                                 resultSet.getString(
                                         "status"
                                 )
-                        );
-
-                recentTenantActivities.add(
-                        activity
+                        )
                 );
             }
 
+            recentTenantTable.setItems(
+                    recentTenantActivities
+            );
+
             recentTenantTable.refresh();
 
-        } catch (SQLException exception) {
+            System.out.println(
+                    "Recent tenants loaded: "
+                            + recentTenantActivities.size()
+            );
 
-            recentTenantActivities.clear();
+        } catch (SQLException exception) {
 
             System.err.println(
                     "Unable to load recent tenant activity."
@@ -283,7 +301,9 @@ public class AdminDashboardController {
 
         recentPaymentDateColumn.setCellValueFactory(
                 data -> new SimpleStringProperty(
-                        data.getValue()
+                        data.getValue().getPaymentDate() == null
+                                ? "No Date"
+                                : data.getValue()
                                 .getPaymentDate()
                                 .toString()
                 )
@@ -706,6 +726,8 @@ public class AdminDashboardController {
             ActionEvent actionEvent
     ) {
 
+        stopDashboardAutoRefresh();
+
         try {
             SessionManager.deleteSession();
 
@@ -724,9 +746,9 @@ public class AdminDashboardController {
         }
     }
 
-    public void openRoomView(
-            ActionEvent actionEvent
-    ) {
+    public void openRoomView(ActionEvent actionEvent) {
+
+        stopDashboardAutoRefresh();
 
         try {
             MainApplication.changeScene(
@@ -742,19 +764,14 @@ public class AdminDashboardController {
             ActionEvent actionEvent
     ) {
 
-        try {
-            MainApplication.changeScene(
-                    "admin-dashboard-view.fxml"
-            );
-
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
+        refreshDashboardData();
     }
 
     public void openTenantView(
             ActionEvent actionEvent
     ) {
+
+        stopDashboardAutoRefresh();
 
         try {
             MainApplication.changeScene(
@@ -769,6 +786,8 @@ public class AdminDashboardController {
     public void openPaymentView(
             ActionEvent actionEvent
     ) {
+
+        stopDashboardAutoRefresh();
 
         try {
             MainApplication.changeScene(
@@ -822,6 +841,52 @@ public class AdminDashboardController {
             return false;
         }
     }
+
+    public void handleRefreshDashboard(
+            ActionEvent actionEvent
+    ) {
+
+        refreshDashboardData();
+
+        System.out.println(
+                "Administrator dashboard refreshed."
+        );
+    }
+    private void startDashboardAutoRefresh() {
+
+        dashboardRefreshTimeline =
+                new Timeline(
+                        new KeyFrame(
+                                Duration.seconds(30),
+                                event ->
+                                        refreshDashboardData()
+                        )
+                );
+
+        dashboardRefreshTimeline.setCycleCount(
+                Timeline.INDEFINITE
+        );
+
+        dashboardRefreshTimeline.play();
+    }
+
+    private void refreshDashboardData() {
+
+        loadDashboardStatistics();
+        loadOccupancySummary();
+        loadFinancialSummary();
+
+        loadRecentTenantActivity();
+        loadRecentPaymentActivity();
+        loadCurrentDateTime();
+    }
+    private void stopDashboardAutoRefresh() {
+
+        if (dashboardRefreshTimeline != null) {
+            dashboardRefreshTimeline.stop();
+        }
+    }
+
     public static class RecentPaymentActivity {
 
         private final String tenantName;

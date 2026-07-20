@@ -25,7 +25,15 @@
 
                 <Label fx:id="adminNameLabel" styleClass="dashboard-user" text="Administrator" />
 
+
                 <Label styleClass="dashboard-user-role" text="System Manager" />
+                <Label fx:id="currentDateLabel"
+                       styleClass="dashboard-user-role"
+                       text="July 20, 2026"/>
+
+                <Label fx:id="currentTimeLabel"
+                       styleClass="dashboard-user-role"
+                       text="10:30 AM"/>
             </VBox>
         </HBox>
     </top>
@@ -57,7 +65,7 @@
     </left>
     <center>
         <ScrollPane fitToWidth="true"
-                    fitToHeight="true"
+                    fitToHeight="false"
                     pannable="true"
                     hbarPolicy="NEVER"
                     vbarPolicy="AS_NEEDED"
@@ -70,9 +78,10 @@
             </padding>
             <VBox spacing="5.0">
 
-                <Label styleClass="dashboard-title" text="Administrator Dashboard" />
+                <Label styleClass="dashboard-title" text="Welcome back, Admin!" />
 
-                <Label styleClass="dashboard-subtitle" text="View the dormitory overview and access management modules." />
+
+                <Label styleClass="dashboard-subtitle" text="Here's today's dormitory activity summary." />
 
             </VBox>
             <HBox spacing="18.0">
@@ -122,11 +131,27 @@
 
                 <HBox spacing="12.0">
 
-                    <Button onAction="#openTenantView" prefHeight="40.0" styleClass="quick-action-button" text="Manage Tenants" />
+                    <Button onAction="#openTenantView"
+                            prefHeight="40.0"
+                            styleClass="quick-action-button"
+                            text="Manage Tenants" />
 
-                    <Button onAction="#openRoomView" prefHeight="40.0" styleClass="quick-action-button" text="Manage Rooms" />
+                    <Button onAction="#openRoomView"
+                            prefHeight="40.0"
+                            styleClass="quick-action-button"
+                            text="Manage Rooms" />
 
-                    <Button onAction="#openPaymentView" prefHeight="40.0" styleClass="quick-action-button" text="Manage Payments" />
+                    <Button onAction="#openPaymentView"
+                            prefHeight="40.0"
+                            styleClass="quick-action-button"
+                            text="Manage Payments" />
+
+                    <Region HBox.hgrow="ALWAYS" />
+
+                    <Button onAction="#handleRefreshDashboard"
+                            prefHeight="40.0"
+                            styleClass="secondary-button"
+                            text="Refresh Dashboard" />
 
                 </HBox>
 
@@ -301,6 +326,7 @@
                     </HBox>
 
                     <TableView fx:id="recentTenantTable"
+                               minHeight="235.0"
                                prefHeight="235.0"
                                maxHeight="235.0"
                                styleClass="management-table">
@@ -349,6 +375,7 @@
                     </HBox>
 
                     <TableView fx:id="recentPaymentTable"
+                               minHeight="235.0"
                                prefHeight="235.0"
                                maxHeight="235.0"
                                styleClass="management-table">
