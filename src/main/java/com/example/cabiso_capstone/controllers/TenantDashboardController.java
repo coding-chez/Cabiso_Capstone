@@ -95,10 +95,6 @@ public class TenantDashboardController {
             return;
         }
 
-        MainApplication.getMainStage().setTitle(
-                "Cabana Dormitory Management System | Tenant Dashboard"
-        );
-
         initializeRecentPaymentsTable();
         initializePaymentHistoryTable();
 

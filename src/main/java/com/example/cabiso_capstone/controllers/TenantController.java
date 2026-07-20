@@ -5,6 +5,7 @@ import com.example.cabiso_capstone.database.DatabaseConnection;
 import com.example.cabiso_capstone.model.Room;
 import com.example.cabiso_capstone.model.Tenant;
 import com.example.cabiso_capstone.session.SessionManager;
+import com.example.cabiso_capstone.session.UserSession;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -51,6 +52,9 @@ public class TenantController {
     private final ObservableList<Room> availableRoomList = FXCollections.observableArrayList();
 
     public void initialize() {
+        if (!validateAdminSession()) {
+            return;
+        }
 
         tenantIdColumn.setCellValueFactory(
                 new PropertyValueFactory<>("tenantId")
@@ -474,9 +478,6 @@ public class TenantController {
         statusComboBox.setValue(null);
     }
 
-    public void handleAddTenant(ActionEvent actionEvent) {
-
-    }
 
     public void handleUpdateTenant(ActionEvent actionEvent) {
 
@@ -827,9 +828,6 @@ public class TenantController {
         formMessageLabel.setText(message);
     }
 
-    public void handleDeleteTenant(ActionEvent actionEvent) {
-
-    }
 
     public void handleClear(ActionEvent actionEvent) {
 
@@ -1310,6 +1308,57 @@ public class TenantController {
             );
 
             exception.printStackTrace();
+        }
+    }
+    private boolean validateAdminSession() {
+
+        try {
+
+            if (!SessionManager.hasValidSession()) {
+
+                MainApplication.changeScene(
+                        "login-view.fxml"
+                );
+
+                return false;
+            }
+
+            UserSession session =
+                    SessionManager.loadSession();
+
+            if (session == null
+                    || !session.isActive()
+                    || !session.isAdmin()) {
+
+                SessionManager.deleteSession();
+
+                MainApplication.changeScene(
+                        "login-view.fxml"
+                );
+
+                return false;
+            }
+
+            return true;
+
+        } catch (
+                IOException
+                | ClassNotFoundException exception
+        ) {
+
+            try {
+                SessionManager.deleteSession();
+
+                MainApplication.changeScene(
+                        "login-view.fxml"
+                );
+
+            } catch (IOException ignored) {
+            }
+
+            exception.printStackTrace();
+
+            return false;
         }
     }
 }

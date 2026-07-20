@@ -4,6 +4,7 @@ import com.example.cabiso_capstone.MainApplication;
 import com.example.cabiso_capstone.database.DatabaseConnection;
 import com.example.cabiso_capstone.model.Room;
 import com.example.cabiso_capstone.session.SessionManager;
+import com.example.cabiso_capstone.session.UserSession;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -20,6 +21,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 
 public class RoomController {
 
@@ -50,6 +52,9 @@ public class RoomController {
             FXCollections.observableArrayList();
 
     public void initialize() {
+        if (!validateAdminSession()) {
+            return;
+        }
 
         roomIdColumn.setCellValueFactory(
                 new PropertyValueFactory<>("roomId")
@@ -1005,6 +1010,57 @@ public class RoomController {
             );
         } catch (IOException exception) {
             exception.printStackTrace();
+        }
+    }
+    private boolean validateAdminSession() {
+
+        try {
+
+            if (!SessionManager.hasValidSession()) {
+
+                MainApplication.changeScene(
+                        "login-view.fxml"
+                );
+
+                return false;
+            }
+
+            UserSession session =
+                    SessionManager.loadSession();
+
+            if (session == null
+                    || !session.isActive()
+                    || !session.isAdmin()) {
+
+                SessionManager.deleteSession();
+
+                MainApplication.changeScene(
+                        "login-view.fxml"
+                );
+
+                return false;
+            }
+
+            return true;
+
+        } catch (
+                IOException
+                | ClassNotFoundException exception
+        ) {
+
+            try {
+                SessionManager.deleteSession();
+
+                MainApplication.changeScene(
+                        "login-view.fxml"
+                );
+
+            } catch (IOException ignored) {
+            }
+
+            exception.printStackTrace();
+
+            return false;
         }
     }
 }

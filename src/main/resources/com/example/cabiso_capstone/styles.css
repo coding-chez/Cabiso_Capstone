@@ -14,9 +14,18 @@
 /* =========================================================
    2. LOGIN AND REGISTRATION
 ========================================================= */
-
+.auth-logo {
+    -fx-effect: dropshadow(
+            gaussian,
+            rgba(0, 0, 0, 0.16),
+            14,
+            0.12,
+            0,
+            4
+    );
+}
 .welcome-panel {
-    -fx-background-color: #174f49;
+    -fx-background-color: #114540;
 }
 
 .brand-name {

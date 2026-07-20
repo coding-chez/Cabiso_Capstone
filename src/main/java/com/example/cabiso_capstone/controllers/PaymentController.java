@@ -6,6 +6,7 @@ import com.example.cabiso_capstone.model.Payment;
 import com.example.cabiso_capstone.model.Room;
 import com.example.cabiso_capstone.model.Tenant;
 import com.example.cabiso_capstone.session.SessionManager;
+import com.example.cabiso_capstone.session.UserSession;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -759,6 +760,10 @@ public class PaymentController {
 
     public void initialize() {
 
+        if (!validateAdminSession()) {
+            return;
+        }
+
         tenantComboBox.setItems(activeTenantList);
 
         paymentMethodComboBox.getItems().addAll(
@@ -1388,5 +1393,56 @@ public class PaymentController {
 
         );
 
+    }
+    private boolean validateAdminSession() {
+
+        try {
+
+            if (!SessionManager.hasValidSession()) {
+
+                MainApplication.changeScene(
+                        "login-view.fxml"
+                );
+
+                return false;
+            }
+
+            UserSession session =
+                    SessionManager.loadSession();
+
+            if (session == null
+                    || !session.isActive()
+                    || !session.isAdmin()) {
+
+                SessionManager.deleteSession();
+
+                MainApplication.changeScene(
+                        "login-view.fxml"
+                );
+
+                return false;
+            }
+
+            return true;
+
+        } catch (
+                IOException
+                | ClassNotFoundException exception
+        ) {
+
+            try {
+                SessionManager.deleteSession();
+
+                MainApplication.changeScene(
+                        "login-view.fxml"
+                );
+
+            } catch (IOException ignored) {
+            }
+
+            exception.printStackTrace();
+
+            return false;
+        }
     }
 }
