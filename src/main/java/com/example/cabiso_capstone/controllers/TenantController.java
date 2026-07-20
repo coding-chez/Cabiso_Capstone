@@ -4,6 +4,7 @@ import com.example.cabiso_capstone.MainApplication;
 import com.example.cabiso_capstone.database.DatabaseConnection;
 import com.example.cabiso_capstone.model.Room;
 import com.example.cabiso_capstone.model.Tenant;
+import com.example.cabiso_capstone.session.SessionManager;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,7 +16,6 @@ import java.io.IOException;
 import javafx.application.Platform;
 
 import java.sql.*;
-
 import javafx.collections.transformation.FilteredList;
 import java.util.Locale;
 import javafx.scene.control.Alert;
@@ -857,9 +857,21 @@ public class TenantController {
     }
 
     public void handleLogout(ActionEvent actionEvent) {
+
         try {
-            MainApplication.changeScene("login-view.fxml");
+            SessionManager.deleteSession();
+
+            System.out.println(
+                    "Session deleted: "
+                            + SessionManager.getSessionFilePath()
+            );
+
+            MainApplication.changeScene(
+                    "login-view.fxml"
+            );
+
         } catch (IOException exception) {
+
             exception.printStackTrace();
         }
     }

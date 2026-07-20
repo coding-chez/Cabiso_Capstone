@@ -1,9 +1,11 @@
 package com.example.cabiso_capstone.controllers;
 
+import com.example.cabiso_capstone.MainApplication;
 import com.example.cabiso_capstone.database.DatabaseConnection;
 import com.example.cabiso_capstone.model.Payment;
 import com.example.cabiso_capstone.model.Room;
 import com.example.cabiso_capstone.model.Tenant;
+import com.example.cabiso_capstone.session.SessionManager;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -11,6 +13,7 @@ import javafx.event.ActionEvent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+import java.io.IOException;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.Optional;
@@ -708,6 +711,23 @@ public class PaymentController {
     }
 
     public void handleLogout(ActionEvent actionEvent) {
+
+        try {
+            SessionManager.deleteSession();
+
+            System.out.println(
+                    "Session deleted: "
+                            + SessionManager.getSessionFilePath()
+            );
+
+            MainApplication.changeScene(
+                    "login-view.fxml"
+            );
+
+        } catch (IOException exception) {
+
+            exception.printStackTrace();
+        }
     }
 
     public void initialize() {

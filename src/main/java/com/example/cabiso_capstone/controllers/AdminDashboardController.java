@@ -4,7 +4,8 @@ import com.example.cabiso_capstone.MainApplication;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-
+import com.example.cabiso_capstone.session.SessionManager;
+import com.example.cabiso_capstone.session.UserSession;
 import java.io.IOException;
 
 public class AdminDashboardController {
@@ -23,12 +24,27 @@ public class AdminDashboardController {
         totalTenantsLabel.setText("2");
         availableRoomsLabel.setText("5");
         pendingPaymentsLabel.setText("1");
+        if (!validateSession()) {
+            return;
+        }
     }
 
     public void handleLogout(ActionEvent actionEvent) {
+
         try {
-            MainApplication.changeScene("login-view.fxml");
+            SessionManager.deleteSession();
+
+            System.out.println(
+                    "Session deleted: "
+                            + SessionManager.getSessionFilePath()
+            );
+
+            MainApplication.changeScene(
+                    "login-view.fxml"
+            );
+
         } catch (IOException exception) {
+
             exception.printStackTrace();
         }
     }
@@ -63,5 +79,54 @@ public class AdminDashboardController {
         } catch (IOException exception) {
             exception.printStackTrace();
         }
+    }
+
+    private boolean validateSession() {
+
+        try {
+
+            if (!SessionManager.hasValidSession()) {
+
+                MainApplication.changeScene(
+                        "login-view.fxml"
+                );
+
+                return false;
+            }
+
+            UserSession session = SessionManager.loadSession();
+            if (!session.isAdmin()) {
+
+                MainApplication.changeScene(
+                        "login-view.fxml"
+                );
+
+                return false;
+            }
+            if (session == null) {
+
+                MainApplication.changeScene(
+                        "login-view.fxml"
+                );
+
+                return false;
+            }
+
+            return true;
+
+        } catch (Exception exception) {
+
+            try {
+
+                MainApplication.changeScene(
+                        "login-view.fxml"
+                );
+
+            } catch (IOException ignored) {
+            }
+
+            return false;
+        }
+
     }
 }

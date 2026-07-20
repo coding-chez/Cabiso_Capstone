@@ -2,6 +2,9 @@ package com.example.cabiso_capstone.controllers;
 
 import com.example.cabiso_capstone.MainApplication;
 import com.example.cabiso_capstone.database.DatabaseConnection;
+import com.example.cabiso_capstone.session.SessionManager;
+import com.example.cabiso_capstone.session.UserSession;
+
 import javafx.event.ActionEvent;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -24,18 +27,25 @@ public class LoginController {
         String username = usernameField.getText().trim();
         String password = passwordField.getText();
 
-        if (username.isEmpty() || password.isEmpty()) {
-            messageLabel.setStyle("-fx-text-fill: red;");
-            messageLabel.setText(
-                    "Please enter your username and password."
-            );
+        if (username.isEmpty() || password.isEmpty()) {showError("Please enter your username and password.");
             return;
         }
 
         String sql =
-                "SELECT user_id, role, account_status "
-                        + "FROM users "
-                        + "WHERE username = ? AND password = ?";
+                """
+                SELECT
+                    u.user_id,
+                    u.username,
+                    u.role,
+                    u.account_status,
+                    t.tenant_id,
+                    t.full_name
+                FROM users u
+                LEFT JOIN tenants t
+                    ON u.user_id = t.user_id
+                WHERE u.username = ?
+                  AND u.password = ?
+                """;
 
         try (
                 Connection connection =
@@ -49,10 +59,8 @@ public class LoginController {
             statement.setString(2, password);
 
             try (ResultSet resultSet = statement.executeQuery()) {
-
                 if (!resultSet.next()) {
-                    messageLabel.setStyle("-fx-text-fill: red;");
-                    messageLabel.setText(
+                    showError(
                             "Invalid username or password."
                     );
 
@@ -61,99 +69,103 @@ public class LoginController {
                     return;
                 }
 
-                String role =
-                        resultSet.getString("role");
+                int userId = resultSet.getInt("user_id");
 
-                String accountStatus =
-                        resultSet.getString("account_status");
+                String storedUsername = resultSet.getString("username");
 
-                if (accountStatus.equalsIgnoreCase("PENDING")) {
-                    messageLabel.setStyle(
-                            "-fx-text-fill: orange;"
-                    );
+                String role = resultSet.getString("role");
 
-                    messageLabel.setText(
-                            "Your account is awaiting administrator approval."
-                    );
+                String accountStatus = resultSet.getString("account_status");
+
+                if ("PENDING".equalsIgnoreCase(accountStatus)) {
+                    showWarning("Your account is awaiting administrator approval.");
                     return;
                 }
 
-                if (accountStatus.equalsIgnoreCase("INACTIVE")) {
-                    messageLabel.setStyle(
-                            "-fx-text-fill: red;"
-                    );
-
-                    messageLabel.setText(
-                            "This account is inactive. "
-                                    + "Please contact the administrator."
-                    );
+                if ("INACTIVE".equalsIgnoreCase(accountStatus)) {
+                    showError("This account is inactive. " + "Please contact the administrator.");
                     return;
                 }
 
-                if (!accountStatus.equalsIgnoreCase("ACTIVE")) {
-                    messageLabel.setStyle(
-                            "-fx-text-fill: red;"
-                    );
-
-                    messageLabel.setText(
-                            "This account is currently unavailable."
-                    );
+                if (!"ACTIVE".equalsIgnoreCase(accountStatus)) {
+                    showError("This account is currently unavailable.");
                     return;
                 }
 
-                if (role.equalsIgnoreCase("ADMIN")) {
+                Integer tenantId = null;
 
-                    MainApplication.changeScene(
-                            "admin-dashboard-view.fxml"
-                    );
+                int retrievedTenantId = resultSet.getInt("tenant_id");
 
-                } else if (role.equalsIgnoreCase("TENANT")) {
+                if (!resultSet.wasNull()) {
+                    tenantId = retrievedTenantId;
+                }
 
-                    MainApplication.changeScene(
-                            "tenant-dashboard-view.fxml"
-                    );
+                String fullName = resultSet.getString("full_name");
+
+                if (fullName == null || fullName.isBlank()) {
+                    fullName = "Administrator";
+                }
+
+                UserSession userSession = new UserSession(userId, tenantId, storedUsername, fullName, role, accountStatus);
+
+                SessionManager.saveSession(userSession);
+
+                System.out.println("Session created: " + SessionManager.getSessionFilePath());
+
+                if ("ADMIN".equalsIgnoreCase(role)) {
+
+                    MainApplication.changeScene("admin-dashboard-view.fxml");
+
+                } else if ("TENANT".equalsIgnoreCase(role)) {
+
+                    MainApplication.changeScene("tenant-dashboard-view.fxml");
 
                 } else {
-                    messageLabel.setStyle(
-                            "-fx-text-fill: red;"
-                    );
 
-                    messageLabel.setText(
-                            "Unknown account role."
-                    );
+                    SessionManager.deleteSession();
+
+                    showError("Unknown account role.");
                 }
             }
 
         } catch (SQLException exception) {
-            messageLabel.setStyle("-fx-text-fill: red;");
-            messageLabel.setText(
-                    "Unable to connect to the database."
-            );
+
+            showError("Unable to connect to the database.");
 
             exception.printStackTrace();
 
         } catch (IOException exception) {
-            messageLabel.setStyle("-fx-text-fill: red;");
-            messageLabel.setText(
-                    "Unable to open the dashboard."
-            );
+
+            showError("Unable to create the login session.");
 
             exception.printStackTrace();
         }
     }
 
     public void openRegisterView(ActionEvent actionEvent) {
+
         try {
-            MainApplication.changeScene(
-                    "register-view.fxml"
-            );
+            MainApplication.changeScene("register-view.fxml");
+
         } catch (IOException exception) {
-            messageLabel.setStyle("-fx-text-fill: red;");
-            messageLabel.setText(
-                    "Unable to open registration."
-            );
+
+            showError("Unable to open registration.");
 
             exception.printStackTrace();
         }
+    }
+
+    private void showError(String message) {
+
+        messageLabel.setStyle("-fx-text-fill: red;");
+
+        messageLabel.setText(message);
+    }
+
+    private void showWarning(String message) {
+
+        messageLabel.setStyle("-fx-text-fill: orange;");
+
+        messageLabel.setText(message);
     }
 }

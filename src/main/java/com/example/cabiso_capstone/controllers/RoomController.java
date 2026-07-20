@@ -3,6 +3,7 @@ package com.example.cabiso_capstone.controllers;
 import com.example.cabiso_capstone.MainApplication;
 import com.example.cabiso_capstone.database.DatabaseConnection;
 import com.example.cabiso_capstone.model.Room;
+import com.example.cabiso_capstone.session.SessionManager;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -958,11 +959,21 @@ public class RoomController {
     }
 
     public void handleLogout(ActionEvent actionEvent) {
+
         try {
+            SessionManager.deleteSession();
+
+            System.out.println(
+                    "Session deleted: "
+                            + SessionManager.getSessionFilePath()
+            );
+
             MainApplication.changeScene(
                     "login-view.fxml"
             );
+
         } catch (IOException exception) {
+
             exception.printStackTrace();
         }
     }
