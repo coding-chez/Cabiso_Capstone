@@ -82,6 +82,10 @@ public class AdminDashboardController {
             return;
         }
 
+        MainApplication.getMainStage().setTitle(
+                "Cabana Dormitory Management System | Admin Dashboard"
+        );
+
         initializeRecentActivityTables();
         loadLoggedInAdministrator();
 
