@@ -63,6 +63,16 @@ Each tenant has access to a personalized dashboard where they can:
 - View payment history
 - Access personal account information
 
+### 🏡 Real-World Workflow
+
+<div align="justify">
+
+The **Cabana Dormitory Management System** reflects the daily operations of a typical boarding house or dormitory where the administrator serves as the central authority for managing tenants, rooms, and financial records. Prospective tenants begin by submitting a registration request, which remains pending until reviewed and approved by the administrator. Once approved, the administrator assigns an available room based on its capacity and operational status, ensuring that maintenance, inactive, or fully occupied rooms cannot be assigned.
+
+After activation, tenants gain secure access to their personal dashboard, where they can view their assigned room, current account balance, payment history, and personal information while being limited to updating only their own contact details. Monthly rental payments are received through the dormitory's existing payment channels, such as cash or digital wallets, and are officially recorded, updated, or voided only by the administrator after payment verification. Every room assignment automatically updates room occupancy, every payment automatically recalculates tenant balances, and user sessions are securely restored using Java Serialization until the user explicitly logs out. Through this workflow, the system provides a centralized, accurate, and role-based solution for managing day-to-day dormitory operations.
+
+</div>
+
 ---
 
 # 🚀 Key Features
@@ -365,49 +375,61 @@ The system uses a relational database in **MySQL** to manage authentication, ten
 The project follows a modular package organization to improve maintainability and readability.
 
 ```text
-Cabiso_Capstone
+Cabana_Dormitory_Management_System
 │
-├── README.md
-├── pom.xml
-│
-└── src
-    └── main
-        ├── java
-        │   └── com.example.cabiso_capstone
-        │       │
-        │       ├── controllers
-        │       │   ├── LoginController.java
-        │       │   ├── RegisterController.java
-        │       │   ├── AdminDashboardController.java
-        │       │   ├── TenantDashboardController.java
-        │       │   ├── TenantController.java
-        │       │   ├── RoomController.java
-        │       │   └── PaymentController.java
-        │       │
-        │       ├── database
-        │       │   └── DatabaseConnection.java
-        │       │
-        │       ├── model
-        │       │   ├── User.java
-        │       │   ├── Administrator.java
-        │       │   ├── Tenant.java
-        │       │   ├── Room.java
-        │       │   └── Payment.java
-        │       │
-        │       ├── session
-        │       │   ├── UserSession.java
-        │       │   ├── SessionStorage.java
-        │       │   ├── FileSessionStorage.java
-        │       │   └── SessionManager.java
-        │       │
-        │       │
-        │       ├── MainApplication.java
-        │       └── module-info.java
-        │
-        └── resources
-            ├── *.fxml
-            ├── *.css
-            └── assets
+├── src
+│   ├── cabiso_dormitory.sql
+│   │
+│   └── main
+│       ├── java
+│       │   ├── com.example.cabiso_capstone
+│       │   │
+│       │   ├── controllers
+│       │   │   ├── AdminDashboardController.java
+│       │   │   ├── LoginController.java
+│       │   │   ├── PaymentController.java
+│       │   │   ├── RegisterController.java
+│       │   │   ├── RoomController.java
+│       │   │   ├── TenantController.java
+│       │   │   └── TenantDashboardController.java
+│       │   │
+│       │   ├── model
+│       │   │   ├── Administrator.java
+│       │   │   ├── Payment.java
+│       │   │   ├── Room.java
+│       │   │   ├── Tenant.java
+│       │   │   └── User.java
+│       │   │
+│       │   ├── database
+│       │   │   └── DatabaseConnection.java
+│       │   │
+│       │   ├── session
+│       │   │   ├── FileSessionStorage.java
+│       │   │   ├── SessionManager.java
+│       │   │   ├── SessionStorage.java
+│       │   │   └── UserSession.java
+│       │   │
+│       │   ├── validation
+│       │   │   └── InputValidator.java
+│       │   │
+│       │   ├── exceptions
+│       │   │   ├── ValidationException.java
+│       │   │   └── InvalidContactNumberException.java
+│       │   │
+│       │   ├── MainApplication.java
+│       │   └── module-info.java
+│       │
+│       └── resources
+│           └── com.example.cabiso_capstone
+│               ├── admin-dashboard-view.fxml
+│               ├── login-view.fxml
+│               ├── payment-view.fxml
+│               ├── register-view.fxml
+│               ├── room-view.fxml
+│               ├── tenant-dashboard-view.fxml
+│               ├── tenant-view.fxml
+│               ├── styles.css
+│               └── CABANA.png
 ```
 
 ---
