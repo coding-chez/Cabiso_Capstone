@@ -5,7 +5,7 @@
 
 <img src="src/main/resources/com/example/cabiso_capstone/CABANA.png" width="180"/>
 
-# 🏠 Cabana Dormitory Management System
+# Cabana Dormitory Management System
 
 <p align="center">
 
@@ -35,9 +35,13 @@ A desktop-based Dormitory Management Information System developed using <strong>
 
 # 📌 About the Project
 
-The **Cabana Dormitory Management System** is a desktop-based information management application designed to modernize the daily administrative operations of boarding houses and dormitories. Instead of relying on paper records or spreadsheets, the system centralizes tenant information, room assignments, payment transactions, and authentication into a single integrated platform.
+<div align="justify">
+
+  The **Cabana Dormitory Management System** is a desktop-based information management application designed to modernize the daily administrative operations of boarding houses and dormitories. Instead of relying on paper records or spreadsheets, the system centralizes tenant information, room assignments, payment transactions, and authentication into a single integrated platform.
 
 Built with **JavaFX**, **MySQL**, and **JDBC**, the application follows the **Model–View–Controller (MVC)** architecture to ensure modularity, maintainability, and scalability. It also implements **Java Serialization** to provide persistent user sessions, allowing authenticated users to continue their previous session after restarting the application until they explicitly log out.
+
+</div>
 
 The system currently supports two user roles:
 
@@ -67,9 +71,9 @@ Each tenant has access to a personalized dashboard where they can:
 
 <div align="justify">
 
-The **Cabana Dormitory Management System** reflects the daily operations of a typical boarding house or dormitory where the administrator serves as the central authority for managing tenants, rooms, and financial records. Prospective tenants begin by submitting a registration request, which remains pending until reviewed and approved by the administrator. Once approved, the administrator assigns an available room based on its capacity and operational status, ensuring that maintenance, inactive, or fully occupied rooms cannot be assigned.
+The **Cabana Dormitory Management System** reflects the day-to-day operations of a typical boarding house or dormitory where the administrator oversees tenant records, room assignments, and payment documentation. Prospective tenants begin by registering through the system, after which their accounts remain in a **Pending** state until reviewed and approved by the administrator. Once approved, the administrator assigns an available room based on its capacity and operational status, ensuring that full, inactive, or maintenance rooms cannot be occupied.
 
-After activation, tenants gain secure access to their personal dashboard, where they can view their assigned room, current account balance, payment history, and personal information while being limited to updating only their own contact details. Monthly rental payments are received through the dormitory's existing payment channels, such as cash or digital wallets, and are officially recorded, updated, or voided only by the administrator after payment verification. Every room assignment automatically updates room occupancy, every payment automatically recalculates tenant balances, and user sessions are securely restored using Java Serialization until the user explicitly logs out. Through this workflow, the system provides a centralized, accurate, and role-based solution for managing day-to-day dormitory operations.
+Approved tenants can securely log in to their personal dashboard to view their profile information, assigned room, outstanding balance, and payment history, while being allowed to update only their contact number. Rental payments are received through the dormitory's existing payment methods outside the system and are subsequently recorded, updated, or voided by the administrator to maintain accurate financial records. The system automatically updates room occupancy after every room assignment, recalculates tenant balances whenever payment records change, and preserves authenticated user sessions through Java Serialization until the user explicitly logs out. By centralizing these administrative tasks, the system provides an organized, role-based, and reliable platform for managing daily dormitory operations.
 
 </div>
 
@@ -521,10 +525,10 @@ The current implementation serves as a strong foundation for future development.
 
 ---
 
-# 👨‍💻 Author
+# 🔮 Author
+
 
 <div align="center">
-
 
 ## Chestine May Mari C. Cabiso
 
