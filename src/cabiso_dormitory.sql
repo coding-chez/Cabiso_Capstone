@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Jul 17, 2026 at 04:36 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Host: localhost
+-- Generation Time: Jul 20, 2026 at 11:44 AM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -30,10 +30,21 @@ SET time_zone = "+00:00";
 CREATE TABLE `payments` (
   `payment_id` int(11) NOT NULL,
   `tenant_id` int(11) NOT NULL,
+  `billing_month` varchar(30) NOT NULL,
   `amount` double NOT NULL,
   `payment_date` date NOT NULL,
-  `status` varchar(20) NOT NULL
+  `payment_method` varchar(30) NOT NULL,
+  `reference_number` varchar(100) DEFAULT NULL,
+  `remarks` varchar(255) DEFAULT NULL,
+  `status` varchar(20) NOT NULL DEFAULT 'PAID'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `payments`
+--
+
+INSERT INTO `payments` (`payment_id`, `tenant_id`, `billing_month`, `amount`, `payment_date`, `payment_method`, `reference_number`, `remarks`, `status`) VALUES
+(1, 3, 'July 2026', 1000, '2026-07-19', 'GCASH', 'G109072026', NULL, 'PAID');
 
 -- --------------------------------------------------------
 
@@ -48,6 +59,18 @@ CREATE TABLE `rooms` (
   `monthly_rate` double NOT NULL,
   `status` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `rooms`
+--
+
+INSERT INTO `rooms` (`room_id`, `room_number`, `capacity`, `monthly_rate`, `status`) VALUES
+(1, '101', 2, 3500, 'AVAILABLE'),
+(2, '102', 2, 3500, 'AVAILABLE'),
+(3, '204', 3, 2500, 'AVAILABLE'),
+(4, '205', 4, 3500, 'MAINTENANCE'),
+(5, '103', 2, 3500, 'AVAILABLE'),
+(6, '104', 2, 3500, 'AVAILABLE');
 
 -- --------------------------------------------------------
 
@@ -69,10 +92,12 @@ CREATE TABLE `tenants` (
 --
 
 INSERT INTO `tenants` (`tenant_id`, `user_id`, `room_id`, `full_name`, `contact_number`, `status`) VALUES
-(1, 2, NULL, 'Juan Dela Cruz', '09123456789a', 'ACTIVE'),
-(2, 3, NULL, 'Nicholas Gomez', '09123456789', 'ACTIVE'),
-(3, 4, NULL, 'Chestine', '09123456789', 'ACTIVE'),
-(4, 5, NULL, 'Bonnieand Clyde', '09951492729', 'PENDING');
+(1, 2, 1, 'Juan Dela Cruz', '09123456789', 'PENDING'),
+(2, 3, 2, 'Nicholas Gomez', '09123456789', 'ACTIVE'),
+(3, 4, 3, 'Chestine', '09332163090', 'ACTIVE'),
+(4, 5, 3, 'BonnieAndClyde', '09331253080', 'ACTIVE'),
+(5, 6, NULL, 'Edwin McCain', '09123456789', 'PENDING'),
+(6, 7, NULL, 'Audrey Hepburn', '09222456789', 'PENDING');
 
 -- --------------------------------------------------------
 
@@ -94,10 +119,12 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`user_id`, `username`, `password`, `role`, `account_status`) VALUES
 (1, 'admin', 'admin123', 'ADMIN', 'ACTIVE'),
-(2, 'juan001', 'tenant123', 'TENANT', 'ACTIVE'),
+(2, 'juan001', 'tenant123', 'TENANT', 'PENDING'),
 (3, 'nich@gmail.com', '0123', 'TENANT', 'ACTIVE'),
 (4, 'ches', 'ches123', 'TENANT', 'ACTIVE'),
-(5, 'bonnie', 'bn123', 'TENANT', 'PENDING');
+(5, 'bonnie', 'bn123', 'TENANT', 'ACTIVE'),
+(6, 'edwin_', 'edwin123', 'TENANT', 'PENDING'),
+(7, 'audrey', 'audrey123', 'TENANT', 'PENDING');
 
 --
 -- Indexes for dumped tables
@@ -140,25 +167,25 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `rooms`
 --
 ALTER TABLE `rooms`
-  MODIFY `room_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `room_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `tenants`
 --
 ALTER TABLE `tenants`
-  MODIFY `tenant_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `tenant_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Constraints for dumped tables
@@ -168,6 +195,7 @@ ALTER TABLE `users`
 -- Constraints for table `payments`
 --
 ALTER TABLE `payments`
+  ADD CONSTRAINT `fk_payments_tenant` FOREIGN KEY (`tenant_id`) REFERENCES `tenants` (`tenant_id`),
   ADD CONSTRAINT `payments_ibfk_1` FOREIGN KEY (`tenant_id`) REFERENCES `tenants` (`tenant_id`);
 
 --
