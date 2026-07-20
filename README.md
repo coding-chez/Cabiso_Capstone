@@ -525,7 +525,7 @@ The current implementation serves as a strong foundation for future development.
 
 ---
 
-# 🔮 Author
+# 👤 Author 
 
 
 <div align="center">
