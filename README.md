@@ -369,7 +369,6 @@ Cabiso_Capstone
 │
 ├── README.md
 ├── pom.xml
-├── session.dat
 │
 └── src
     └── main
