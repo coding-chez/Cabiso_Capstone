@@ -482,7 +482,7 @@ The application will automatically launch.
 
 ---
 
-# Future Improvements
+# 🔮 Future Improvements
 
 The current implementation serves as a strong foundation for future development. Planned enhancements include:
 
@@ -499,9 +499,10 @@ The current implementation serves as a strong foundation for future development.
 
 ---
 
-# Author
+# 👨‍💻 Author
 
 <div align="center">
+
 
 ## Chestine May Mari C. Cabiso
 
