@@ -56,6 +56,13 @@
         </VBox>
     </left>
     <center>
+        <ScrollPane fitToWidth="true"
+                    fitToHeight="true"
+                    pannable="true"
+                    hbarPolicy="NEVER"
+                    vbarPolicy="AS_NEEDED"
+                    styleClass="dashboard-scroll">
+                <content>
         <VBox spacing="24.0" styleClass="dashboard-content">
 
             <padding>
@@ -266,7 +273,114 @@
 
             </VBox>
 
+            <!-- RECENT ACTIVITY -->
+
+            <HBox spacing="20.0">
+
+                <!-- RECENT TENANTS -->
+
+                <VBox spacing="14.0"
+                      styleClass="content-card"
+                      HBox.hgrow="ALWAYS">
+
+                    <HBox alignment="CENTER_LEFT">
+
+                        <VBox spacing="3.0">
+                            <Label text="Recent Tenant Activity"
+                                   styleClass="section-title"/>
+
+                            <Label text="Latest tenant registrations and account statuses."
+                                   styleClass="section-description"/>
+                        </VBox>
+
+                        <Region HBox.hgrow="ALWAYS"/>
+
+                        <Button text="View All Tenants"
+                                onAction="#openTenantView"
+                                styleClass="secondary-button"/>
+                    </HBox>
+
+                    <TableView fx:id="recentTenantTable"
+                               prefHeight="235.0"
+                               maxHeight="235.0"
+                               styleClass="management-table">
+
+                        <placeholder>
+                            <Label text="No recent tenant activity."
+                                   styleClass="table-placeholder"/>
+                        </placeholder>
+
+                        <columns>
+                            <TableColumn fx:id="recentTenantNameColumn"
+                                         text="Tenant"/>
+
+                            <TableColumn fx:id="recentTenantRoomColumn"
+                                         text="Room"/>
+
+                            <TableColumn fx:id="recentTenantStatusColumn"
+                                         text="Status"/>
+                        </columns>
+
+                    </TableView>
+
+                </VBox>
+
+                <!-- RECENT PAYMENTS -->
+
+                <VBox spacing="14.0"
+                      styleClass="content-card"
+                      HBox.hgrow="ALWAYS">
+
+                    <HBox alignment="CENTER_LEFT">
+
+                        <VBox spacing="3.0">
+                            <Label text="Recent Payment Activity"
+                                   styleClass="section-title"/>
+
+                            <Label text="Latest recorded and voided tenant payments."
+                                   styleClass="section-description"/>
+                        </VBox>
+
+                        <Region HBox.hgrow="ALWAYS"/>
+
+                        <Button text="View All Payments"
+                                onAction="#openPaymentView"
+                                styleClass="secondary-button"/>
+                    </HBox>
+
+                    <TableView fx:id="recentPaymentTable"
+                               prefHeight="235.0"
+                               maxHeight="235.0"
+                               styleClass="management-table">
+
+                        <placeholder>
+                            <Label text="No recent payment activity."
+                                   styleClass="table-placeholder"/>
+                        </placeholder>
+
+                        <columns>
+                            <TableColumn fx:id="recentPaymentTenantColumn"
+                                         text="Tenant"/>
+
+                            <TableColumn fx:id="recentPaymentAmountColumn"
+                                         text="Amount"/>
+
+                            <TableColumn fx:id="recentPaymentDateColumn"
+                                         text="Date"/>
+
+                            <TableColumn fx:id="recentPaymentStatusColumn"
+                                         text="Status"/>
+                        </columns>
+
+                    </TableView>
+
+                </VBox>
+
+            </HBox>
+
         </VBox>
+                </content>
+        </ScrollPane>
     </center>
 
 </BorderPane>

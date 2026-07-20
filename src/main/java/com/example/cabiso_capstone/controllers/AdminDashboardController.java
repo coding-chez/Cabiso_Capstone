@@ -14,6 +14,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+
+import java.time.LocalDate;
 
 public class AdminDashboardController {
 
@@ -35,17 +42,266 @@ public class AdminDashboardController {
     public Label monthlyRevenueLabel;
     public Label totalRevenueLabel;
     public Label voidPaymentsLabel;
+    public TableView<RecentTenantActivity> recentTenantTable;
 
+    public TableColumn<RecentTenantActivity, String>
+            recentTenantNameColumn;
+
+    public TableColumn<RecentTenantActivity, String>
+            recentTenantRoomColumn;
+
+    public TableColumn<RecentTenantActivity, String>
+            recentTenantStatusColumn;
+
+
+    public TableView<RecentPaymentActivity> recentPaymentTable;
+
+    public TableColumn<RecentPaymentActivity, String>
+            recentPaymentTenantColumn;
+
+    public TableColumn<RecentPaymentActivity, String>
+            recentPaymentAmountColumn;
+
+    public TableColumn<RecentPaymentActivity, String>
+            recentPaymentDateColumn;
+
+    public TableColumn<RecentPaymentActivity, String>
+            recentPaymentStatusColumn;
+    private final ObservableList<RecentTenantActivity>
+            recentTenantActivities =
+            FXCollections.observableArrayList();
+
+    private final ObservableList<RecentPaymentActivity>
+            recentPaymentActivities =
+            FXCollections.observableArrayList();
     public void initialize() {
 
         if (!validateSession()) {
             return;
         }
 
+        initializeRecentActivityTables();
+
         loadLoggedInAdministrator();
         loadDashboardStatistics();
         loadOccupancySummary();
         loadFinancialSummary();
+
+        loadRecentTenantActivity();
+        loadRecentPaymentActivity();
+    }
+
+    private void loadRecentPaymentActivity() {
+
+        recentPaymentActivities.clear();
+
+        String sql =
+                """
+                SELECT
+                    t.full_name,
+                    p.amount,
+                    p.payment_date,
+                    p.status
+                FROM payments p
+    
+                JOIN tenants t
+                    ON p.tenant_id = t.tenant_id
+    
+                ORDER BY
+                    p.payment_date DESC,
+                    p.payment_id DESC
+    
+                LIMIT 5
+                """;
+
+        try (
+                Connection connection =
+                        DatabaseConnection.getConnection();
+
+                PreparedStatement statement =
+                        connection.prepareStatement(sql);
+
+                ResultSet resultSet =
+                        statement.executeQuery()
+        ) {
+
+            while (resultSet.next()) {
+
+                RecentPaymentActivity activity =
+                        new RecentPaymentActivity(
+                                resultSet.getString(
+                                        "full_name"
+                                ),
+                                resultSet.getDouble(
+                                        "amount"
+                                ),
+                                resultSet.getDate(
+                                        "payment_date"
+                                ).toLocalDate(),
+                                resultSet.getString(
+                                        "status"
+                                )
+                        );
+
+                recentPaymentActivities.add(
+                        activity
+                );
+            }
+
+            recentPaymentTable.refresh();
+
+        } catch (SQLException exception) {
+
+            recentPaymentActivities.clear();
+
+            System.err.println(
+                    "Unable to load recent payment activity."
+            );
+
+            exception.printStackTrace();
+        }
+    }
+
+    private void loadRecentTenantActivity() {
+
+        recentTenantActivities.clear();
+
+        String sql =
+                """
+                SELECT
+                    t.full_name,
+                    r.room_number,
+                    t.status
+                FROM tenants t
+    
+                LEFT JOIN rooms r
+                    ON t.room_id = r.room_id
+    
+                ORDER BY t.tenant_id DESC
+    
+                LIMIT 5
+                """;
+
+        try (
+                Connection connection =
+                        DatabaseConnection.getConnection();
+
+                PreparedStatement statement =
+                        connection.prepareStatement(sql);
+
+                ResultSet resultSet =
+                        statement.executeQuery()
+        ) {
+
+            while (resultSet.next()) {
+
+                String roomNumber =
+                        resultSet.getString(
+                                "room_number"
+                        );
+
+                if (roomNumber == null
+                        || roomNumber.isBlank()) {
+
+                    roomNumber =
+                            "Not Assigned";
+                }
+
+                RecentTenantActivity activity =
+                        new RecentTenantActivity(
+                                resultSet.getString(
+                                        "full_name"
+                                ),
+                                roomNumber,
+                                resultSet.getString(
+                                        "status"
+                                )
+                        );
+
+                recentTenantActivities.add(
+                        activity
+                );
+            }
+
+            recentTenantTable.refresh();
+
+        } catch (SQLException exception) {
+
+            recentTenantActivities.clear();
+
+            System.err.println(
+                    "Unable to load recent tenant activity."
+            );
+
+            exception.printStackTrace();
+        }
+    }
+
+    private void initializeRecentActivityTables() {
+
+        recentTenantNameColumn.setCellValueFactory(
+                data -> new SimpleStringProperty(
+                        data.getValue().getTenantName()
+                )
+        );
+
+        recentTenantRoomColumn.setCellValueFactory(
+                data -> new SimpleStringProperty(
+                        data.getValue().getRoomNumber()
+                )
+        );
+
+        recentTenantStatusColumn.setCellValueFactory(
+                data -> new SimpleStringProperty(
+                        data.getValue().getStatus()
+                )
+        );
+
+        recentTenantTable.setItems(
+                recentTenantActivities
+        );
+
+        recentTenantTable.setColumnResizePolicy(
+                TableView.CONSTRAINED_RESIZE_POLICY
+        );
+
+
+        recentPaymentTenantColumn.setCellValueFactory(
+                data -> new SimpleStringProperty(
+                        data.getValue().getTenantName()
+                )
+        );
+
+        recentPaymentAmountColumn.setCellValueFactory(
+                data -> new SimpleStringProperty(
+                        String.format(
+                                "₱%,.2f",
+                                data.getValue().getAmount()
+                        )
+                )
+        );
+
+        recentPaymentDateColumn.setCellValueFactory(
+                data -> new SimpleStringProperty(
+                        data.getValue()
+                                .getPaymentDate()
+                                .toString()
+                )
+        );
+
+        recentPaymentStatusColumn.setCellValueFactory(
+                data -> new SimpleStringProperty(
+                        data.getValue().getStatus()
+                )
+        );
+
+        recentPaymentTable.setItems(
+                recentPaymentActivities
+        );
+
+        recentPaymentTable.setColumnResizePolicy(
+                TableView.CONSTRAINED_RESIZE_POLICY
+        );
     }
 
     private void loadFinancialSummary() {
@@ -564,6 +820,82 @@ public class AdminDashboardController {
             }
 
             return false;
+        }
+    }
+    public static class RecentPaymentActivity {
+
+        private final String tenantName;
+        private final double amount;
+        private final LocalDate paymentDate;
+        private final String status;
+
+        public RecentPaymentActivity(
+                String tenantName,
+                double amount,
+                LocalDate paymentDate,
+                String status
+        ) {
+            this.tenantName =
+                    tenantName;
+
+            this.amount =
+                    amount;
+
+            this.paymentDate =
+                    paymentDate;
+
+            this.status =
+                    status;
+        }
+
+        public String getTenantName() {
+            return tenantName;
+        }
+
+        public double getAmount() {
+            return amount;
+        }
+
+        public LocalDate getPaymentDate() {
+            return paymentDate;
+        }
+
+        public String getStatus() {
+            return status;
+        }
+    }
+
+    public static class RecentTenantActivity {
+
+        private final String tenantName;
+        private final String roomNumber;
+        private final String status;
+
+        public RecentTenantActivity(
+                String tenantName,
+                String roomNumber,
+                String status
+        ) {
+            this.tenantName =
+                    tenantName;
+
+            this.roomNumber =
+                    roomNumber;
+
+            this.status =
+                    status;
+        }
+
+        public String getTenantName() {
+            return tenantName;
+        }
+
+        public String getRoomNumber() {
+            return roomNumber;
+        }
+
+        public String getStatus() {
+            return status;
         }
     }
 }

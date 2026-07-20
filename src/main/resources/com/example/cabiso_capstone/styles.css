@@ -227,6 +227,16 @@
     -fx-text-fill: #70817d;
 }
 
+.dashboard-scroll{
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+    -fx-border-color: transparent;
+}
+
+.dashboard-scroll > .viewport{
+    -fx-background-color: transparent;
+}
+
 /* =========================================================
    6. CARDS
 ========================================================= */
