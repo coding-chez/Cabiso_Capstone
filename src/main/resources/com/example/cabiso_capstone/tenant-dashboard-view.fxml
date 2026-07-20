@@ -7,6 +7,8 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <BorderPane xmlns="http://javafx.com/javafx/17.0.12"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.example.cabiso_capstone.controllers.TenantDashboardController"
@@ -16,50 +18,69 @@
             styleClass="tenant-dashboard-root">
 
     <top>
+
         <HBox alignment="CENTER_LEFT"
-              spacing="15.0"
+              spacing="14.0"
               styleClass="dashboard-header">
 
             <padding>
-                <Insets top="15.0"
-                        right="25.0"
-                        bottom="15.0"
+                <Insets top="12.0"
+                        right="28.0"
+                        bottom="12.0"
                         left="25.0"/>
             </padding>
 
-            <VBox spacing="2.0">
+            <ImageView fitWidth="48.0"
+                       fitHeight="48.0"
+                       preserveRatio="true"
+                       smooth="true"
+                       styleClass="header-logo">
+
+                <image>
+                    <Image url="@CABANA.png"/>
+                </image>
+
+            </ImageView>
+
+            <VBox spacing="2">
+
                 <Label text="CABANA DORMITORY"
                        styleClass="dashboard-brand"/>
 
-                <Label text="Tenant Portal"
+                <Label text="Dormitory Management System"
                        styleClass="dashboard-brand-subtitle"/>
+
             </VBox>
 
             <Region HBox.hgrow="ALWAYS"/>
 
             <VBox alignment="CENTER_RIGHT"
-                  spacing="2.0">
+                  spacing="2">
 
                 <Label fx:id="tenantNameHeaderLabel"
                        text="Tenant Name"
                        styleClass="dashboard-user"/>
 
-                <Label text="Tenant Account"
+                <Label text="Tenant"
                        styleClass="dashboard-user-role"/>
+
             </VBox>
 
         </HBox>
+
     </top>
+
     <left>
-        <VBox prefWidth="220.0"
-              spacing="8.0"
+
+        <VBox prefWidth="220"
+              spacing="8"
               styleClass="dashboard-sidebar">
 
             <padding>
-                <Insets top="28.0"
-                        right="15.0"
-                        bottom="22.0"
-                        left="15.0"/>
+                <Insets top="28"
+                        right="15"
+                        bottom="22"
+                        left="15"/>
             </padding>
 
             <Label text="TENANT MENU"
@@ -68,24 +89,28 @@
             <Button fx:id="overviewButton"
                     text="Overview"
                     maxWidth="Infinity"
+                    prefHeight="43"
                     onAction="#showOverview"
                     styleClass="sidebar-button-active"/>
 
             <Button fx:id="profileButton"
                     text="My Profile"
                     maxWidth="Infinity"
+                    prefHeight="43"
                     onAction="#showProfile"
                     styleClass="sidebar-button"/>
 
             <Button fx:id="roomButton"
                     text="My Room"
                     maxWidth="Infinity"
+                    prefHeight="43"
                     onAction="#showRoomDetails"
                     styleClass="sidebar-button"/>
 
             <Button fx:id="paymentButton"
                     text="Payment History"
                     maxWidth="Infinity"
+                    prefHeight="43"
                     onAction="#showPaymentHistory"
                     styleClass="sidebar-button"/>
 
@@ -95,10 +120,12 @@
 
             <Button text="Logout"
                     maxWidth="Infinity"
+                    prefHeight="43"
                     onAction="#handleLogout"
                     styleClass="logout-button"/>
 
         </VBox>
+
     </left>
 
     <center>
@@ -250,9 +277,6 @@
 
             </VBox>
 
-            <!-- =================================================
-                 PROFILE SECTION
-                 ================================================= -->
             <VBox fx:id="profilePane"
                   spacing="22.0"
                   visible="false"

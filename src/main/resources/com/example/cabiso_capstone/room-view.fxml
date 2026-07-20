@@ -4,6 +4,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <BorderPane prefWidth="1440.0"
             prefHeight="900.0"
             styleClass="management-root"
@@ -12,28 +14,39 @@
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.example.cabiso_capstone.controllers.RoomController">
 
-    <!-- =====================================================
-         HEADER
-    ====================================================== -->
-
     <top>
+
         <HBox alignment="CENTER_LEFT"
-              spacing="15.0"
+              spacing="14.0"
               styleClass="dashboard-header">
 
             <padding>
-                <Insets top="15.0"
-                        right="25.0"
-                        bottom="15.0"
+                <Insets top="12.0"
+                        right="28.0"
+                        bottom="12.0"
                         left="25.0"/>
             </padding>
 
+            <ImageView fitWidth="48.0"
+                       fitHeight="48.0"
+                       preserveRatio="true"
+                       smooth="true"
+                       styleClass="header-logo">
+
+                <image>
+                    <Image url="@CABANA.png"/>
+                </image>
+
+            </ImageView>
+
             <VBox spacing="2.0">
+
                 <Label text="CABANA DORMITORY"
                        styleClass="dashboard-brand"/>
 
                 <Label text="Dormitory Management System"
                        styleClass="dashboard-brand-subtitle"/>
+
             </VBox>
 
             <Region HBox.hgrow="ALWAYS"/>
@@ -44,19 +57,20 @@
                 <Label text="Administrator"
                        styleClass="dashboard-user"/>
 
-                <Label text="System Manager"
+                <Label text="Room Management"
                        styleClass="dashboard-user-role"/>
+
             </VBox>
 
         </HBox>
+
     </top>
 
-    <!-- =====================================================
-         SIDEBAR
-    ====================================================== -->
 
     <left>
-        <VBox spacing="8.0"
+
+        <VBox prefWidth="220.0"
+              spacing="8.0"
               styleClass="dashboard-sidebar">
 
             <padding>
@@ -71,36 +85,40 @@
 
             <Button text="Dashboard"
                     maxWidth="Infinity"
+                    prefHeight="43.0"
                     onAction="#openDashboard"
                     styleClass="sidebar-button"/>
 
             <Button text="Tenant Management"
                     maxWidth="Infinity"
+                    prefHeight="43.0"
                     onAction="#openTenantView"
                     styleClass="sidebar-button"/>
 
             <Button text="Room Management"
                     maxWidth="Infinity"
+                    prefHeight="43.0"
                     styleClass="sidebar-button-active"/>
 
             <Button text="Payment Management"
                     maxWidth="Infinity"
+                    prefHeight="43.0"
                     onAction="#openPaymentView"
                     styleClass="sidebar-button"/>
 
             <Region VBox.vgrow="ALWAYS"/>
 
+            <Separator styleClass="sidebar-separator"/>
+
             <Button text="Logout"
                     maxWidth="Infinity"
+                    prefHeight="43.0"
                     onAction="#handleLogout"
                     styleClass="logout-button"/>
 
         </VBox>
-    </left>
 
-    <!-- =====================================================
-         MAIN CONTENT
-    ====================================================== -->
+    </left>
 
     <center>
         <ScrollPane fitToWidth="true"
@@ -119,7 +137,6 @@
                                 left="32.0"/>
                     </padding>
 
-                    <!-- Page title -->
 
                     <VBox spacing="4.0">
                         <Label text="Room Management"
@@ -128,8 +145,6 @@
                         <Label text="Monitor room capacity, occupancy, rates, and operational status."
                                styleClass="dashboard-subtitle"/>
                     </VBox>
-
-                    <!-- Search and filter toolbar -->
 
                     <HBox alignment="CENTER_LEFT"
                           spacing="10.0"
@@ -159,8 +174,6 @@
                                 styleClass="secondary-button"/>
 
                     </HBox>
-
-                    <!-- Room records -->
 
                     <VBox minHeight="320.0"
                           prefHeight="340.0"
@@ -224,8 +237,6 @@
 
                     </VBox>
 
-                    <!-- Room information form -->
-
                     <VBox spacing="20.0"
                           styleClass="content-card">
 
@@ -236,8 +247,6 @@
                             <Label text="Create a room or select an existing record before updating it."
                                    styleClass="section-description"/>
                         </VBox>
-
-                        <!-- Row 1 -->
 
                         <HBox spacing="16.0">
 
@@ -272,8 +281,6 @@
 
                         </HBox>
 
-                        <!-- Row 2 -->
-
                         <HBox spacing="16.0">
 
                             <VBox spacing="6.0"
@@ -306,8 +313,6 @@
                             </VBox>
 
                         </HBox>
-
-                        <!-- Row 3 -->
 
                         <HBox spacing="16.0">
 
@@ -346,8 +351,6 @@
                                wrapText="true"
                                minHeight="18.0"
                                styleClass="form-message-label"/>
-
-                        <!-- Actions -->
 
                         <HBox alignment="CENTER_RIGHT"
                               spacing="10.0">

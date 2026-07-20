@@ -4,24 +4,44 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <BorderPane prefWidth="1440.0"
             prefHeight="900.0" styleClass="management-root" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cabiso_capstone.controllers.TenantController">
 
     <top>
+
         <HBox alignment="CENTER_LEFT"
-              spacing="15.0"
+              spacing="14.0"
               styleClass="dashboard-header">
 
             <padding>
-                <Insets top="15.0" right="25.0" bottom="15.0" left="25.0"/>
+                <Insets top="12.0"
+                        right="28.0"
+                        bottom="12.0"
+                        left="25.0"/>
             </padding>
 
+            <ImageView fitWidth="48.0"
+                       fitHeight="48.0"
+                       preserveRatio="true"
+                       smooth="true"
+                       styleClass="header-logo">
+
+                <image>
+                    <Image url="@CABANA.png"/>
+                </image>
+
+            </ImageView>
+
             <VBox spacing="2.0">
+
                 <Label text="CABANA DORMITORY"
                        styleClass="dashboard-brand"/>
 
                 <Label text="Dormitory Management System"
                        styleClass="dashboard-brand-subtitle"/>
+
             </VBox>
 
             <Region HBox.hgrow="ALWAYS"/>
@@ -32,19 +52,26 @@
                 <Label text="Administrator"
                        styleClass="dashboard-user"/>
 
-                <Label text="System Manager"
+                <Label text="Tenant Management"
                        styleClass="dashboard-user-role"/>
+
             </VBox>
 
         </HBox>
+
     </top>
 
     <left>
-        <VBox spacing="8.0"
+
+        <VBox prefWidth="220.0"
+              spacing="8.0"
               styleClass="dashboard-sidebar">
 
             <padding>
-                <Insets top="28.0" right="15.0" bottom="22.0" left="15.0"/>
+                <Insets top="28.0"
+                        right="15.0"
+                        bottom="22.0"
+                        left="15.0"/>
             </padding>
 
             <Label text="MAIN MENU"
@@ -52,32 +79,41 @@
 
             <Button text="Dashboard"
                     maxWidth="Infinity"
+                    prefHeight="43.0"
                     onAction="#openDashboard"
                     styleClass="sidebar-button"/>
 
             <Button text="Tenant Management"
                     maxWidth="Infinity"
+                    prefHeight="43.0"
                     styleClass="sidebar-button-active"/>
 
             <Button text="Room Management"
                     maxWidth="Infinity"
+                    prefHeight="43.0"
                     onAction="#openRoomView"
                     styleClass="sidebar-button"/>
 
             <Button text="Payment Management"
                     maxWidth="Infinity"
+                    prefHeight="43.0"
                     onAction="#openPaymentView"
                     styleClass="sidebar-button"/>
 
             <Region VBox.vgrow="ALWAYS"/>
 
+            <Separator styleClass="sidebar-separator"/>
+
             <Button text="Logout"
                     maxWidth="Infinity"
+                    prefHeight="43.0"
                     onAction="#handleLogout"
                     styleClass="logout-button"/>
 
         </VBox>
+
     </left>
+
 
     <center>
         <ScrollPane fitToHeight="false"
