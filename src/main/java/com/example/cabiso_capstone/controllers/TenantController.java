@@ -6,6 +6,8 @@ import com.example.cabiso_capstone.model.Room;
 import com.example.cabiso_capstone.model.Tenant;
 import com.example.cabiso_capstone.session.SessionManager;
 import com.example.cabiso_capstone.session.UserSession;
+import com.example.cabiso_capstone.exceptions.ValidationException;
+import com.example.cabiso_capstone.validation.InputValidator;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -509,8 +511,26 @@ public class TenantController {
         String newPassword =
                 passwordField.getText();
 
-        String contactNumber =
-                contactField.getText().trim();
+        String contactNumber;
+
+        try {
+            contactNumber =
+                    InputValidator.validateContactNumber(
+                            contactField.getText()
+                    );
+
+        } catch (ValidationException exception) {
+
+            formMessageLabel.setStyle(
+                    "-fx-text-fill: #c62828;"
+            );
+
+            formMessageLabel.setText(
+                    exception.getMessage()
+            );
+
+            return;
+        }
 
         String selectedStatus =
                 statusComboBox.getValue();

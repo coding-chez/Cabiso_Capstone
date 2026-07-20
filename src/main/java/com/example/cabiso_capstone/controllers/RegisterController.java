@@ -2,6 +2,8 @@ package com.example.cabiso_capstone.controllers;
 
 import com.example.cabiso_capstone.MainApplication;
 import com.example.cabiso_capstone.database.DatabaseConnection;
+import com.example.cabiso_capstone.exceptions.ValidationException;
+import com.example.cabiso_capstone.validation.InputValidator;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -26,7 +28,26 @@ public class RegisterController {
     public void handleRegister(ActionEvent actionEvent) {
 
         String fullName = fullNameField.getText().trim();
-        String contactNumber = contactNumberField.getText().trim();
+        String contactNumber;
+
+        try {
+            contactNumber =
+                    InputValidator.validateContactNumber(
+                            contactNumberField.getText()
+                    );
+
+        } catch (ValidationException exception) {
+
+            messageLabel.setStyle(
+                    "-fx-text-fill: #c62828;"
+            );
+
+            messageLabel.setText(
+                    exception.getMessage()
+            );
+
+            return;
+        }
         String username = usernameField.getText().trim();
         String password = passwordField.getText();
         String confirmPassword = confirmPasswordField.getText();

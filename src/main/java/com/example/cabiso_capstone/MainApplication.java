@@ -59,7 +59,7 @@ public class MainApplication extends Application {
                 new Scene(loader.load());
 
         mainStage.setTitle(
-                "Dormitory Management System"
+                "CABANA Dormitory Management System"
         );
 
         mainStage.setScene(scene);
