@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane prefHeight="700.0" styleClass="dashboard-root" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cabiso_capstone.controllers.AdminDashboardController">
+<BorderPane prefWidth="1440.0" prefHeight="900.0" styleClass="dashboard-root" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cabiso_capstone.controllers.AdminDashboardController">
 
     <top>
         <HBox alignment="CENTER_LEFT" spacing="15.0" styleClass="dashboard-header">
@@ -124,37 +124,142 @@
                 </HBox>
 
             </VBox>
+            <!-- OCCUPANCY SUMMARY -->
+
             <VBox spacing="15.0" styleClass="content-card">
 
                 <VBox spacing="3.0">
-                    <Label styleClass="section-title" text="System Information" />
+                    <Label styleClass="section-title"
+                           text="Occupancy Summary" />
 
-                    <Label styleClass="section-description" text="Current dormitory management summary." />
+                    <Label styleClass="section-description"
+                           text="Current bed capacity and dormitory occupancy." />
                 </VBox>
 
                 <Separator />
 
-                <HBox spacing="50.0">
+                <HBox spacing="35.0">
 
-                    <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+                    <VBox spacing="4.0"
+                          HBox.hgrow="ALWAYS">
 
-                        <Label styleClass="detail-label" text="Occupied Rooms" />
+                        <Label styleClass="detail-label"
+                               text="Occupied Rooms" />
 
-                        <Label fx:id="occupiedRoomsLabel" styleClass="detail-value" text="0" />
+                        <Label fx:id="occupiedRoomsLabel"
+                               styleClass="detail-value"
+                               text="0" />
                     </VBox>
 
-                    <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+                    <VBox spacing="4.0"
+                          HBox.hgrow="ALWAYS">
 
-                        <Label styleClass="detail-label" text="Total Rooms" />
+                        <Label styleClass="detail-label"
+                               text="Total Rooms" />
 
-                        <Label fx:id="totalRoomsLabel" styleClass="detail-value" text="0" />
+                        <Label fx:id="totalRoomsLabel"
+                               styleClass="detail-value"
+                               text="0" />
                     </VBox>
 
-                    <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+                    <VBox spacing="4.0"
+                          HBox.hgrow="ALWAYS">
 
-                        <Label styleClass="detail-label" text="Recorded Payments" />
+                        <Label styleClass="detail-label"
+                               text="Occupied Beds" />
 
-                        <Label fx:id="totalPaymentsLabel" styleClass="detail-value" text="0" />
+                        <Label fx:id="occupiedBedsLabel"
+                               styleClass="detail-value"
+                               text="0" />
+                    </VBox>
+
+                    <VBox spacing="4.0"
+                          HBox.hgrow="ALWAYS">
+
+                        <Label styleClass="detail-label"
+                               text="Available Slots" />
+
+                        <Label fx:id="availableSlotsLabel"
+                               styleClass="detail-value"
+                               text="0" />
+                    </VBox>
+
+                    <VBox spacing="4.0"
+                          HBox.hgrow="ALWAYS">
+
+                        <Label styleClass="detail-label"
+                               text="Occupancy Rate" />
+
+                        <Label fx:id="occupancyRateLabel"
+                               styleClass="detail-value"
+                               text="0%" />
+                    </VBox>
+
+                </HBox>
+
+            </VBox>
+
+            <!-- FINANCIAL SUMMARY -->
+
+            <VBox spacing="15.0"
+                  styleClass="content-card">
+
+                <VBox spacing="3.0">
+
+                    <Label styleClass="section-title"
+                           text="Financial Summary" />
+
+                    <Label styleClass="section-description"
+                           text="Overview of successfully recorded and voided payments." />
+
+                </VBox>
+
+                <Separator />
+
+                <HBox spacing="35.0">
+
+                    <VBox spacing="4.0"
+                          HBox.hgrow="ALWAYS">
+
+                        <Label styleClass="detail-label"
+                               text="Current Month Revenue" />
+
+                        <Label fx:id="monthlyRevenueLabel"
+                               styleClass="detail-value"
+                               text="₱0.00" />
+                    </VBox>
+
+                    <VBox spacing="4.0"
+                          HBox.hgrow="ALWAYS">
+
+                        <Label styleClass="detail-label"
+                               text="Total Revenue" />
+
+                        <Label fx:id="totalRevenueLabel"
+                               styleClass="detail-value"
+                               text="₱0.00" />
+                    </VBox>
+
+                    <VBox spacing="4.0"
+                          HBox.hgrow="ALWAYS">
+
+                        <Label styleClass="detail-label"
+                               text="Paid Transactions" />
+
+                        <Label fx:id="totalPaymentsLabel"
+                               styleClass="detail-value"
+                               text="0" />
+                    </VBox>
+
+                    <VBox spacing="4.0"
+                          HBox.hgrow="ALWAYS">
+
+                        <Label styleClass="detail-label"
+                               text="Voided Transactions" />
+
+                        <Label fx:id="voidPaymentsLabel"
+                               styleClass="detail-value"
+                               text="0" />
                     </VBox>
 
                 </HBox>

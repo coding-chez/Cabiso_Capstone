@@ -4,7 +4,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane prefHeight="700.0" styleClass="management-root" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cabiso_capstone.controllers.TenantController">
+<BorderPane prefWidth="1440.0"
+            prefHeight="900.0" styleClass="management-root" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cabiso_capstone.controllers.TenantController">
 
     <top>
         <HBox alignment="CENTER_LEFT"
