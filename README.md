@@ -1,17 +1,20 @@
-<!-- PROJECT HEADER -->
+<p align="center">
+  <img src="src/main/resources/com/example/cabiso_capstone/CABANA.png" width="180"/>
+</p>
 
-<br />
 <div align="center">
 
-<img src="src/main/resources/com/example/cabiso_capstone/CABANA.png" width="180"/>
+# 🏠 Cabana Dormitory Management System
 
-# Cabana Dormitory Management System
+### *A JavaFX-based Dormitory Management System for Efficient Tenant, Room, and Payment Administration*
 
-<p align="center">
-
-A desktop-based Dormitory Management Information System developed using <strong>JavaFX</strong>, <strong>MySQL</strong>, <strong>JDBC</strong>, and <strong>Java Serialization</strong>. The application streamlines tenant administration, room allocation, payment management, and secure authentication through a centralized and user-friendly platform.
-
-</p>
+![Java](https://img.shields.io/badge/Java-21-orange?style=for-the-badge&logo=openjdk)
+![JavaFX](https://img.shields.io/badge/JavaFX-UI-blue?style=for-the-badge)
+![MySQL](https://img.shields.io/badge/MySQL-Database-4479A1?style=for-the-badge&logo=mysql)
+![JDBC](https://img.shields.io/badge/JDBC-Connectivity-success?style=for-the-badge)
+![Maven](https://img.shields.io/badge/Maven-Build-red?style=for-the-badge&logo=apachemaven)
+![MVC](https://img.shields.io/badge/Architecture-MVC-0A8F5A?style=for-the-badge)
+![Java Serialization](https://img.shields.io/badge/Session-Java%20Serialization-6A1B9A?style=for-the-badge)
 
 </div>
 
@@ -19,145 +22,149 @@ A desktop-based Dormitory Management Information System developed using <strong>
 
 # 📚 Table of Contents
 
-- [About the Project](#-about-the-project)
-- [Key Features](#-key-features)
-- [Technologies Used](#-technologies-used)
-- [System Architecture](#-system-architecture)
-- [Java Serialization](#-java-serialization)
-- [SOLID Principles Applied](#-solid-principles-applied)
-- [Database Design](#-database-design)
-- [Project Structure](#-project-structure)
-- [Installation](#-installation)
-- [Future Improvements](#-future-improvements)
-- [Author](#-author)
+- [📌 About the Project](#-about-the-project)
+- [✨ Key Features](#-key-features)
+- [🛠️ Technologies Used](#️-technologies-used)
+- [🏛️ System Architecture](#️-system-architecture)
+- [📐 UML Diagrams](#-uml-diagrams)
+- [💾 Java Serialization](#-java-serialization)
+- [🧱 SOLID Principles Applied](#-solid-principles-applied)
+- [🎨 Design Patterns](#-design-patterns)
+- [🗄️ Database Design](#️-database-design)
+- [📁 Project Structure](#-project-structure)
+- [🚀 Installation](#-installation)
+- [🔮 Future Improvements](#-future-improvements)
+- [👤 Author](#-author)
+- [📄 License](#-license)
 
 ---
+
+<div align="center">
 
 # 📌 About the Project
 
-<div align="justify">
-
-  The **Cabana Dormitory Management System** is a desktop-based information management application designed to modernize the daily administrative operations of boarding houses and dormitories. Instead of relying on paper records or spreadsheets, the system centralizes tenant information, room assignments, payment transactions, and authentication into a single integrated platform.
-
-Built with **JavaFX**, **MySQL**, and **JDBC**, the application follows the **Model–View–Controller (MVC)** architecture to ensure modularity, maintainability, and scalability. It also implements **Java Serialization** to provide persistent user sessions, allowing authenticated users to continue their previous session after restarting the application until they explicitly log out.
-
 </div>
 
-The system currently supports two user roles:
-
-### 👨‍💼 Administrator
-
-The administrator has full access to manage the dormitory operations, including:
-
-- Tenant Management
-- Room Management
-- Payment Management
-- Tenant Approval
-- Room Assignment & Transfer
-- Occupancy Monitoring
-- Dashboard Overview
-
-### 🧑 Tenant
-
-Each tenant has access to a personalized dashboard where they can:
-
-- Securely log in
-- View assigned room information
-- View outstanding balance
-- View payment history
-- Access personal account information
-
-### 🏡 Real-World Workflow
-
 <div align="justify">
 
-The **Cabana Dormitory Management System** reflects the day-to-day operations of a typical boarding house or dormitory where the administrator oversees tenant records, room assignments, and payment documentation. Prospective tenants begin by registering through the system, after which their accounts remain in a **Pending** state until reviewed and approved by the administrator. Once approved, the administrator assigns an available room based on its capacity and operational status, ensuring that full, inactive, or maintenance rooms cannot be occupied.
+The **Cabana Dormitory Management System** is a desktop-based dormitory management application developed using **JavaFX**, **JDBC**, and **MySQL** following the **Model–View–Controller (MVC)** architectural pattern. It was created as the capstone project for **Object-Oriented Programming 2**, demonstrating the practical application of object-oriented design principles, database integration, graphical user interface development, session persistence, and software design patterns.
 
-Approved tenants can securely log in to their personal dashboard to view their profile information, assigned room, outstanding balance, and payment history, while being allowed to update only their contact number. Rental payments are received through the dormitory's existing payment methods outside the system and are subsequently recorded, updated, or voided by the administrator to maintain accurate financial records. The system automatically updates room occupancy after every room assignment, recalculates tenant balances whenever payment records change, and preserves authenticated user sessions through Java Serialization until the user explicitly logs out. By centralizing these administrative tasks, the system provides an organized, role-based, and reliable platform for managing daily dormitory operations.
+The system centralizes the daily administrative operations of a dormitory by providing role-based access for **Administrators** and **Tenants**. It enables administrators to efficiently manage tenant registrations, room assignments, occupancy monitoring, payment records, and dashboard summaries, while tenants are provided with a secure personal dashboard where they can monitor their assigned room, outstanding balance, payment history, and profile information.
+
+To improve software maintainability and extensibility, the project applies **Factory Method**, **Facade**, and **Strategy** design patterns alongside **SOLID principles**. User sessions are preserved using **Java Serialization**, allowing authenticated users to continue their session after restarting the application until they explicitly log out.
+
+Rather than simply demonstrating CRUD operations, the project models a realistic dormitory management workflow where tenant registrations undergo administrative approval, room occupancy is automatically maintained, payment records update tenant balances, and user access is controlled according to account status and assigned roles.
+
+---
+
+### 🌍 Real-World Workflow
+
+The Cabana Dormitory Management System reflects the daily operations of a typical boarding house or dormitory where the **Administrator** serves as the central authority for managing tenants, rooms, and financial records. Prospective tenants begin by submitting a registration request, which remains in a **Pending** state until reviewed by the administrator. Once approved, the administrator assigns an available room based on its capacity and operational status, ensuring that maintenance, inactive, or fully occupied rooms cannot be assigned.
+
+After activation, tenants gain secure access to their personal dashboard where they can view their assigned room, current account balance, payment history, and profile information while being limited to updating only their own contact details. Monthly rental payments are received through the dormitory's existing payment channels, such as **cash**, **GCash**, or **bank transfer**, and are officially recorded, updated, or voided only by the administrator after payment verification. Every room assignment automatically updates room occupancy, every recorded payment recalculates tenant balances, and authenticated sessions are securely restored through **Java Serialization** until the user explicitly logs out. Through this workflow, the system provides a centralized, accurate, and role-based solution for managing day-to-day dormitory operations.
 
 </div>
 
 ---
 
-# 🚀 Key Features
+<div align="center">
 
-## 🔐 Authentication
+# ✨ Key Features
 
-- Administrator & Tenant Login
-- Tenant Registration
-- Administrator Approval Workflow
-- Role-Based Access Control
-- Account Status Validation
-- Persistent Login Sessions
-- Secure Logout
+</div>
 
----
-
-## 👥 Tenant Management
-
-- Register New Tenant
-- Approve Tenant Accounts
-- Update Tenant Information
-- Assign & Transfer Rooms
-- Search & Filter Tenants
-- Deactivate Tenant Accounts
-- Automatic Occupancy Synchronization
+| Module | Description |
+|:-------|:------------|
+| 🔐 Authentication | Secure role-based login for Administrators and Tenants |
+| 👤 Tenant Registration | Pending registration workflow requiring administrator approval |
+| 🏠 Room Management | Room creation, updating, occupancy monitoring, and activation management |
+| 👥 Tenant Management | Tenant approval, room assignment, updates, transfers, and deactivation |
+| 💳 Payment Management | Record, update, search, and void payment transactions |
+| 📊 Administrator Dashboard | Displays occupancy statistics, tenant summaries, revenue, balances, and recent activities |
+| 🏡 Tenant Dashboard | Displays profile, assigned room, payment history, and outstanding balance |
+| 💾 Session Persistence | Automatic login restoration through Java Serialization |
+| ✔ Input Validation | Validation of user inputs using reusable validation classes and custom exceptions |
+| 🎨 Modern JavaFX UI | Responsive desktop interface with consistent styling and navigation |
+| 🧱 MVC Architecture | Separation of presentation, business logic, and data access layers |
+| 🏛 Design Patterns | Factory Method, Facade, and Strategy patterns for improved maintainability |
 
 ---
 
-## 🏠 Room Management
+<div align="center">
 
-- Add & Update Rooms
-- Search & Filter Rooms
-- Capacity Validation
-- Occupancy Monitoring
-- Available Slot Calculation
-- Room Status Management
+# 🛠️ Technologies Used
 
----
-
-## 💳 Payment Management
-
-- Record Payments
-- Update Payment Information
-- Void Payments *(Soft Delete)*
-- Search & Filter Payments
-- Automatic Balance Computation
-- Duplicate Payment Prevention
-
----
-
-# 💻 Technologies Used
+</div>
 
 | Category | Technology |
-|------------|------------|
-| Programming Language | Java |
-| User Interface | JavaFX |
-| UI Layout | FXML |
-| Styling | CSS |
+|:---------|:-----------|
+| Programming Language | Java 21 |
+| GUI Framework | JavaFX |
 | Database | MySQL |
 | Database Connectivity | JDBC |
 | Build Tool | Maven |
 | IDE | IntelliJ IDEA |
+| Architecture | Model–View–Controller (MVC) |
 | Session Persistence | Java Serialization |
-| Software Architecture | MVC |
+| Version Control | Git & GitHub |
+| UML Modeling | PlantUML / Mermaid / diagrams.net |
 
 ---
 
-# 🏛 System Architecture
+<div align="center">
 
-The application follows the **Model–View–Controller (MVC)** architectural pattern to separate the presentation layer, business logic, and data access layer.
+### 📦 Core Java Concepts Demonstrated
+
+</div>
+
+- Object-Oriented Programming (OOP)
+- Encapsulation
+- Inheritance
+- Polymorphism
+- Abstraction
+- Interfaces
+- Abstract Classes
+- Exception Handling
+- Collections Framework
+- JavaFX Event Handling
+- JDBC Database Programming
+- Java Serialization
+- Generic Programming
+- Design Patterns
+- SOLID Principles
+
+---
+
+<div align="center">
+
+# 🏛️ System Architecture
+
+</div>
+
+<div align="justify">
+
+The **Cabana Dormitory Management System** follows the **Model–View–Controller (MVC)** architectural pattern to separate the presentation layer, business logic, and data access layer. This separation improves maintainability, scalability, readability, and testability by ensuring that each component has a well-defined responsibility.
+
+The presentation layer consists of JavaFX FXML views and CSS styling responsible for user interaction. Controllers process user requests and coordinate application behavior, while the model layer represents the application's core business entities. Persistent data is managed through MySQL using JDBC, whereas authenticated sessions are maintained locally using Java Serialization.
+
+The application also incorporates multiple software design patterns to reduce coupling and improve extensibility without affecting existing functionality.
+
+</div>
+
+---
+
+<div align="center">
 
 ```text
-                       USER
-                         │
-                         ▼
-               JavaFX User Interface
-              (FXML Views + CSS Files)
-                         │
-                         ▼
+                           USER
+                             │
+                             ▼
+                  JavaFX User Interface
+                 (FXML Views + CSS Files)
+                             │
+                             ▼
                   JavaFX Controllers
-────────────────────────────────────────────
+──────────────────────────────────────────────────
  LoginController
  RegisterController
  AdminDashboardController
@@ -165,67 +172,158 @@ The application follows the **Model–View–Controller (MVC)** architectural pa
  TenantController
  RoomController
  PaymentController
-────────────────────────────────────────────
-                         │
-                         ▼
-                Business Logic Layer
-────────────────────────────────────────────
- Authentication
+──────────────────────────────────────────────────
+                             │
+                             ▼
+                 Business Logic Layer
+──────────────────────────────────────────────────
+ Factory Method
+ Facade
+ Strategy
  Validation
- Room Assignment
- Payment Computation
+ Authentication
  Session Management
  Business Rules
-────────────────────────────────────────────
-                         │
-                         ▼
-                Persistence Layer
-────────────────────────────────────────────
+──────────────────────────────────────────────────
+                             │
+                             ▼
+                 Persistence Layer
+──────────────────────────────────────────────────
  JDBC
  Java Serialization
  DatabaseConnection
-────────────────────────────────────────────
-                         │
-                         ▼
-                     MySQL Database
-────────────────────────────────────────────
+──────────────────────────────────────────────────
+                             │
+                             ▼
+                      MySQL Database
+──────────────────────────────────────────────────
  users
  tenants
  rooms
  payments
-────────────────────────────────────────────
+──────────────────────────────────────────────────
 ```
 
-### Advantages
-
-- Separation of Concerns
-- Easier Maintenance
-- Better Scalability
-- Improved Readability
-- Reusable Components
+</div>
 
 ---
+
+<div align="center">
+
+### ✔ Architectural Advantages
+
+</div>
+
+- Separation of Concerns
+- Modular Application Structure
+- Improved Maintainability
+- Reusable Components
+- Low Coupling and High Cohesion
+- Easier Future Expansion
+- Clear Layered Architecture
+
+---
+
+<div align="center">
+
+# 📐 UML Diagrams
+
+</div>
+
+<div align="justify">
+
+The following UML diagrams document both the **structural** and **behavioral** aspects of the Cabana Dormitory Management System. Together, they illustrate how the implemented source code aligns with the business requirements, software architecture, object-oriented design principles, and applied design patterns.
+
+Each diagram complements the others by representing the same system from different perspectives.
+
+</div>
+
+---
+
+## 📌 1. Overall Use Case Diagram
+
+<p align="center">
+    <img src="src/main/resources/com/example/cabiso_capstone/uml/Use-CaseDiagram.drawio.png">
+</p>
+
+<div align="justify">
+
+Illustrates the interactions between the two system actors—**Administrator** and **Tenant**—and the major services provided by the system including authentication, tenant management, room management, payment management, and tenant self-service operations.
+
+</div>
+
+---
+
+## 🏛️ 2. Core Class Diagram
+
+<p align="center">
+    <img src="src/main/resources/com/example/cabiso_capstone/uml/CoreClassDiagram.drawio.png">
+</p>
+
+<div align="justify">
+
+Illustrates the application's object-oriented architecture, including the relationships among controllers, models, session management components, database utilities, validation classes, and the implemented **Factory Method**, **Facade**, and **Strategy** design patterns.
+
+</div>
+
+---
+
+## 🔐 3. Login & Session Sequence Diagram
+
+<p align="center">
+    <img src="src/main/resources/com/example/cabiso_capstone/uml/LoginAndSessionSequenceDiagram.drawio.png">
+</p>
+
+<div align="justify">
+
+Describes the authentication workflow beginning from user login, credential verification, account status validation, Factory Method object creation, Java Serialization of authenticated sessions, and role-based dashboard navigation through the Facade.
+
+</div>
+
+---
+
+## 💳 4. Payment Recording Sequence Diagram
+
+<p align="center">
+    <img src="src/main/resources/com/example/cabiso_capstone/uml/PaymentRecordSequenceDiagram.drawio.png">
+</p>
+
+<div align="justify">
+
+Illustrates the administrator's payment-recording workflow, demonstrating Strategy-based payment validation, duplicate billing verification, database persistence, tenant balance recalculation, and automatic dashboard updates.
+
+</div>
+
+---
+
+<div align="center">
 
 # 💾 Java Serialization
 
-## Overview
+</div>
 
-The application implements **Java Object Serialization** to preserve authenticated user sessions. Once a user successfully logs in, a serialized session object is stored locally, allowing the application to restore the previous session automatically when reopened.
+<div align="justify">
+
+The Cabana Dormitory Management System implements **Java Object Serialization** to preserve authenticated user sessions between application launches. Once a user successfully logs in, the application serializes a lightweight session object that stores only the information necessary to restore the previous authenticated state.
+
+When the application starts, the serialized session is validated before automatically restoring the appropriate dashboard. Sessions remain active until the user explicitly logs out, at which point the serialized session file is securely removed.
+
+</div>
 
 ---
 
-## Classes Involved
+### Session Components
 
 | Class | Responsibility |
-|---------|----------------|
+|:------|:---------------|
 | `UserSession` | Stores authenticated user information |
-| `SessionStorage` | Defines session storage abstraction |
+| `SessionStorage` | Defines the session storage abstraction |
 | `FileSessionStorage` | Reads and writes serialized session files |
-| `SessionManager` | Manages session creation, validation, loading, and deletion |
+| `SessionManager` | Controls session creation, loading, validation, and deletion |
 
 ---
 
-## Serialization Workflow
+### Serialization Workflow
 
 ```text
 Successful Login
@@ -251,7 +349,7 @@ Valid Session?
    Yes         No
     │           │
     ▼           ▼
-Dashboard     Login Screen
+Dashboard   Login Screen
     │
     ▼
 Logout
@@ -263,9 +361,9 @@ SessionManager.deleteSession()
 session.txt Deleted
 ```
 
-### Serialized Information
+---
 
-The serialized session stores only the following information:
+### Serialized Information
 
 - User ID
 - Tenant ID *(if applicable)*
@@ -276,43 +374,56 @@ The serialized session stores only the following information:
 
 > **Passwords are never serialized or stored inside the session file.**
 
+---
+
 ### Benefits
 
-- Persistent user sessions
-- Automatic session restoration
+- Persistent authenticated sessions
+- Automatic login restoration
 - Faster application startup
-- Improved user convenience
-- Secure session validation
+- Secure role validation
+- Improved user experience
 - Simplified desktop authentication
 
 ---
 
-# 🧩 SOLID Principles Applied
+<div align="center">
 
-The project applies two SOLID principles to improve maintainability and software quality.
+# 🧱 SOLID Principles Applied
 
-## 1. Single Responsibility Principle (SRP)
+</div>
 
-Each class has only **one responsibility** and one reason to change.
+<div align="justify">
 
-| Class | Responsibility |
-|--------|----------------|
-| `UserSession` | Stores session information |
-| `SessionManager` | Controls session lifecycle |
-| `FileSessionStorage` | Handles serialization only |
-| `DatabaseConnection` | Establishes database connections |
-| Controllers | Manage JavaFX user interactions |
+The project follows selected **SOLID principles** to improve maintainability, flexibility, readability, and extensibility. By assigning clear responsibilities to individual classes and depending on abstractions rather than concrete implementations, the application becomes easier to modify without introducing unnecessary side effects.
 
-**Benefits**
-
-- Better maintainability
-- Easier debugging
-- Cleaner architecture
-- Higher code readability
+</div>
 
 ---
 
-## 2. Dependency Inversion Principle (DIP)
+## 1️⃣ Single Responsibility Principle (SRP)
+
+Every class has **one primary responsibility**.
+
+| Class | Responsibility |
+|:------|:---------------|
+| `DatabaseConnection` | Establishes MySQL database connections |
+| `SessionManager` | Controls the lifecycle of user sessions |
+| `FileSessionStorage` | Handles Java Serialization only |
+| `UserSession` | Stores authenticated session data |
+| Controllers | Handle JavaFX user interactions |
+| Models | Represent business entities |
+
+### Benefits
+
+- Easier debugging
+- Better maintainability
+- Higher readability
+- Improved modularity
+
+---
+
+## 2️⃣ Dependency Inversion Principle (DIP)
 
 Instead of depending directly on file serialization, `SessionManager` communicates through the `SessionStorage` abstraction.
 
@@ -326,176 +437,293 @@ SessionStorage (Interface)
 FileSessionStorage
 ```
 
-**Benefits**
+### Benefits
 
 - Loose coupling
-- Easier future extensions
-- Greater flexibility
-- Better scalability
-- Supports alternative storage implementations
-# 🗄 Database Design
-
-The system uses a relational database in **MySQL** to manage authentication, tenant information, room allocation, and payment transactions.
-
-## Database Tables
-
-| Table | Description |
-|--------|-------------|
-| **users** | Stores login credentials and user roles. |
-| **tenants** | Stores tenant profile information. |
-| **rooms** | Stores room details, capacity, rates, and availability. |
-| **payments** | Stores tenant payment transactions and payment history. |
+- Easier future storage implementations
+- Better extensibility
+- Improved scalability
 
 ---
 
-## Entity Relationships
+<div align="center">
+
+# 🎨 Design Patterns
+
+</div>
+
+<div align="justify">
+
+To improve software quality and maintainability, the Cabana Dormitory Management System applies three **Gang of Four (GoF)** design patterns. Each pattern addresses a different architectural concern while promoting modularity, flexibility, and reduced coupling among application components.
+
+</div>
+
+---
+
+## 🏗️ Factory Method (Creational)
+
+| Classes |
+|:---------|
+| `UserFactory` |
+| `AdministratorFactory` |
+| `TenantFactory` |
+
+**Purpose**
+
+Creates `Administrator` and `Tenant` objects through specialized factories instead of directly instantiating concrete classes inside `LoginController`. This centralizes object creation and simplifies future expansion for additional user roles.
+
+---
+
+## 🏛️ Facade (Structural)
+
+| Class |
+|:------|
+| `ApplicationFacade` |
+
+**Purpose**
+
+Provides a simplified interface for scene navigation and session operations by encapsulating interactions with `MainApplication`, `SessionManager`, and `UserSession`. Controllers interact with a single facade rather than multiple subsystem classes.
+
+---
+
+## ⚙️ Strategy (Behavioral)
+
+| Classes |
+|:---------|
+| `PaymentMethodContext` |
+| `PaymentMethodStrategy` |
+| `CashPaymentStrategy` |
+| `GCashPaymentStrategy` |
+| `BankTransferPaymentStrategy` |
+
+**Purpose**
+
+Encapsulates payment-method-specific validation rules. Each payment method defines its own validation behavior, allowing the `PaymentController` to delegate payment processing dynamically without relying on large conditional statements.
+
+---
+
+### Benefits of the Applied Design Patterns
+
+- Reduced coupling between components
+- Improved code maintainability
+- Greater extensibility
+- Better adherence to object-oriented principles
+- Easier testing and future feature expansion
+
+---
+
+<div align="center">
+
+# 🗄️ Database Design
+
+</div>
+
+<div align="justify">
+
+The Cabana Dormitory Management System utilizes a **relational MySQL database** to maintain data integrity and efficiently manage relationships between users, tenants, rooms, and payment records. Through **JDBC**, the application performs secure CRUD operations while enforcing business rules such as tenant approval, room occupancy validation, and automatic balance recalculation.
+
+The database design minimizes redundancy by separating authentication information from tenant-specific records while maintaining referential integrity using foreign keys.
+
+</div>
+
+---
+
+## 📋 Database Tables
+
+| Table | Purpose |
+|:------|:--------|
+| **users** | Stores login credentials, user roles, and account status |
+| **tenants** | Stores tenant personal information, assigned room, balance, and contact details |
+| **rooms** | Stores room information, capacity, occupancy, monthly rate, and operational status |
+| **payments** | Stores payment transactions, billing months, payment methods, and payment status |
+
+---
+
+### Entity Relationships
 
 ```text
-                   users
-                     │
-                     │ 1 : 1
-                     ▼
-                  tenants
-                     │
-         ┌───────────┴───────────┐
-         │                       │
-         │ MANY                  │ MANY
-         ▼                       ▼
-      payments                rooms
+Users (1)
+    │
+    │
+    ▼
+Tenants (1)
+    │
+    ├──────────────► Rooms
+    │                  ▲
+    │                  │
+    │                  │
+    ▼                  │
+Payments (*)───────────┘
 ```
 
-### Relationship Summary
+---
 
-| Relationship | Description |
-|--------------|-------------|
-| Users → Tenants | One user account corresponds to one tenant profile. |
-| Rooms → Tenants | One room can accommodate multiple tenants up to its capacity. |
-| Tenants → Payments | One tenant may have multiple payment records. |
+### Business Rules
+
+- Only **approved tenants** may access the system.
+- A room cannot exceed its maximum capacity.
+- Inactive or maintenance rooms cannot receive new tenants.
+- Duplicate paid billing months are not allowed.
+- Every successful payment automatically recalculates the tenant's balance.
+- Deactivating a tenant automatically releases the occupied room.
+- Only administrators may create, modify, or void payment records.
 
 ---
 
-# 📂 Project Structure
+<div align="center">
 
-The project follows a modular package organization to improve maintainability and readability.
+# 📁 Project Structure
+
+</div>
 
 ```text
-Cabana_Dormitory_Management_System
+Cabana-Dormitory-Management-System
 │
 ├── src
-│   ├── cabiso_dormitory.sql
+│   ├── main
 │   │
-│   └── main
-│       ├── java
-│       │   ├── com.example.cabiso_capstone
-│       │   │
-│       │   ├── controllers
-│       │   │   ├── AdminDashboardController.java
-│       │   │   ├── LoginController.java
-│       │   │   ├── PaymentController.java
-│       │   │   ├── RegisterController.java
-│       │   │   ├── RoomController.java
-│       │   │   ├── TenantController.java
-│       │   │   └── TenantDashboardController.java
-│       │   │
-│       │   ├── model
-│       │   │   ├── Administrator.java
-│       │   │   ├── Payment.java
-│       │   │   ├── Room.java
-│       │   │   ├── Tenant.java
-│       │   │   └── User.java
-│       │   │
-│       │   ├── database
-│       │   │   └── DatabaseConnection.java
-│       │   │
-│       │   ├── session
-│       │   │   ├── FileSessionStorage.java
-│       │   │   ├── SessionManager.java
-│       │   │   ├── SessionStorage.java
-│       │   │   └── UserSession.java
-│       │   │
-│       │   ├── validation
-│       │   │   └── InputValidator.java
-│       │   │
-│       │   ├── exceptions
-│       │   │   ├── ValidationException.java
-│       │   │   └── InvalidContactNumberException.java
-│       │   │
-│       │   ├── MainApplication.java
-│       │   └── module-info.java
-│       │
-│       └── resources
-│           └── com.example.cabiso_capstone
-│               ├── admin-dashboard-view.fxml
-│               ├── login-view.fxml
-│               ├── payment-view.fxml
-│               ├── register-view.fxml
-│               ├── room-view.fxml
-│               ├── tenant-dashboard-view.fxml
-│               ├── tenant-view.fxml
-│               ├── styles.css
-│               └── CABANA.png
+│   ├── java
+│   │   └── com.example.cabiso_capstone
+│   │
+│   │       ├── controllers
+│   │       │     ├── LoginController
+│   │       │     ├── RegisterController
+│   │       │     ├── AdminDashboardController
+│   │       │     ├── TenantDashboardController
+│   │       │     ├── TenantController
+│   │       │     ├── RoomController
+│   │       │     └── PaymentController
+│   │       │
+│   │       ├── model
+│   │       │     ├── User
+│   │       │     ├── Administrator
+│   │       │     ├── Tenant
+│   │       │     ├── Room
+│   │       │     └── Payment
+│   │       │
+│   │       ├── database
+│   │       │     └── DatabaseConnection
+│   │       │
+│   │       ├── session
+│   │       │     ├── SessionManager
+│   │       │     ├── SessionStorage
+│   │       │     ├── FileSessionStorage
+│   │       │     └── UserSession
+│   │       │
+│   │       ├── validation
+│   │       │     └── InputValidator
+│   │       │
+│   │       ├── exceptions
+│   │       │     ├── ValidationException
+│   │       │     └── InvalidContactNumberException
+│   │       │
+│   │       ├── factory
+│   │       │     ├── UserFactory
+│   │       │     ├── AdministratorFactory
+│   │       │     └── TenantFactory
+│   │       │
+│   │       ├── facade
+│   │       │     └── ApplicationFacade
+│   │       │
+│   │       ├── strategy
+│   │       │     ├── PaymentMethodContext
+│   │       │     ├── PaymentMethodStrategy
+│   │       │     ├── CashPaymentStrategy
+│   │       │     ├── GCashPaymentStrategy
+│   │       │     └── BankTransferPaymentStrategy
+│   │       │
+│   │       └── MainApplication
+│   │
+│   └── resources
+│       └── com.example.cabiso_capstone
+│
+│           ├── fxml
+│           │     ├── login-view.fxml
+│           │     ├── register-view.fxml
+│           │     ├── admin-dashboard-view.fxml
+│           │     ├── tenant-dashboard-view.fxml
+│           │     ├── tenant-view.fxml
+│           │     ├── room-view.fxml
+│           │     └── payment-view.fxml
+│           │
+│           ├── styles
+│           │     └── styles.css
+│           │
+│           ├── images
+│           │     └── CABANA.png
+│           │
+│           └── uml
+│                 ├── use-case-diagram.png
+│                 ├── class-diagram.png
+│                 ├── login-sequence.png
+│                 ├── payment-sequence.png
+│                 └── activity-diagram.png
+│
+├── pom.xml
+├── README.md
+└── LICENSE
 ```
 
 ---
 
-# ⚙ Installation
+<div align="center">
+
+# 🚀 Installation
+
+</div>
 
 ## Prerequisites
 
-Before running the project, ensure the following software is installed:
+Before running the application, ensure that the following software is installed:
 
-- Java Development Kit (JDK)
-- IntelliJ IDEA
+- Java Development Kit (JDK 21 or later)
 - Apache Maven
 - MySQL Server
+- IntelliJ IDEA (recommended)
 
 ---
 
-## Setup Instructions
-
-### 1. Clone the Repository
+## 1️⃣ Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/Cabana-Dormitory-Management-System.git
+git clone https://github.com/coding-chez/Cabana-Dormitory-Management-System.git
 ```
 
 ---
 
-### 2. Open the Project
+## 2️⃣ Open the Project
 
-Open the project using **IntelliJ IDEA**.
-
----
-
-### 3. Configure the Database
-
-Create a MySQL database and import the provided SQL script.
+Open the project using **IntelliJ IDEA** and allow Maven to download all required dependencies.
 
 ---
 
-### 4. Update Database Credentials
+## 3️⃣ Configure the Database
 
-Edit the database configuration inside:
+Create a MySQL database.
+
+Example:
+
+```sql
+CREATE DATABASE cabana_db;
+```
+
+Import the provided SQL schema and configure the database credentials inside:
 
 ```text
 DatabaseConnection.java
 ```
 
-Update the following values:
+Update:
 
-- Database URL
-- Username
-- Password
-
----
-
-### 5. Reload Maven
-
-Allow IntelliJ IDEA to download all required dependencies.
+```java
+private static final String URL = "...";
+private static final String USER = "...";
+private static final String PASSWORD = "...";
+```
 
 ---
 
-### 6. Run the Application
+## 4️⃣ Run the Application
 
 Run:
 
@@ -503,52 +731,202 @@ Run:
 MainApplication.java
 ```
 
-The application will automatically launch.
-
+The application will automatically display the Login screen.
 
 ---
+
+<div align="center">
+
+### Default Workflow
+
+</div>
+
+```text
+Register Tenant
+        │
+        ▼
+Administrator Approval
+        │
+        ▼
+Room Assignment
+        │
+        ▼
+Tenant Login
+        │
+        ▼
+Tenant Dashboard
+        │
+        ▼
+Administrator Records Payment
+        │
+        ▼
+Balance Automatically Updates
+```
+
+---
+
+<div align="center">
 
 # 🔮 Future Improvements
 
-The current implementation serves as a strong foundation for future development. Planned enhancements include:
+</div>
 
-- Password hashing using BCrypt
-- Email verification and notifications
-- PDF receipt generation
-- Dashboard analytics and reports
-- Audit logs
-- Backup and restore functionality
-- QR Code-based tenant check-in
-- Multi-administrator support
-- Advanced role and permission management
-- Cloud-based data synchronization
+<div align="justify">
+
+Although the current implementation successfully fulfills the project's objectives, several enhancements could further improve usability, scalability, and real-world applicability.
+
+Future versions of the system may include online payment integration, automated billing generation, email or SMS notifications, room reservation requests, tenant document uploads, maintenance request management, audit logging, reporting dashboards, cloud-based deployment, and multi-administrator support.
+
+Additional security improvements such as password hashing, role-based authorization middleware, encrypted session storage, and database backup automation may also be incorporated to strengthen the application's reliability and security.
+
+These enhancements would transform the project from an academic desktop application into a more comprehensive dormitory management solution suitable for real-world deployment.
 
 ---
 
-# 👤 Author 
+### Possible Future Features
 
+- Online payment integration
+- QR-code payment verification
+- Automated monthly billing
+- Email and SMS notifications
+- Maintenance request management
+- Room reservation requests
+- Audit logs
+- Dashboard analytics
+- Password hashing
+- Cloud database support
+- Multi-administrator accounts
+- Backup and restore functionality
+- Mobile companion application
+
+---
 
 <div align="center">
+
+# 👤 Author
+
+<img src="src/main/resources/com/example/cabiso_capstone/CABANA.png" width="120"/>
 
 ## Chestine May Mari C. Cabiso
 
 **Bachelor of Science in Information Technology**
 
+**College of Computer Studies**
+
 **Cebu Institute of Technology – University**
 
-*Cabana Dormitory Management System*
+Object-Oriented Programming 2 Capstone Project • 2026
 
-OOP2 Capstone Mini Project • 2026
+---
+
+<div align="center">
+
+# 🎯 Project Objectives
+
+</div>
+
+<div align="justify">
+
+This project was developed not only to satisfy the requirements of **Object-Oriented Programming 2**, but also to demonstrate the practical application of software engineering concepts learned throughout the course. The system integrates JavaFX desktop development, relational database management, object-oriented analysis and design, Java Serialization, and software design patterns into a single cohesive application.
+
+Through the completion of this project, the following objectives were achieved:
+
+- Design and implement a complete JavaFX desktop application.
+- Apply the **Model–View–Controller (MVC)** architectural pattern.
+- Integrate a relational MySQL database using **JDBC**.
+- Preserve authenticated user sessions using **Java Serialization**.
+- Apply the **SOLID Principles** to improve maintainability.
+- Implement three **Gang of Four (GoF) Design Patterns**:
+    - Factory Method (Creational)
+    - Facade (Structural)
+    - Strategy (Behavioral)
+- Produce complete UML documentation consistent with the implemented source code.
+- Simulate realistic dormitory management operations through role-based workflows.
 
 </div>
 
 ---
 
-# License
 <div align="center">
 
-This project was developed as an academic requirement for the **Object-Oriented Programming 2 (OOP2)** course at **Cebu Institute of Technology – University**.
+# 📊 Project Summary
 
-The source code is intended for **educational and portfolio purposes only**. Commercial redistribution or unauthorized reproduction without proper attribution is discouraged.
+</div>
 
+| Category | Implementation |
+|:---------|:---------------|
+| Programming Language | Java 21 |
+| GUI Framework | JavaFX |
+| Database | MySQL |
+| Database Connectivity | JDBC |
+| Build Tool | Maven |
+| Architecture | MVC |
+| Session Persistence | Java Serialization |
+| Design Patterns | Factory Method, Facade, Strategy |
+| SOLID Principles | ✔ Implemented |
+| UML Documentation | ✔ Complete |
+| CRUD Operations | ✔ Complete |
+| Authentication | ✔ Role-Based |
+| Administrator Dashboard | ✔ Complete |
+| Tenant Dashboard | ✔ Complete |
+| Room Management | ✔ Complete |
+| Tenant Management | ✔ Complete |
+| Payment Management | ✔ Complete |
+
+---
+
+<div align="center">
+
+# 🏆 Learning Outcomes
+
+</div>
+
+<div align="justify">
+
+Developing the **Cabana Dormitory Management System** strengthened practical experience in designing, implementing, documenting, and maintaining a complete object-oriented desktop application. Beyond implementing CRUD operations, the project emphasized software architecture, code organization, maintainability, and the application of industry-recognized software engineering practices.
+
+The project also reinforced the importance of separating responsibilities through MVC, improving extensibility using design patterns, maintaining user sessions securely through Java Serialization, and documenting software using UML diagrams that accurately reflect the implemented system.
+
+Collectively, these concepts establish a solid foundation for developing larger desktop, web, and enterprise applications in future academic and professional software projects.
+
+</div>
+
+---
+
+<div align="center">
+
+# 📄 License
+
+</div>
+
+<div align="justify">
+
+This repository was developed as an **academic capstone project** for the course **Object-Oriented Programming 2** at **Cebu Institute of Technology – University**.
+
+The project is intended solely for **educational and portfolio purposes**. Any external libraries, frameworks, or third-party resources remain the property of their respective owners.
+
+You are welcome to study the source code for learning purposes; however, copying or submitting this project, in whole or in part, as another person's academic work is strictly discouraged.
+
+© 2026 Chestine May Mari C. Cabiso. All Rights Reserved.
+
+</div>
+
+---
+
+<div align="center">
+
+Thank you for taking the time to explore the
+
+# 🏠 Cabana Dormitory Management System
+
+<img src="src/main/resources/com/example/cabiso_capstone/CABANA.png" width="110"/>
+
+---
+
+### Built with
+
+**Java • JavaFX • JDBC • MySQL • Maven • Java Serialization • MVC • SOLID Principles • Design Patterns**
+
+</div>
+</div>
 </div>
