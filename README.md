@@ -653,11 +653,10 @@ Cabana-Dormitory-Management-System
 │           │     └── CABANA.png
 │           │
 │           └── uml
-│                 ├── use-case-diagram.png
-│                 ├── class-diagram.png
-│                 ├── login-sequence.png
-│                 ├── payment-sequence.png
-│                 └── activity-diagram.png
+│                 ├── Use-CaseDiagram.drawio.png
+│                 ├── CoreClassDiagram.drawio.png
+│                 ├── LoginAndSessionSequenceDiagram.drawio.png
+│                 └── PaymentRecordSequenceDiagram.drawio.png
 │
 ├── pom.xml
 ├── README.md
