@@ -96,17 +96,17 @@ After activation, tenants gain secure access to their personal dashboard where t
 
 </div>
 
-| Category | Technology |
-|:---------|:-----------|
-| Programming Language | Java 21 |
-| GUI Framework | JavaFX |
-| Database | MySQL |
-| Database Connectivity | JDBC |
-| Build Tool | Maven |
-| IDE | IntelliJ IDEA |
-| Architecture | Model–View–Controller (MVC) |
-| Session Persistence | Java Serialization |
-| Version Control | Git & GitHub |
+| Category | Technology                        |
+|:---------|:----------------------------------|
+| Programming Language | Java                              |
+| GUI Framework | JavaFX                            |
+| Database | MySQL                             |
+| Database Connectivity | JDBC                              |
+| Build Tool | Maven                             |
+| IDE | IntelliJ IDEA                     |
+| Architecture | Model–View–Controller (MVC)       |
+| Session Persistence | Java Serialization                |
+| Version Control | Git & GitHub                      |
 | UML Modeling | PlantUML / Mermaid / diagrams.net |
 
 ---
