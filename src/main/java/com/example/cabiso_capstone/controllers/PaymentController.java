@@ -9,6 +9,7 @@ import com.example.cabiso_capstone.model.Tenant;
 import com.example.cabiso_capstone.session.SessionManager;
 import com.example.cabiso_capstone.session.UserSession;
 
+import com.example.cabiso_capstone.strategy.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -73,6 +74,8 @@ public class PaymentController {
 
     private final ObservableList<Payment> paymentList = FXCollections.observableArrayList();
 
+    private final PaymentMethodContext paymentMethodContext = new PaymentMethodContext();
+
     public void handleRecordPayment(ActionEvent actionEvent) {
 
         Tenant selectedTenant =
@@ -87,17 +90,13 @@ public class PaymentController {
         LocalDate paymentDate =
                 paymentDatePicker.getValue();
 
-        String paymentMethod =
-                (String) paymentMethodComboBox.getValue();
+        String paymentMethod = (String) paymentMethodComboBox.getValue();
 
-        String paymentStatus =
-                (String) statusComboBox.getValue();
+        String paymentStatus = (String) statusComboBox.getValue();
 
-        String referenceNumber =
-                referenceNumberField.getText().trim();
+        String referenceNumber = referenceNumberField.getText();
 
-        String remarks =
-                remarksArea.getText().trim();
+        String remarks = remarksArea.getText().trim();
 
         if (selectedTenant == null
                 || billingMonth == null
@@ -133,6 +132,36 @@ public class PaymentController {
 
             showFormError(
                     "Payment amount must be greater than zero."
+            );
+
+            return;
+        }
+
+        try {
+
+            PaymentMethodStrategy strategy =
+                    resolvePaymentStrategy(
+                            paymentMethod
+                    );
+
+            paymentMethodContext.setStrategy(
+                    strategy
+            );
+
+            referenceNumber =
+                    paymentMethodContext
+                            .validateReferenceNumber(
+                                    referenceNumber
+                            );
+
+            paymentMethod =
+                    paymentMethodContext
+                            .getMethodName();
+
+        } catch (IllegalArgumentException exception) {
+
+            showFormError(
+                    exception.getMessage()
             );
 
             return;
@@ -199,7 +228,8 @@ public class PaymentController {
                         paymentMethod
                 );
 
-                if (referenceNumber.isBlank()) {
+                if (referenceNumber == null
+                        || referenceNumber.isBlank()) {
 
                     statement.setNull(
                             6,
@@ -319,8 +349,7 @@ public class PaymentController {
         String paymentStatus =
                 (String) statusComboBox.getValue();
 
-        String referenceNumber =
-                referenceNumberField.getText().trim();
+        String referenceNumber = referenceNumberField.getText();
 
         String remarks =
                 remarksArea.getText().trim();
@@ -357,6 +386,36 @@ public class PaymentController {
 
             showFormError(
                     "Payment amount must be greater than zero."
+            );
+
+            return;
+        }
+
+        try {
+
+            PaymentMethodStrategy strategy =
+                    resolvePaymentStrategy(
+                            paymentMethod
+                    );
+
+            paymentMethodContext.setStrategy(
+                    strategy
+            );
+
+            referenceNumber =
+                    paymentMethodContext
+                            .validateReferenceNumber(
+                                    referenceNumber
+                            );
+
+            paymentMethod =
+                    paymentMethodContext
+                            .getMethodName();
+
+        } catch (IllegalArgumentException exception) {
+
+            showFormError(
+                    exception.getMessage()
             );
 
             return;
@@ -420,7 +479,8 @@ public class PaymentController {
                         paymentMethod
                 );
 
-                if (referenceNumber.isBlank()) {
+                if (referenceNumber == null
+                        || referenceNumber.isBlank()) {
 
                     statement.setNull(
                             6,
@@ -757,6 +817,39 @@ public class PaymentController {
             return;
         }
 
+        paymentMethodComboBox.valueProperty()
+                .addListener(
+                        (observable,
+                         oldMethod,
+                         selectedMethod) -> {
+
+                            if ("CASH".equalsIgnoreCase(
+                                    selectedMethod
+                            )) {
+
+                                referenceNumberField.setPromptText(
+                                        "Optional for cash payments"
+                                );
+
+                            } else if ("GCASH".equalsIgnoreCase(
+                                    selectedMethod
+                            )) {
+
+                                referenceNumberField.setPromptText(
+                                        "Enter GCash reference number"
+                                );
+
+                            } else if ("BANK TRANSFER"
+                                    .equalsIgnoreCase(
+                                            selectedMethod
+                                    )) {
+
+                                referenceNumberField.setPromptText(
+                                        "Enter bank transaction reference"
+                                );
+                            }
+                        }
+                );
         tenantComboBox.setItems(activeTenantList);
 
         paymentMethodComboBox.getItems().addAll(
@@ -1437,5 +1530,36 @@ public class PaymentController {
 
             return false;
         }
+    }
+
+    private PaymentMethodStrategy resolvePaymentStrategy(
+            String paymentMethod
+    ) {
+
+        if (paymentMethod == null) {
+
+            throw new IllegalArgumentException(
+                    "Please select a payment method."
+            );
+        }
+
+        return switch (
+                paymentMethod.toUpperCase()
+                ) {
+
+            case "CASH" ->
+                    new CashPaymentStrategy();
+
+            case "GCASH" ->
+                    new GCashPaymentStrategy();
+
+            case "BANK TRANSFER" ->
+                    new BankTransferPaymentStrategy();
+
+            default ->
+                    throw new IllegalArgumentException(
+                            "Unsupported payment method."
+                    );
+        };
     }
 }
