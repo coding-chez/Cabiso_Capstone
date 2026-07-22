@@ -2,6 +2,7 @@ package com.example.cabiso_capstone.controllers;
 
 import com.example.cabiso_capstone.MainApplication;
 import com.example.cabiso_capstone.database.DatabaseConnection;
+import com.example.cabiso_capstone.facade.ApplicationFacade;
 import com.example.cabiso_capstone.model.Payment;
 import com.example.cabiso_capstone.model.Room;
 import com.example.cabiso_capstone.model.Tenant;
@@ -705,11 +706,11 @@ public class PaymentController {
     public void openDashboard(ActionEvent actionEvent) {
 
         try {
-            MainApplication.changeScene(
-                    "admin-dashboard-view.fxml"
-            );
+
+            ApplicationFacade.openAdminDashboard();
 
         } catch (IOException exception) {
+
             exception.printStackTrace();
         }
     }
@@ -717,11 +718,11 @@ public class PaymentController {
     public void openTenantView(ActionEvent actionEvent) {
 
         try {
-            MainApplication.changeScene(
-                    "tenant-view.fxml"
-            );
+
+            ApplicationFacade.openTenantManagement();
 
         } catch (IOException exception) {
+
             exception.printStackTrace();
         }
     }
@@ -729,11 +730,11 @@ public class PaymentController {
     public void openRoomView(ActionEvent actionEvent) {
 
         try {
-            MainApplication.changeScene(
-                    "room-view.fxml"
-            );
+
+            ApplicationFacade.openRoomManagement();
 
         } catch (IOException exception) {
+
             exception.printStackTrace();
         }
     }
@@ -741,16 +742,8 @@ public class PaymentController {
     public void handleLogout(ActionEvent actionEvent) {
 
         try {
-            SessionManager.deleteSession();
 
-            System.out.println(
-                    "Session deleted: "
-                            + SessionManager.getSessionFilePath()
-            );
-
-            MainApplication.changeScene(
-                    "login-view.fxml"
-            );
+            ApplicationFacade.logout();
 
         } catch (IOException exception) {
 

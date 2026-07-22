@@ -2,6 +2,7 @@ package com.example.cabiso_capstone.controllers;
 
 import com.example.cabiso_capstone.MainApplication;
 import com.example.cabiso_capstone.database.DatabaseConnection;
+import com.example.cabiso_capstone.facade.ApplicationFacade;
 import com.example.cabiso_capstone.session.SessionManager;
 import com.example.cabiso_capstone.session.UserSession;
 import javafx.beans.property.SimpleStringProperty;
@@ -1218,24 +1219,17 @@ public class TenantDashboardController {
         }
     }
 
-    public void handleLogout(
-            ActionEvent actionEvent
-    ) {
+    public void handleLogout(ActionEvent actionEvent) {
 
         try {
-            SessionManager.deleteSession();
 
-            System.out.println(
-                    "Session deleted: "
-                            + SessionManager
-                            .getSessionFilePath()
-            );
-
-            MainApplication.changeScene(
-                    "login-view.fxml"
-            );
+            ApplicationFacade.logout();
 
         } catch (IOException exception) {
+
+            System.err.println(
+                    "Unable to log out."
+            );
 
             exception.printStackTrace();
         }

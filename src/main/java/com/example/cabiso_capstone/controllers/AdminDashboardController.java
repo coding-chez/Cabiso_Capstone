@@ -2,6 +2,7 @@ package com.example.cabiso_capstone.controllers;
 
 import com.example.cabiso_capstone.MainApplication;
 import com.example.cabiso_capstone.database.DatabaseConnection;
+import com.example.cabiso_capstone.facade.ApplicationFacade;
 import com.example.cabiso_capstone.session.SessionManager;
 import com.example.cabiso_capstone.session.UserSession;
 
@@ -207,50 +208,25 @@ public class AdminDashboardController {
                 LIMIT 5
                 """;
 
-        try (
-                Connection connection =
-                        DatabaseConnection.getConnection();
+        try (Connection connection = DatabaseConnection.getConnection();
 
-                PreparedStatement statement =
-                        connection.prepareStatement(sql);
+                PreparedStatement statement = connection.prepareStatement(sql);
 
-                ResultSet resultSet =
-                        statement.executeQuery()
-        ) {
+                ResultSet resultSet = statement.executeQuery()) {
 
             while (resultSet.next()) {
-
-                recentTenantActivities.add(
-                        new RecentTenantActivity(
-                                resultSet.getString(
-                                        "full_name"
-                                ),
-                                resultSet.getString(
-                                        "room_number"
-                                ),
-                                resultSet.getString(
-                                        "status"
-                                )
-                        )
-                );
+                recentTenantActivities.add(new RecentTenantActivity(resultSet.getString("full_name"), resultSet.getString("room_number"), resultSet.getString("status")));
             }
 
-            recentTenantTable.setItems(
-                    recentTenantActivities
-            );
+            recentTenantTable.setItems(recentTenantActivities);
 
             recentTenantTable.refresh();
 
-            System.out.println(
-                    "Recent tenants loaded: "
-                            + recentTenantActivities.size()
-            );
+            System.out.println("Recent tenants loaded: " + recentTenantActivities.size());
 
         } catch (SQLException exception) {
 
-            System.err.println(
-                    "Unable to load recent tenant activity."
-            );
+            System.err.println("Unable to load recent tenant activity.");
 
             exception.printStackTrace();
         }
@@ -258,47 +234,20 @@ public class AdminDashboardController {
 
     private void initializeRecentActivityTables() {
 
-        recentTenantNameColumn.setCellValueFactory(
-                data -> new SimpleStringProperty(
-                        data.getValue().getTenantName()
-                )
-        );
+        recentTenantNameColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getTenantName()));
 
-        recentTenantRoomColumn.setCellValueFactory(
-                data -> new SimpleStringProperty(
-                        data.getValue().getRoomNumber()
-                )
-        );
+        recentTenantRoomColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getRoomNumber()));
 
-        recentTenantStatusColumn.setCellValueFactory(
-                data -> new SimpleStringProperty(
-                        data.getValue().getStatus()
-                )
-        );
+        recentTenantStatusColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getStatus()));
 
-        recentTenantTable.setItems(
-                recentTenantActivities
-        );
+        recentTenantTable.setItems(recentTenantActivities);
 
-        recentTenantTable.setColumnResizePolicy(
-                TableView.CONSTRAINED_RESIZE_POLICY
-        );
+        recentTenantTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
 
-        recentPaymentTenantColumn.setCellValueFactory(
-                data -> new SimpleStringProperty(
-                        data.getValue().getTenantName()
-                )
-        );
+        recentPaymentTenantColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getTenantName()));
 
-        recentPaymentAmountColumn.setCellValueFactory(
-                data -> new SimpleStringProperty(
-                        String.format(
-                                "₱%,.2f",
-                                data.getValue().getAmount()
-                        )
-                )
-        );
+        recentPaymentAmountColumn.setCellValueFactory(data -> new SimpleStringProperty(String.format("₱%,.2f", data.getValue().getAmount())));
 
         recentPaymentDateColumn.setCellValueFactory(
                 data -> new SimpleStringProperty(
@@ -723,26 +672,17 @@ public class AdminDashboardController {
         totalPaymentsLabel.setText("0");
     }
 
-    public void handleLogout(
-            ActionEvent actionEvent
-    ) {
+    public void handleLogout(ActionEvent actionEvent) {
 
         stopDashboardAutoRefresh();
 
         try {
-            SessionManager.deleteSession();
-
-            System.out.println(
-                    "Session deleted: "
-                            + SessionManager
-                            .getSessionFilePath()
-            );
-
-            MainApplication.changeScene(
-                    "login-view.fxml"
-            );
+            ApplicationFacade.logout();
 
         } catch (IOException exception) {
+
+            System.err.println("Unable to log out.");
+
             exception.printStackTrace();
         }
     }
@@ -752,50 +692,47 @@ public class AdminDashboardController {
         stopDashboardAutoRefresh();
 
         try {
-            MainApplication.changeScene(
-                    "room-view.fxml"
-            );
+            ApplicationFacade.openRoomManagement();
 
         } catch (IOException exception) {
+            System.err.println("Unable to open Room Management.");
+
             exception.printStackTrace();
         }
     }
 
-    public void showDashboard(
-            ActionEvent actionEvent
-    ) {
+    public void showDashboard(ActionEvent actionEvent) {
 
         refreshDashboardData();
     }
 
-    public void openTenantView(
-            ActionEvent actionEvent
-    ) {
+    public void openTenantView(ActionEvent actionEvent) {
 
         stopDashboardAutoRefresh();
 
         try {
-            MainApplication.changeScene(
-                    "tenant-view.fxml"
-            );
+
+            ApplicationFacade.openTenantManagement();
 
         } catch (IOException exception) {
+
+            System.err.println("Unable to open Tenant Management.");
             exception.printStackTrace();
         }
     }
 
-    public void openPaymentView(
-            ActionEvent actionEvent
-    ) {
+    public void openPaymentView(ActionEvent actionEvent) {
 
         stopDashboardAutoRefresh();
 
         try {
-            MainApplication.changeScene(
-                    "payment-view.fxml"
-            );
+
+            ApplicationFacade.openPaymentManagement();
 
         } catch (IOException exception) {
+
+            System.err.println("Unable to open Payment Management.");
+
             exception.printStackTrace();
         }
     }

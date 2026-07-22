@@ -2,6 +2,7 @@ package com.example.cabiso_capstone.controllers;
 
 import com.example.cabiso_capstone.MainApplication;
 import com.example.cabiso_capstone.database.DatabaseConnection;
+import com.example.cabiso_capstone.facade.ApplicationFacade;
 import com.example.cabiso_capstone.model.Room;
 import com.example.cabiso_capstone.session.SessionManager;
 import com.example.cabiso_capstone.session.UserSession;
@@ -966,16 +967,8 @@ public class RoomController {
     public void handleLogout(ActionEvent actionEvent) {
 
         try {
-            SessionManager.deleteSession();
 
-            System.out.println(
-                    "Session deleted: "
-                            + SessionManager.getSessionFilePath()
-            );
-
-            MainApplication.changeScene(
-                    "login-view.fxml"
-            );
+            ApplicationFacade.logout();
 
         } catch (IOException exception) {
 
@@ -984,34 +977,41 @@ public class RoomController {
     }
 
     public void openDashboard(ActionEvent actionEvent) {
+
         try {
-            MainApplication.changeScene(
-                    "admin-dashboard-view.fxml"
-            );
+
+            ApplicationFacade.openAdminDashboard();
+
         } catch (IOException exception) {
+
             exception.printStackTrace();
         }
     }
 
     public void openTenantView(ActionEvent actionEvent) {
+
         try {
-            MainApplication.changeScene(
-                    "tenant-view.fxml"
-            );
+
+            ApplicationFacade.openTenantManagement();
+
         } catch (IOException exception) {
+
             exception.printStackTrace();
         }
     }
 
     public void openPaymentView(ActionEvent actionEvent) {
+
         try {
-            MainApplication.changeScene(
-                    "payment-view.fxml"
-            );
+
+            ApplicationFacade.openPaymentManagement();
+
         } catch (IOException exception) {
+
             exception.printStackTrace();
         }
     }
+
     private boolean validateAdminSession() {
 
         try {
