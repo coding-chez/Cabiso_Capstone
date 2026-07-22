@@ -2,6 +2,12 @@ package com.example.cabiso_capstone.controllers;
 
 import com.example.cabiso_capstone.MainApplication;
 import com.example.cabiso_capstone.database.DatabaseConnection;
+import com.example.cabiso_capstone.factory.AdministratorFactory;
+import com.example.cabiso_capstone.factory.TenantFactory;
+import com.example.cabiso_capstone.factory.UserFactory;
+import com.example.cabiso_capstone.model.Administrator;
+import com.example.cabiso_capstone.model.Tenant;
+import com.example.cabiso_capstone.model.User;
 import com.example.cabiso_capstone.session.SessionManager;
 import com.example.cabiso_capstone.session.UserSession;
 
@@ -22,12 +28,18 @@ public class LoginController {
     public PasswordField passwordField;
     public Label messageLabel;
 
-    public void handleLogin(ActionEvent actionEvent) {
+    public void handleLogin(
+            ActionEvent actionEvent
+    ) {
 
         String username = usernameField.getText().trim();
+
         String password = passwordField.getText();
 
-        if (username.isEmpty() || password.isEmpty()) {showError("Please enter your username and password.");
+        if (username.isEmpty() || password.isEmpty()) {
+
+            showError("Please enter your username and password.");
+
             return;
         }
 
@@ -47,125 +59,271 @@ public class LoginController {
                   AND u.password = ?
                 """;
 
-        try (
-                Connection connection =
-                        DatabaseConnection.getConnection();
+        try (Connection connection = DatabaseConnection.getConnection();
 
-                PreparedStatement statement =
-                        connection.prepareStatement(sql)
-        ) {
+                PreparedStatement statement = connection.prepareStatement(sql)) {
 
             statement.setString(1, username);
+
             statement.setString(2, password);
 
             try (ResultSet resultSet = statement.executeQuery()) {
+
                 if (!resultSet.next()) {
+
                     showError(
                             "Invalid username or password."
                     );
 
                     passwordField.clear();
                     passwordField.requestFocus();
+
                     return;
                 }
 
-                int userId = resultSet.getInt("user_id");
+                int userId =
+                        resultSet.getInt(
+                                "user_id"
+                        );
 
-                String storedUsername = resultSet.getString("username");
+                String storedUsername =
+                        resultSet.getString(
+                                "username"
+                        );
 
-                String role = resultSet.getString("role");
+                String role =
+                        resultSet.getString(
+                                "role"
+                        );
 
-                String accountStatus = resultSet.getString("account_status");
+                String accountStatus =
+                        resultSet.getString(
+                                "account_status"
+                        );
 
-                if ("PENDING".equalsIgnoreCase(accountStatus)) {
-                    showWarning("Your account is awaiting administrator approval.");
+                if ("PENDING".equalsIgnoreCase(
+                        accountStatus
+                )) {
+
+                    showWarning(
+                            "Your account is awaiting administrator approval."
+                    );
+
                     return;
                 }
 
-                if ("INACTIVE".equalsIgnoreCase(accountStatus)) {
-                    showError("This account is inactive. " + "Please contact the administrator.");
+                if ("INACTIVE".equalsIgnoreCase(
+                        accountStatus
+                )) {
+
+                    showError(
+                            "This account is inactive. "
+                                    + "Please contact the administrator."
+                    );
+
                     return;
                 }
 
-                if (!"ACTIVE".equalsIgnoreCase(accountStatus)) {
-                    showError("This account is currently unavailable.");
+                if (!"ACTIVE".equalsIgnoreCase(
+                        accountStatus
+                )) {
+
+                    showError(
+                            "This account is currently unavailable."
+                    );
+
                     return;
                 }
 
                 Integer tenantId = null;
 
-                int retrievedTenantId = resultSet.getInt("tenant_id");
+                int retrievedTenantId =
+                        resultSet.getInt(
+                                "tenant_id"
+                        );
 
                 if (!resultSet.wasNull()) {
-                    tenantId = retrievedTenantId;
+
+                    tenantId =
+                            retrievedTenantId;
                 }
 
-                String fullName = resultSet.getString("full_name");
+                String fullName =
+                        resultSet.getString(
+                                "full_name"
+                        );
 
-                if (fullName == null || fullName.isBlank()) {
-                    fullName = "Administrator";
+                if (fullName == null
+                        || fullName.isBlank()) {
+
+                    fullName =
+                            "Administrator";
                 }
 
-                UserSession userSession = new UserSession(userId, tenantId, storedUsername, fullName, role, accountStatus);
+                /*
+                 * FACTORY METHOD PATTERN
+                 *
+                 * LoginController selects the appropriate
+                 * concrete factory based on the account role.
+                 *
+                 * The factory creates the corresponding
+                 * Administrator or Tenant object.
+                 */
+                UserFactory userFactory;
 
-                SessionManager.saveSession(userSession);
+                if ("ADMIN".equalsIgnoreCase(
+                        role
+                )) {
 
-                System.out.println("Session created: " + SessionManager.getSessionFilePath());
+                    userFactory =
+                            new AdministratorFactory();
 
-                if ("ADMIN".equalsIgnoreCase(role)) {
+                } else if ("TENANT".equalsIgnoreCase(
+                        role
+                )) {
 
-                    MainApplication.changeScene("admin-dashboard-view.fxml");
+                    userFactory =
+                            new TenantFactory();
 
-                } else if ("TENANT".equalsIgnoreCase(role)) {
+                } else {
 
-                    MainApplication.changeScene("tenant-dashboard-view.fxml");
+                    showError(
+                            "Unknown account role."
+                    );
+
+                    return;
+                }
+
+                User authenticatedUser =
+                        userFactory.createUser(
+                                userId,
+                                fullName,
+                                storedUsername,
+                                password
+                        );
+
+                UserSession userSession =
+                        new UserSession(
+                                authenticatedUser
+                                        .getUserId(),
+                                tenantId,
+                                authenticatedUser
+                                        .getUsername(),
+                                authenticatedUser
+                                        .getFullName(),
+                                role,
+                                accountStatus
+                        );
+
+                SessionManager.saveSession(
+                        userSession
+                );
+
+                System.out.println(
+                        "Created user through: "
+                                + userFactory
+                                .getClass()
+                                .getSimpleName()
+                );
+
+                System.out.println(
+                        "Authenticated user type: "
+                                + authenticatedUser
+                                .getClass()
+                                .getSimpleName()
+                );
+
+                System.out.println(
+                        "Session created: "
+                                + SessionManager
+                                .getSessionFilePath()
+                );
+
+                if (authenticatedUser
+                        instanceof Administrator) {
+
+                    MainApplication.changeScene(
+                            "admin-dashboard-view.fxml"
+                    );
+
+                } else if (authenticatedUser
+                        instanceof Tenant) {
+
+                    MainApplication.changeScene(
+                            "tenant-dashboard-view.fxml"
+                    );
 
                 } else {
 
                     SessionManager.deleteSession();
 
-                    showError("Unknown account role.");
+                    showError(
+                            "Unsupported user type."
+                    );
                 }
             }
 
         } catch (SQLException exception) {
 
-            showError("Unable to connect to the database.");
+            showError(
+                    "Unable to connect to the database."
+            );
 
             exception.printStackTrace();
 
         } catch (IOException exception) {
 
-            showError("Unable to create the login session.");
+            showError(
+                    "Unable to create the login session."
+            );
 
             exception.printStackTrace();
         }
     }
 
-    public void openRegisterView(ActionEvent actionEvent) {
+    public void openRegisterView(
+            ActionEvent actionEvent
+    ) {
 
         try {
-            MainApplication.changeScene("register-view.fxml");
+
+            MainApplication.changeScene(
+                    "register-view.fxml"
+            );
 
         } catch (IOException exception) {
 
-            showError("Unable to open registration.");
+            showError(
+                    "Unable to open registration."
+            );
 
             exception.printStackTrace();
         }
     }
 
-    private void showError(String message) {
+    private void showError(
+            String message
+    ) {
 
-        messageLabel.setStyle("-fx-text-fill: red;");
+        messageLabel.setStyle(
+                "-fx-text-fill: #c62828;"
+        );
 
-        messageLabel.setText(message);
+        messageLabel.setText(
+                message
+        );
     }
 
-    private void showWarning(String message) {
+    private void showWarning(
+            String message
+    ) {
 
-        messageLabel.setStyle("-fx-text-fill: orange;");
+        messageLabel.setStyle(
+                "-fx-text-fill: #c27a00;"
+        );
 
-        messageLabel.setText(message);
+        messageLabel.setText(
+                message
+        );
     }
 }
