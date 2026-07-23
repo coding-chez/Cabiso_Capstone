@@ -8,6 +8,8 @@ import com.example.cabiso_capstone.session.UserSession;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -796,8 +798,56 @@ public class AdminDashboardController {
                 new Timeline(
                         new KeyFrame(
                                 Duration.seconds(30),
-                                event ->
-                                        refreshDashboardData()
+                                event -> {
+
+                                    Task<Void> refreshTask =
+                                            new Task<>() {
+
+                                                @Override
+                                                protected Void call() {
+
+                                                    System.out.println(
+                                                            "Background dashboard refresh started..."
+                                                    );
+
+                                                    Platform.runLater(
+                                                            () -> refreshDashboardData()
+                                                    );
+
+                                                    return null;
+                                                }
+                                            };
+
+                                    refreshTask.setOnSucceeded(
+                                            e -> System.out.println(
+                                                    "Dashboard refresh completed."
+                                            )
+                                    );
+
+                                    refreshTask.setOnFailed(
+                                            e -> {
+
+                                                System.err.println(
+                                                        "Dashboard refresh failed."
+                                                );
+
+                                                if (refreshTask.getException() != null) {
+                                                    refreshTask.getException().printStackTrace();
+                                                }
+                                            }
+                                    );
+
+                                    Thread refreshThread =
+                                            new Thread(refreshTask);
+
+                                    refreshThread.setDaemon(true);
+
+                                    refreshThread.setName(
+                                            "DashboardRefreshThread"
+                                    );
+
+                                    refreshThread.start();
+                                }
                         )
                 );
 
