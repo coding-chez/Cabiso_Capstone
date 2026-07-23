@@ -28,6 +28,7 @@
 - [🏛️ System Architecture](#️-system-architecture)
 - [📐 UML Diagrams](#-uml-diagrams)
 - [💾 Java Serialization](#-java-serialization)
+- [🧵 Java Multithreading](#-java-multithreading)
 - [🧱 SOLID Principles Applied](#-solid-principles-applied)
 - [🎨 Design Patterns](#-design-patterns)
 - [🗄️ Database Design](#️-database-design)
@@ -240,57 +241,57 @@ Each diagram complements the others by representing the same system from differe
 
 ---
 
-## 📌 1. Overall Use Case Diagram
+## 📌 1. Use Case Diagram
 
 <p align="center">
-    <img src="src/main/resources/com/example/cabiso_capstone/uml/Use-CaseDiagram.drawio.png">
+    <img src="src/main/resources/com/example/cabiso_capstone/uml/use-case-diagram.drawio.png" width="1000">
 </p>
 
 <div align="justify">
 
-Illustrates the interactions between the two system actors—**Administrator** and **Tenant**—and the major services provided by the system including authentication, tenant management, room management, payment management, and tenant self-service operations.
+Presents the overall functional requirements of the CABANA Dormitory Management System by illustrating the interactions between the two primary actors—**Administrator** and **Tenant**. It summarizes the system's major capabilities, including account registration, authentication, tenant management, room assignment, payment management, and tenant self-service features.
 
 </div>
 
 ---
 
-## 🏛️ 2. Core Class Diagram
+## 🏛️ 2. Class Diagram
 
 <p align="center">
-    <img src="src/main/resources/com/example/cabiso_capstone/uml/CoreClassDiagram.drawio.png">
+    <img src="src/main/resources/com/example/cabiso_capstone/uml/class-diagram.drawio.png" width="1000">
 </p>
 
 <div align="justify">
 
-Illustrates the application's object-oriented architecture, including the relationships among controllers, models, session management components, database utilities, validation classes, and the implemented **Factory Method**, **Facade**, and **Strategy** design patterns.
+Illustrates the system's object-oriented architecture by showing the relationships among the core model classes, controllers, database and session components, and the implemented **Factory Method**, **Facade**, and **Strategy** design patterns. The diagram demonstrates how responsibilities are organized following the Model–View–Controller (MVC) architecture and SOLID principles.
 
 </div>
 
 ---
 
-## 🔐 3. Login & Session Sequence Diagram
+## 🔄 3. Sequence Diagram
 
 <p align="center">
-    <img src="src/main/resources/com/example/cabiso_capstone/uml/LoginAndSessionSequenceDiagram.drawio.png">
+    <img src="src/main/resources/com/example/cabiso_capstone/uml/sequence-diagram.drawio.png" width="1000">
 </p>
 
 <div align="justify">
 
-Describes the authentication workflow beginning from user login, credential verification, account status validation, Factory Method object creation, Java Serialization of authenticated sessions, and role-based dashboard navigation through the Facade.
+Describes the complete interaction flow of the system, beginning with tenant registration, administrator approval, room assignment, user authentication, tenant dashboard access, payment recording, automatic balance updates, and user logout. The diagram highlights how the application's components collaborate throughout the entire dormitory management process.
 
 </div>
 
 ---
 
-## 💳 4. Payment Recording Sequence Diagram
+## 📊 4. Activity Diagram
 
 <p align="center">
-    <img src="src/main/resources/com/example/cabiso_capstone/uml/PaymentRecordSequenceDiagram.drawio.png">
+    <img src="src/main/resources/com/example/cabiso_capstone/uml/activity-diagram.drawio.png" width="1000">
 </p>
 
 <div align="justify">
 
-Illustrates the administrator's payment-recording workflow, demonstrating Strategy-based payment validation, duplicate billing verification, database persistence, tenant balance recalculation, and automatic dashboard updates.
+Illustrates the overall workflow of the CABANA Dormitory Management System using four swimlanes representing the **Tenant**, **System Interface**, **Management Service**, and **Administrator**. It depicts the complete business process from registration and approval, room assignment, login, tenant self-service, payment recording, balance updating, and logout, providing a high-level view of the system's operational flow.
 
 </div>
 
@@ -322,6 +323,8 @@ When the application starts, the serialized session is validated before automati
 | `SessionManager` | Controls session creation, loading, validation, and deletion |
 
 ---
+
+
 
 ### Serialization Workflow
 
@@ -384,6 +387,70 @@ session.txt Deleted
 - Secure role validation
 - Improved user experience
 - Simplified desktop authentication
+
+---
+
+---
+
+<div align="center">
+
+# 🧵 Java Multithreading
+
+</div>
+
+<div align="justify">
+
+To improve application responsiveness, the Cabana Dormitory Management System utilizes **JavaFX's Task API** to perform periodic dashboard refresh operations on a **background daemon thread**. Rather than executing scheduled refreshes directly on the JavaFX Application Thread, a background task is created every refresh cycle to handle the operation asynchronously.
+
+After the background task begins execution, user interface updates are safely delegated back to the JavaFX Application Thread using `Platform.runLater()`. This approach prevents the scheduled refresh mechanism from blocking the application's user interface while maintaining thread safety during dashboard updates.
+
+The implementation demonstrates the practical use of Java concurrency within a JavaFX desktop application while preserving the existing business logic and application workflow.
+
+</div>
+
+---
+
+### Components
+
+| Component | Responsibility |
+|:----------|:---------------|
+| `Task<Void>` | Executes dashboard refresh asynchronously |
+| `Thread` | Runs the background task |
+| `Platform.runLater()` | Safely updates the JavaFX user interface |
+| `Timeline` | Schedules automatic dashboard refresh every 30 seconds |
+
+---
+
+### Workflow
+
+```text
+Timeline (30 seconds)
+        │
+        ▼
+Create JavaFX Task
+        │
+        ▼
+Start Background Thread
+        │
+        ▼
+Platform.runLater()
+        │
+        ▼
+refreshDashboardData()
+        │
+        ▼
+Dashboard Updated
+```
+
+---
+
+### Benefits
+
+- Non-blocking dashboard refresh
+- Improved UI responsiveness
+- Safe JavaFX thread synchronization
+- Demonstrates Java concurrency concepts
+- Minimal impact on existing application architecture
 
 ---
 
